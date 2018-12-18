@@ -5,14 +5,18 @@ import '../styles/Admin.css';
 
 import Teams from '../components/Teams';
 import TeamPlayers from '../components/TeamPlayers';
+import DisplayTeams from '../components/DisplayTeams';
 import TossResults from '../components/TossResults';
 
 class Admin extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pageComponent: 'enterTeams',
-      teamNames: ['Team 1', 'Team 2']
+      pageComponent: 0,
+      currentTeam: 1,
+      teamNames: ['Team 1', 'Team 2'],
+      team1: {},
+      team2: {}
     }
   }
 
@@ -28,34 +32,80 @@ class Admin extends Component {
 
   //   console.log('cdu');
   // }
-  
+
 
   setTeams(teams) {
     if (teams && teams[0] && teams[1]) {
       this.setState({
         teamNames: teams,
-        pageComponent: 'teamPlayers'
+        pageComponent: 1
       });
     }
   }
 
+  setTeamPlayers(teamNo, players) {
+    switch (teamNo) {
+      case 1: {
+        this.setState({
+          team1: {
+            teamNo,
+            teamName: this.state.teamNames[0],
+            teamPlayers: players
+          },
+          currentTeam: 2
+        });
+        break;
+      }
+      case 2: {
+        this.setState({
+          team2: {
+            teamNo,
+            teamName: this.state.teamNames[1],
+            teamPlayers: players,
+          },
+          pageComponent: 2
+        });
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  }
+
+  setTossPage() {
+    this.setState({ pageComponent: 3 });
+  }
+
   renderComponent() {
     switch (this.state.pageComponent) {
-      case 'enterTeams': {
+      case 0: {
         return (
           <Teams
             setTeams={this.setTeams.bind(this)}
           />
         );
       }
-      case 'teamPlayers': {
+      case 1: {
         return (
           <TeamPlayers
-            teamNames={this.state.teamNames}
+            teamNo={this.state.currentTeam}
+            teamName={this.state.teamNames[this.state.currentTeam - 1]}
+            setTeamPlayers={this.setTeamPlayers.bind(this)}
           />
         );
       }
-      case 'tossResults': {
+      case 2: {
+        return (
+          <DisplayTeams
+            team1={this.state.team1}
+            team2={this.state.team2}
+            setTossPage={this.setTossPage.bind(this)}
+          />
+        );
+        break;
+      }
+      case 3: {
         return (
           <TossResults />
         );
