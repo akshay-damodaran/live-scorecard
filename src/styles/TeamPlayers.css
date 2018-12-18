@@ -1,0 +1,24 @@
+.teamplayer-div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: row;
+}
+
+.teamplayer-input {
+      width: 300px;
+      height: 30px;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 16px;
+      border-radius: 15px;      
+}
+
+.teamplayer-button {
+      width: 300px;
+      height: 40px;
+      border-radius: 25px;
+      font-size: 16px;
+      padding-left: 10px;
+      padding-right: 10px;
+}

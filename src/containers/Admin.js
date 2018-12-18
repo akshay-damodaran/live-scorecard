@@ -11,7 +11,6 @@ class Admin extends Component {
     super(props);
     this.state = {
       pageComponent: 'enterTeams',
-      currentTeam: 0,
       teamNames: ['Team 1', 'Team 2']
     }
   }
@@ -37,7 +36,7 @@ class Admin extends Component {
       case 'teamPlayers': {
         return (
           <TeamPlayers
-            team={this.state.teamNames[this.state.currentTeam]}
+            teamNames={this.state.teamNames}
           />
         );
       }
