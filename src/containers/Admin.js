@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// import socketIOClient from 'socket.io-client';
 
 import '../styles/Admin.css';
 
@@ -14,6 +15,20 @@ class Admin extends Component {
       teamNames: ['Team 1', 'Team 2']
     }
   }
+
+  // componentDidMount() {
+  //   console.log('cdm')
+  //   const endpoint = 'http://127.0.0.4001';
+  //   const socket = socketIOClient(endpoint);
+
+  //   socket.on('initialize', pageComponent => {
+  //     console.log('Page Component : ', pageComponent);
+  //     // this.setState({ pageComponent });
+  //   });
+
+  //   console.log('cdu');
+  // }
+  
 
   setTeams(teams) {
     if (teams && teams[0] && teams[1]) {
