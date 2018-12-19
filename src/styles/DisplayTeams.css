@@ -7,13 +7,35 @@
 }
 
 .team-list {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
       border: solid 1px #000000;
-      width: 300px;
+      width: 95%;
       font-size: 18px;
       margin-bottom: 10px;
 }
 
-.player-row {
-      border: solid 1px #000000;
-      /* border-bottom: 1px; */
+tr {
+      display: flex;
+      flex: 1;
+}
+
+th {
+      display: flex;
+      flex: 1;
+      background-color: #000000;
+      color: #ffffff;
+      height: 40px;
+      align-items: center;
+      justify-content: center;
+}
+
+td {
+      display: flex;
+      width: 50%;
+      height: 40px;
+      align-items: center;
+      justify-content: center;   
+      border: solid 0.5px #e6e6e6;
 }

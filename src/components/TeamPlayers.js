@@ -9,7 +9,7 @@ class TeamPlayers extends Component {
                   teamNo: this.props.teamNo,
                   teamName: this.props.teamName,
                   mainPlayers: ['', '', '', '', '', '', '', '', '', '', ''],
-                  extraPlayers: ['', '', '', '']
+                  extraPlayers: ['', '', '', '', '']
             }
       }
 
@@ -18,7 +18,7 @@ class TeamPlayers extends Component {
                   teamNo: nextProps.teamNo,
                   teamName: nextProps.teamName,
                   mainPlayers: ['', '', '', '', '', '', '', '', '', '', ''],
-                  extraPlayers: ['', '', '', '']
+                  extraPlayers: ['', '', '', '', '']
             })
       }
 
@@ -50,14 +50,17 @@ class TeamPlayers extends Component {
       render() {
             return (
                   <div className="teamplayers">
-                        <div>
-                              <h2>{`Team ${this.state.teamNo}: ${this.state.teamName}`}</h2>
+                        <div className="header">
+                              <h3>{`Team ${this.state.teamNo}: ${this.state.teamName}`}</h3>
+                        </div>
+                        <div className="teamplayers-body">
+                              <h4>Main Players</h4>
                               {
                                     this.state.mainPlayers.map((item, i) =>
                                           <input
                                                 className="teamplayer-input"
                                                 key={`mainplayer_${i}`}
-                                                placeholder={`Player ${i + 1} name`}
+                                                placeholder={(i === 0) ? `Captain name` : `Player ${i + 1} name`}
                                                 value={this.state.mainPlayers[i]}
                                                 onChange={(e) => this.setPlayer(e.target.value, i, 'main')}
                                                 type="text"
@@ -65,8 +68,7 @@ class TeamPlayers extends Component {
                                           />
                                     )
                               }
-                              <br />
-                              <h2>Extra Players</h2>
+                              <h4>Extra Players</h4>
                               {
                                     this.state.extraPlayers.map((item, i) =>
                                           <input
@@ -89,6 +91,7 @@ class TeamPlayers extends Component {
                                                 `Done with Teams`
                                     }
                               </button>
+                              <br />
                         </div>
                   </div>
             )

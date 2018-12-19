@@ -12,11 +12,13 @@ class Admin extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pageComponent: 0,
+      pageComponent: 1,
       currentTeam: 1,
       teamNames: ['Team 1', 'Team 2'],
       team1: {},
-      team2: {}
+      team2: {},
+      tossResults: 1,
+      battingFirst: 1
     }
   }
 
@@ -38,7 +40,7 @@ class Admin extends Component {
     if (teams && teams[0] && teams[1]) {
       this.setState({
         teamNames: teams,
-        pageComponent: 1
+        pageComponent: 2
       });
     }
   }
@@ -63,7 +65,7 @@ class Admin extends Component {
             teamName: this.state.teamNames[1],
             teamPlayers: players,
           },
-          pageComponent: 2
+          pageComponent: 3
         });
         break;
       }
@@ -74,19 +76,19 @@ class Admin extends Component {
   }
 
   setTossPage() {
-    this.setState({ pageComponent: 3 });
+    this.setState({ pageComponent: 4 });
   }
 
   renderComponent() {
     switch (this.state.pageComponent) {
-      case 0: {
+      case 1: {
         return (
           <Teams
             setTeams={this.setTeams.bind(this)}
           />
         );
       }
-      case 1: {
+      case 2: {
         return (
           <TeamPlayers
             teamNo={this.state.currentTeam}
@@ -95,7 +97,7 @@ class Admin extends Component {
           />
         );
       }
-      case 2: {
+      case 3: {
         return (
           <DisplayTeams
             team1={this.state.team1}
@@ -103,9 +105,8 @@ class Admin extends Component {
             setTossPage={this.setTossPage.bind(this)}
           />
         );
-        break;
       }
-      case 3: {
+      case 4: {
         return (
           <TossResults />
         );
@@ -121,10 +122,14 @@ class Admin extends Component {
   render() {
     return (
       <div className="admin">
-        <h1>ScoreBuzz</h1>
-        <hr />
-        <br />
-        {this.renderComponent()}
+        <div className="admin-header">
+          <h2>ScoreBuzz</h2>
+        </div>
+        <div className="admin-body">
+          <div className="admin-card">
+            {this.renderComponent()}
+          </div>
+        </div>
       </div>
     );
   }

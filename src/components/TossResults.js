@@ -12,15 +12,27 @@ class TossResults extends Component {
 
       render() {
             return (
-                  <div className="tossResults">
-                        <h2>Toss Results</h2>
-                        <h4>Who won the toss?</h4>
-                        <button>Team 1</button>
-                        <button>Team 2</button>
-                        <hr/>
-                        <h4>Which team will do batting first?</h4>
-                        <button>Team 1</button>
-                        <button>Team 2</button>
+                  <div className="toss-results">
+                        <div className="header">
+                              <h3>Toss Results</h3>
+                        </div>
+                        <div className="toss-team">
+                              <h4>Who won the toss?</h4>
+                              <button>Team 1</button>
+                              <br />
+                              <button>Team 2</button>
+                        </div>
+                        <hr />
+                        <div className="batting-team">
+                              <h4>Which team will do batting first?</h4>
+                              <button>Team 1</button>
+                              <br />
+                              <button>Team 2</button>
+                        </div>
+                        <br />
+                        <br />
+                        <br />
+                        <button>Let's Play</button>
                   </div>
             );
       }

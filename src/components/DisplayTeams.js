@@ -15,52 +15,39 @@ class DisplayTeams extends Component {
             this.props.setTossPage();
       }
 
-      renderTeamPlayers() {
-            let players = [];
-            for (let i = 0; i < 16; i++) {
-                  players[2 * i] = this.state.team1.teamPlayers[i];
-                  players[2 * i + 1] = this.state.team2.teamPlayers[i];
-            }
-            console.log(players);
-            return (
-                  <tbody>
-                        {
-                              players.map
-                        }
-                  </tbody>
-            )
-      }
-
       render() {
             return (
                   <div className="display-teams">
-                        <h2>Display Teams</h2>
+                        <div className="header">
+                              <h3>Display Teams</h3>
+                        </div>
+                        <br />
                         <table className="team-list">
-                              <thead>
+                              <thead className="table-heading">
                                     <tr>
                                           <th>{this.state.team1.teamName}</th>
                                           <th>{this.state.team2.teamName}</th>
                                     </tr>
                               </thead>
-                              {/* {this.renderTeamPlayers()} */}
-                              <tbody>
+                              <tbody className="table-body">
                                     {
                                           this.state.team1.teamPlayers.map((item, i) =>
-                                                <tr className="player-row">
+                                                <tr key={`table_row_${i}`} className="player-row">
                                                       <td>{item}</td>
                                                       <td>{this.state.team2.teamPlayers[i]}</td>
                                                 </tr>
                                           )
                                     }
-                                    <tr>
+                                    {/* <tr>
                                           <td><button onClick={() => { }}>Edit</button></td>
                                           <td><button onClick={() => { }}>Edit</button></td>
-                                    </tr>
+                                    </tr> */}
                               </tbody>
                         </table>
                         <button className="teamplayer-button" onClick={() => this.setTossPage()}>
-                                    Let's Toss
+                              Let's Toss
                         </button>
+                        <br />
                   </div>
             );
       }
