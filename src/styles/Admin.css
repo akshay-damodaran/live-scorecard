@@ -67,3 +67,8 @@ button {
       padding-left: 10px;
       padding-right: 10px;
 }
+
+button:active, button:focus {
+      background-color: #ba124c;
+      color: #ffffff;
+}

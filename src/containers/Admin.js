@@ -17,8 +17,8 @@ class Admin extends Component {
       teamNames: ['Team 1', 'Team 2'],
       team1: {},
       team2: {},
-      tossResults: 1,
-      battingFirst: 1
+      tossResults: 0,
+      battingTeam: 0
     }
   }
 
@@ -79,6 +79,13 @@ class Admin extends Component {
     this.setState({ pageComponent: 4 });
   }
 
+  setTossResults(tossResults, battingTeam) {
+    this.setState({
+      tossResults,
+      battingTeam
+    });
+  }
+
   renderComponent() {
     switch (this.state.pageComponent) {
       case 1: {
@@ -108,7 +115,10 @@ class Admin extends Component {
       }
       case 4: {
         return (
-          <TossResults />
+          <TossResults
+            teamNames={this.state.teamNames}
+            setTossResults={this.setTossResults.bind(this)}
+          />
         );
       }
       default: {
