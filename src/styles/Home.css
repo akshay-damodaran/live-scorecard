@@ -1,0 +1,146 @@
+.home {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      width: 100vw;
+      height: 100vh;
+}
+
+.home-header {
+      display: flex;
+      background-color: #1339b7;
+      color: #ffffff;
+      height: 60px;
+      /* border-bottom: solid 1px #333333; */
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 5px;
+}
+
+.home-sponsors {
+      text-align: center;
+      background-color: #0099ff;
+      color: #ffffff;
+}
+
+.home-teams {
+      display: flex;
+      flex: 1;
+      flex-direction: row;
+      height: 60px;
+      align-items: center;
+      justify-content: center;
+      background-color: #b3e0ff;
+}
+
+.team {
+      display: flex;
+      flex: 0.5;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+}
+
+.team-logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+      background-color: #ffffff;
+}
+
+.toss-win {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      background-color: #e6f5ff;
+      text-align: center;
+}
+
+.home {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      /* background-color: #e6e6e6; */
+      padding-bottom: 60px;
+}
+
+.home-card {
+      width: 100%;
+      height: 100%;
+      /* margin: 4px; */
+      /* background-color: #ffffff; */
+}
+
+.score-board {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      width: 100%;
+}
+
+.bowling-status {
+      display: flex;
+      flex: 1;
+      flex-direction: row;
+      margin: 20px;
+      align-items: center;
+      justify-content: center;
+}
+
+.bowl-status {
+      display: flex;
+      flex-direction: column;
+}
+
+.bowl-no {
+      display: flex;
+      flex-direction: row;
+}
+
+.bowl-result {
+      display: flex;
+      flex-direction: row;
+}
+
+.bowl {
+      display: flex;
+      height: 8vw;
+      width: 8vw;
+      border-radius: 4vw;
+      background-color: #ffffff;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      /* padding-top: 3px; */
+      margin-left: 10px;
+      margin-right: 10px;
+      margin-bottom: 5px;
+      border: solid 1px #333333;
+}
+
+.bottom-navigation {
+      position: fixed;
+      height: 60px;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      flex: 1;
+      flex-direction: row;
+      overflow: hidden;
+      /* align-items: center;
+      justify-content: center; */
+}
+
+.tab {
+      display: flex;
+      flex: 0.5;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      background-color: #660033;
+      color: #ffffff;
+}
