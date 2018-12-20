@@ -18,7 +18,7 @@ class Admin extends Component {
     const socket = socketIOClient(endpoint);
 
     this.state = {
-      pageComponent: 0,
+      pageComponent: 1,
       currentTeam: 1,
       team1: '',
       team2: '',
@@ -71,13 +71,20 @@ class Admin extends Component {
   }
 
   setTossPage() {
-    this.setState({ pageComponent: 3 });
+    this.setState({ pageComponent: 4 });
+  }
+
+  setTossResults(tossResults, battingTeam) {
+    this.setState({
+      tossResults,
+      battingTeam
+    });
   }
 
   renderComponent() {
     const { team1, team2 } = this.state;
     switch (this.state.pageComponent) {
-      case 0: {
+      case 1: {
         return (
           <Teams
             team1 = {team1}
@@ -87,7 +94,7 @@ class Admin extends Component {
           />
         );
       }
-      case 1: {
+      case 2: {
         return (
           <TeamPlayers
             teamNo = {1}
@@ -96,7 +103,7 @@ class Admin extends Component {
           />
         );
       }
-      case 2: {
+      case 3: {
         return (
           <TeamPlayers
             teamNo = {2}
@@ -116,7 +123,10 @@ class Admin extends Component {
       }
       case 4: {
         return (
-          <TossResults />
+          <TossResults
+            teamNames={this.state.teamNames}
+            setTossResults={this.setTossResults.bind(this)}
+          />
         );
       }
       default: {
@@ -130,10 +140,14 @@ class Admin extends Component {
   render() {
     return (
       <div className="admin">
-        <h1>ScoreBuzz</h1>
-        <hr />
-        <br />
-        {this.renderComponent()}
+        <div className="admin-header">
+          <h2>ScoreBuzz</h2>
+        </div>
+        <div className="admin-body">
+          <div className="admin-card">
+            {this.renderComponent()}
+          </div>
+        </div>
       </div>
     );
   }
