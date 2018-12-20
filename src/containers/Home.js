@@ -198,7 +198,7 @@ class Home extends React.Component {
                     this.state.bowlingStatus.map((item, i) =>
                       <div className="bowl-status">
                         <div className="bowl">{i + 1}</div>
-                        <div className="bowl">{item}</div>
+                        <div className="bowl" id="status" style={{ backgroundColor: (item === 'WK') ? '#ff0000' : '#333333' }}>{item}</div>
                       </div>
                     )
                   }

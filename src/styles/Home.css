@@ -108,18 +108,24 @@
 
 .bowl {
       display: flex;
-      height: 8vw;
-      width: 8vw;
-      border-radius: 4vw;
+      height: 9vw;
+      width: 9vw;
+      border-radius: 4.5vw;
+      font-size: 14px;
       background-color: #ffffff;
       align-items: center;
       justify-content: center;
       text-align: center;
-      /* padding-top: 3px; */
       margin-left: 10px;
       margin-right: 10px;
       margin-bottom: 5px;
       border: solid 1px #333333;
+}
+
+#status {
+      color: #ffffff;
+      border: none;
+      font-weight: bold;
 }
 
 .bottom-navigation {
