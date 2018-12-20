@@ -53,14 +53,14 @@ class Home extends React.Component {
         isBattingTeam: false
       },
       batsman1: {
-        name: 'Virat',
+        name: 'Virat Kohli',
         runs: 9,
         balls: 6,
         fours: 2,
         sixes: 0
       },
       batsman2: {
-        name: 'Dhoni',
+        name: 'Mahendra Dhoni',
         runs: 9,
         balls: 6,
         fours: 2,
@@ -126,11 +126,11 @@ class Home extends React.Component {
           <h4>Sponsored by Viren Patil and Karan Patil</h4>
         </div>
         <div className="home-teams">
-          <div className="team">
+          <div className="team" style={{ backgroundColor: '#66ccff' }}>
             <img src={this.state.team1.logo} width="50" height="50" className="team-logo" />
             <h4>&nbsp;{this.state.team1.name}</h4>
           </div>
-          <div className="team">
+          <div className="team" style={{ backgroundColor: '#ccccff' }}>
             <img src={this.state.team2.logo} width="50" height="50" className="team-logo" />
             <h4>&nbsp;{this.state.team2.name}</h4>
           </div>
@@ -193,7 +193,7 @@ class Home extends React.Component {
                           <td key={`bowler_${item}`}>{bowler[item]}</td>
                         )
                       }
-                      <td key={`bowler_economy`}>{bowler.overs / bowler.runs * 100}</td>
+                      <td key={`bowler_economy`}>{(bowler.runs / bowler.overs * 100).toFixed(2)}</td>
                     </tr>
                   </tbody>
                 </table>

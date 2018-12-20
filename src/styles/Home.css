@@ -80,11 +80,16 @@
       flex-direction: column;
       flex: 1;
       width: 100%;
+      font-size: 12px;
 }
 
 .scoreboard-details {
       display: flex;
       flex-direction: row;
+}
+
+td {
+      text-align: center; 
 }
 
 .bowling-status {
@@ -130,7 +135,7 @@
 #status {
       color: #ffffff;
       border: none;
-      font-weight: bold;
+      /* font-weight: bold; */
 }
 
 .bottom-navigation {
