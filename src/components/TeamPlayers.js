@@ -6,7 +6,7 @@ class TeamPlayers extends Component {
 		super(props);
 		this.state = {
 			mainPlayers: Array(11).fill(null).map(() => ({name: ''})),
-			extraPlayers: Array(4).fill(null).map(() => ({name: ''}))
+			extraPlayers: Array(5).fill(null).map(() => ({name: ''}))
 		}
 	}
 

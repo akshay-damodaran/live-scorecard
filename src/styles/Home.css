@@ -82,6 +82,11 @@
       width: 100%;
 }
 
+.scoreboard-details {
+      display: flex;
+      flex-direction: row;
+}
+
 .bowling-status {
       display: flex;
       flex: 1;

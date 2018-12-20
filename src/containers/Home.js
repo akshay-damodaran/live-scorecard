@@ -116,6 +116,7 @@ class Home extends React.Component {
   }
 
   render() {
+    const { team1, team2, batsman1, batsman2, bowler, bowlingStatus, tabs, scoreBoardDetails } = this.state;
     return (
       <div className="home">
         <div className="home-header">
@@ -136,10 +137,10 @@ class Home extends React.Component {
         </div>
         <div className="toss-win">
           {
-            (this.state.team1.wonToss) ?
-              <span>{`${this.state.team1.name} won the toss and elected to do ${(this.state.team1.isBattingTeam) ? 'batting' : 'fielding'}.`}</span>
+            (team1.wonToss) ?
+              <span>{`${team1.name} won the toss and elected to do ${(team1.isBattingTeam) ? 'batting' : 'fielding'}.`}</span>
               :
-              <span>{`${this.state.team2.name} won the toss and elected to do ${(this.state.team2.isBattingTeam) ? 'batting' : 'fielding'}.`}</span>
+              <span>{`${team2.name} won the toss and elected to do ${(team2.isBattingTeam) ? 'batting' : 'fielding'}.`}</span>
           }
         </div>
         <div className="home-body">
@@ -159,18 +160,20 @@ class Home extends React.Component {
                   </thead>
                   <tbody>
                     <tr>
-                      <td key={`batsman1_name`}>{this.state.batsman1.name}</td>
-                      <td key={`batsman1_runs`}>{this.state.batsman1.runs}</td>
-                      <td key={`batsman1_balls`}>{this.state.batsman1.balls}</td>
-                      <td key={`batsman1_fours`}>{this.state.batsman1.fours}</td>
-                      <td key={`batsman1_sixes`}>{this.state.batsman1.sixes}</td>
+                      {
+                        Object.keys(batsman1).map((item, i) =>
+                          <td key={`batsman1_${item}`}>{batsman1[item]}</td>
+                        )
+                      }
+                      <td key={`batsman1_strikeRate`}>{batsman1.runs / batsman1.balls * 100}</td>
                     </tr>
                     <tr>
-                      <td key={`batsman2_name`}>{this.state.batsman2.name}</td>
-                      <td key={`batsman2_runs`}>{this.state.batsman2.runs}</td>
-                      <td key={`batsman2_balls`}>{this.state.batsman2.balls}</td>
-                      <td key={`batsman2_fours`}>{this.state.batsman2.fours}</td>
-                      <td key={`batsman2_sixes`}>{this.state.batsman2.sixes}</td>
+                      {
+                        Object.keys(batsman2).map((item, i) =>
+                          <td key={`batsman2_${item}`}>{batsman2[item]}</td>
+                        )
+                      }
+                      <td key={`batsman2_strikeRate`}>{batsman2.runs / batsman2.balls * 100}</td>
                     </tr>
                   </tbody>
                   <thead>
@@ -185,17 +188,18 @@ class Home extends React.Component {
                   </thead>
                   <tbody>
                     <tr>
-                      <td key={`bowler_name`}>{this.state.bowler.name}</td>
-                      <td key={`bowler_overs`}>{this.state.bowler.overs}</td>
-                      <td key={`bowler_runs`}>{this.state.bowler.runs}</td>
-                      <td key={`bowler_maidens`}>{this.state.bowler.maidens}</td>
-                      <td key={`bowler_wickets`}>{this.state.bowler.wickets}</td>
+                      {
+                        Object.keys(bowler).map((item, i) =>
+                          <td key={`bowler_${item}`}>{bowler[item]}</td>
+                        )
+                      }
+                      <td key={`bowler_economy`}>{bowler.overs / bowler.runs * 100}</td>
                     </tr>
                   </tbody>
                 </table>
                 <div className="bowling-status">
                   {
-                    this.state.bowlingStatus.map((item, i) =>
+                    bowlingStatus.map((item, i) =>
                       <div className="bowl-status">
                         <div className="bowl">{i + 1}</div>
                         <div className="bowl" id="status" style={{ backgroundColor: (item === 'WK') ? '#ff0000' : '#333333' }}>{item}</div>
@@ -218,13 +222,18 @@ class Home extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      {/* {
-                        this.state.batsman[0].map((item, i) =>
-                          <td key={`batsman1_${i}`}>{item}</td>
-                        )
-                      } */}
-                    </tr>
+                    {
+                      scoreBoardDetails.map((obj) =>
+                        <tr className="scoreboard-details">
+                          {
+                            Object.keys(obj).map((item, i) =>
+                              <td key={`batsman_${i}`}>{obj[item]}</td>
+                            )
+                          }
+                          <td key={`batsman_strikeRate`}>{obj.runs / obj.balls * 100}</td>
+                        </tr>
+                      )
+                    }
                   </tbody>
                 </table>
               </div>
@@ -232,7 +241,7 @@ class Home extends React.Component {
         </div>
         <div className="bottom-navigation">
           {
-            this.state.tabs.map((item, i) =>
+            tabs.map((item, i) =>
               <div id={`tab${i}`} className="tab" onClick={() => this.setTab(i)}>{item}</div>
             )
           }
