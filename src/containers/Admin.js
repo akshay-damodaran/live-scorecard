@@ -26,6 +26,7 @@ class Admin extends Component {
       team2Players: Array(15).fill(null).map(() => ({name: ''})),
       // team2: {},
       socket,
+
     }
   }
 
@@ -59,30 +60,39 @@ class Admin extends Component {
   }
 
   setTeamPlayers(teamId, teamName, teamPlayers) {
-    axios.post({
-      url: `${conf.base_url}/apis/createteam`,
-      body: {
+    const url = `${conf.base_url}apis/createteam`;
+    axios.post(
+      url,
+      {
         teamName,
         teamId,
         teamPlayers,
-      },
-    });
+      }
+      )
+      .then(res => {
+        console.log('Res : ', res);
+      })
+      .catch(err => console.log('Error : ', err));
     this.nextScreen();
   }
 
-  setTossPage() {
-    this.setState({ pageComponent: 4 });
-  }
-
-  setTossResults(tossResults, battingTeam) {
-    this.setState({
-      tossResults,
-      battingTeam
-    });
+  setTossResults() {
+    const { tossResult, battingTeam } = this.state;
+    const url = `${conf.base_url}apis/toss`;
+    const decision = (tossResult === battingTeam) ? '0' : '1';
+    axios.post(
+      url,
+      {
+        teamid: tossResult,
+        battingTeam,
+        decision,
+      }
+    )
+    this.nextScreen();
   }
 
   renderComponent() {
-    const { team1, team2 } = this.state;
+    const { team1, team2, team1Players, team2Players } = this.state;
     switch (this.state.pageComponent) {
       case 1: {
         return (
@@ -112,20 +122,24 @@ class Admin extends Component {
           />
         )
       }
-      case 3: {
+      case 4: {
         return (
           <DisplayTeams
-            team1={this.state.team1}
-            team2={this.state.team2}
-            setTossPage={this.setTossPage.bind(this)}
+            team1 = { team1 }
+            team2 = { team2 }
+            team1Players = { team1Players }
+            team2Players = { team2Players }
+            nextScreen = {() => this.nextScreen()}
           />
         );
       }
-      case 4: {
+      case 5: {
         return (
           <TossResults
-            teamNames={this.state.teamNames}
-            setTossResults={this.setTossResults.bind(this)}
+            team1 = { team1 }
+            team2 = { team2 }
+            setTossData = {data => this.setState({ ...data })}
+            setTossResults={() => this.setTossResults()}
           />
         );
       }
