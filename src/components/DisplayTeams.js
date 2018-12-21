@@ -38,10 +38,6 @@ class DisplayTeams extends Component {
                                                 </tr>
                                           )
                                     }
-                                    {/* <tr>
-                                          <td><button onClick={() => { }}>Edit</button></td>
-                                          <td><button onClick={() => { }}>Edit</button></td>
-                                    </tr> */}
                               </tbody>
                         </table>
                         <button className="teamplayer-button" onClick={() => this.setTossPage()}>

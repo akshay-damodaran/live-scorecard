@@ -24,7 +24,6 @@ class Admin extends Component {
       team2: '',
       team1Players: Array(16).fill(null).map(() => ({ name: '' })),
       team2Players: Array(16).fill(null).map(() => ({ name: '' })),
-      // team2: {},
       socket,
     }
   }
