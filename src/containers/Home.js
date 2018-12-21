@@ -20,7 +20,7 @@ class Home extends React.Component {
       bowlingStatus: [],
       tabs: ['Live-Score', 'Score-Board'],
       scoreBoardDetails: [],
-      socket
+      // socket
     }
   }
 
