@@ -1,0 +1,293 @@
+.admin-scoreboard {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      width: 100vw;
+      /* min-height: 80vh; */
+}
+
+.admin-teams {
+      display: flex;
+      flex-direction: row;
+}
+
+.scoreboard-header {
+      display: flex;
+      width: 100%;
+      height: 40px;
+      align-items: center;
+      justify-content: center;
+      background-color: #0099ff;
+}
+
+.scoreboard-body {
+      display: flex;
+      flex-direction: column;
+      /* align-items: center;     */
+}
+
+.scoreboard-body-match-start {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+}
+
+.dropdown-list {
+      display: flex;
+      flex: 1;
+      flex-direction: row;
+      width: 100%;
+}
+
+.dd-list-half {
+      display: flex;
+      flex: 0.5;  
+      align-items: center;
+      justify-content: center;
+      height: 50px;
+      font-weight: bold;
+}
+
+#bowlerNames-match {
+      width: 200px;
+      height: 40px;
+      font-size: 15px;
+      /* border-radius: 20px; */
+}
+
+#strikerNames {
+      width: 200px;
+      height: 40px;
+      font-size: 15px;
+}
+
+#nonStrikerNames {
+      width: 200px;
+      height: 40px;
+      font-size: 15px;
+}
+
+#bowlerNames-over {
+      width: 200px;
+      height: 40px;
+      font-size: 15px;
+}
+
+.sb-input {
+      width: 200px;
+      height: 40px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      padding-left: 10px;
+}
+
+.scoreboard-button {
+      width: 200px;
+      height: 40px;
+      border-radius: 20px;
+}
+
+.section-header {
+      display: flex;
+      height: 30px;
+      background-color: #000066;
+      color: #ffffff;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+}
+
+.section-body {
+      display: flex;
+      flex-direction: row;
+      flex: 1
+}
+
+.striker-headings {
+      display: flex;
+      flex: 0.2;
+      flex-direction: column;
+      align-items: center;
+      height: 150px;
+      background-color: #999999;
+      font-weight: bold;
+}
+
+.striker {
+      display: flex;
+      flex: 0.4;
+      flex-direction: column;
+      align-items: center;
+      height: 150px;
+      background-color: #eeeeee;
+}
+
+.batsman {
+      display: flex;
+      width: 100%;
+      height: 30px;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-bottom: solid 1px #cccccc;
+}
+
+.scores-section {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+}
+
+.runs {
+      display: flex;
+      flex: 0.5;
+      height: 60px;
+      align-items: center;
+      justify-content: center;
+      background-color: #eeeeee;
+}
+
+.wickets {
+      display: flex;
+      flex: 0.5;
+      height: 60px;
+      align-items: center;
+      justify-content: center;
+      background-color: #cccccc;
+}
+
+.score-minus {
+      display: flex;
+      align-items: center;
+      justify-content: center; 
+      text-align: center;
+      width: 30px;
+      height: 30px;
+      background-color: #ff0000;
+      color: #ffffff;
+      font-weight: bold;
+      /* margin-left: 10px; */
+}
+
+.score-add {
+      display: flex;
+      align-items: center;
+      justify-content: center; 
+      text-align: center;
+      width: 30px;
+      height: 30px;
+      background-color: #00ff00;
+      color: #ffffff;
+      font-weight: bold;
+      /* margin-right: 10px; */
+}
+
+.score {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #ffffff;
+      width: 50px;
+      height: 30px;
+      font-weight: bold;
+}
+
+.overs-section-body {
+      display: flex;
+      flex-direction: column;
+      flex: 1
+}
+
+.overs-status {
+      display: flex;
+      flex: 1;
+      flex-direction: row;
+      height: 40px;
+      align-items: center;
+      justify-content: center;
+      background-color: #ccff99;
+}
+
+.overs {
+      display: flex;
+      flex: 0.333;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+}
+
+.over-count {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      height: 50px;
+      background-color: #b3ecff;
+      /* padding-top: 10px; */
+}
+
+.bowl {
+      display: flex;
+      height: 9vw;
+      width: 9vw;
+      border-radius: 4.5vw;
+      font-size: 14px;
+      background-color: #ffffff;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin-left: 5px;
+      margin-right: 5px;
+      border: solid 1px #333333;
+}
+
+
+
+
+/* .scores {
+      display: flex;
+      flex: 1;
+      background-color: #66ccff;
+      height: 50px;
+}*/
+
+
+/*
+
+
+
+
+.bowler-input {
+      padding-left: 10px;
+}
+
+.popup {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      flex-direction: column;
+}
+
+#popup-header {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      justify-content: center;
+      width: 100%;
+      height: 60px;
+      background-color: #99cc00;
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: bold;
+}
+
+#popup-body {
+      display: flex;
+      align-items: center;
+} */
