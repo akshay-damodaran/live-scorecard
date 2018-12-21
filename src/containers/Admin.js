@@ -22,8 +22,8 @@ class Admin extends Component {
       currentTeam: 1,
       team1: '',
       team2: '',
-      team1Players: Array(15).fill(null).map(() => ({name: ''})),
-      team2Players: Array(15).fill(null).map(() => ({name: ''})),
+      team1Players: Array(16).fill(null).map(() => ({ name: '' })),
+      team2Players: Array(16).fill(null).map(() => ({ name: '' })),
       // team2: {},
       socket,
 
@@ -42,7 +42,7 @@ class Admin extends Component {
     let { pageComponent, socket } = this.state;
     // No of screens
     let n = 5;
-    if(pageComponent === n) {
+    if (pageComponent === n) {
       pageComponent = -1;
     }
     this.setState({
@@ -97,28 +97,28 @@ class Admin extends Component {
       case 1: {
         return (
           <Teams
-            team1 = {team1}
-            team2 = {team2}
-            nextScreen = {() => this.nextScreen()}
-            changeTeamName = {(teamName) => this.changeTeamName(teamName)}
+            team1={team1}
+            team2={team2}
+            nextScreen={() => this.nextScreen()}
+            changeTeamName={(teamName) => this.changeTeamName(teamName)}
           />
         );
       }
       case 2: {
         return (
           <TeamPlayers
-            teamNo = {1}
-            teamName = {this.state.team1}
-            setTeamPlayers = {teamPlayers => this.setTeamPlayers(1, team1, teamPlayers)}
+            teamNo={1}
+            teamName={this.state.team1}
+            setTeamPlayers={teamPlayers => this.setTeamPlayers(1, team1, teamPlayers)}
           />
         );
       }
       case 3: {
         return (
           <TeamPlayers
-            teamNo = {2}
-            teamName = {this.state.team2}
-            setTeamPlayers = {teamPlayers => this.setTeamPlayers(2, team2, teamPlayers)}
+            teamNo={2}
+            teamName={this.state.team2}
+            setTeamPlayers={teamPlayers => this.setTeamPlayers(2, team2, teamPlayers)}
           />
         )
       }
@@ -155,7 +155,7 @@ class Admin extends Component {
     return (
       <div className="admin">
         <div className="admin-header">
-          <h2>ScoreBuzz</h2>
+          <h2>Kalva-Pen Tennis Cricket Association</h2>
         </div>
         <div className="admin-body">
           <div className="admin-card">
