@@ -7,7 +7,8 @@ import '../styles/Admin.css';
 import Teams from '../components/Teams';
 import TeamPlayers from '../components/TeamPlayers';
 import DisplayTeams from '../components/DisplayTeams';
-import TossResults from '../components/TossResults'
+import TossResults from '../components/TossResults';
+import AdminScoreBoard from '../components/AdminScoreBoard';
 
 import conf from '../conf';
 
@@ -20,11 +21,12 @@ class Admin extends Component {
     this.state = {
       pageComponent: 1,
       currentTeam: 1,
-      team1: '',
-      team2: '',
+      team1: 'Mumbai',
+      team2: 'Pune',
       team1Players: Array(16).fill(null).map(() => ({ name: '' })),
       team2Players: Array(16).fill(null).map(() => ({ name: '' })),
       socket,
+
     }
   }
 
@@ -37,9 +39,12 @@ class Admin extends Component {
   }
 
   nextScreen() {
-    let { pageComponent, socket } = this.state;
+    let { 
+      pageComponent, 
+      socket 
+    } = this.state;
     // No of screens
-    let n = 5;
+    let n = 6;
     if (pageComponent === n) {
       pageComponent = -1;
     }
@@ -58,30 +63,43 @@ class Admin extends Component {
   }
 
   setTeamPlayers(teamId, teamName, teamPlayers) {
-    axios.post({
-      url: `${conf.base_url}/apis/createteam`,
-      body: {
+    const url = `${conf.base_url}apis/createteam`;
+    axios.post(
+      url,
+      {
         teamName,
         teamId,
         teamPlayers,
-      },
-    });
+      })
+      .then(res => {
+        console.log('Res : ', res);
+      })
+      .catch(err => console.log('Error : ', err));
+    if (teamId === 1) {
+      this.setState({ team1Players: teamPlayers });
+    } else {
+      this.setState({ team2Players: teamPlayers });
+    }
     this.nextScreen();
   }
 
-  setTossPage() {
-    this.setState({ pageComponent: 4 });
-  }
-
-  setTossResults(tossResults, battingTeam) {
-    this.setState({
-      tossResults,
-      battingTeam
-    });
+  setTossResults() {
+    const { tossResult, battingTeam } = this.state;
+    const url = `${conf.base_url}apis/toss`;
+    const decision = (tossResult === battingTeam) ? '0' : '1';
+    axios.post(
+      url,
+      {
+        teamid: tossResult,
+        battingTeam,
+        decision,
+      }
+    )
+    this.nextScreen();
   }
 
   renderComponent() {
-    const { team1, team2 } = this.state;
+    const { team1, team2, team1Players, team2Players } = this.state;
     switch (this.state.pageComponent) {
       case 1: {
         return (
@@ -114,17 +132,30 @@ class Admin extends Component {
       case 4: {
         return (
           <DisplayTeams
-            team1={this.state.team1}
-            team2={this.state.team2}
-            setTossPage={this.setTossPage.bind(this)}
+            team1={team1}
+            team2={team2}
+            team1Players={team1Players}
+            team2Players={team2Players}
+            nextScreen={() => this.nextScreen()}
           />
         );
       }
       case 5: {
         return (
           <TossResults
-            teamNames={this.state.teamNames}
-            setTossResults={this.setTossResults.bind(this)}
+            team1={team1}
+            team2={team2}
+            setTossData={data => this.setState({ ...data })}
+            setTossResults={() => this.setTossResults()}
+          />
+        );
+      }
+      case 6: {
+        return (
+          <AdminScoreBoard
+            team1={team1}
+            team2={team2}
+
           />
         );
       }

@@ -5,8 +5,8 @@ class TeamPlayers extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			mainPlayers: Array(11).fill(null).map(() => ({ name: '' })),
-			extraPlayers: Array(5).fill(null).map(() => ({ name: '' }))
+			mainPlayers: Array(11).fill(null).map(() => ({ name: '' })), // remove by default data
+			extraPlayers: Array(5).fill(null).map(() => ({ name: '' })) // remove by default data
 		}
 	}
 
@@ -32,7 +32,9 @@ class TeamPlayers extends Component {
 
 	render() {
 		const { teamNo, teamName, setTeamPlayers } = this.props;
-		const { mainPlayers, extraPlayers } = this.state;
+		let { mainPlayers, extraPlayers } = this.state;
+		mainPlayers = Array(11).fill(null).map(() => ({ name: (this.props.teamNo === 1) ? 'Mum' : 'Pun' })); // remove by default data
+		extraPlayers = Array(5).fill(null).map(() => ({ name: (this.props.teamNo === 1) ? 'Mum' : 'Pun' })); // remove by default data
 		return (
 			<div className="teamplayers">
 				<h2>{`Team ${teamNo}: ${teamName}`}</h2>
@@ -65,12 +67,12 @@ class TeamPlayers extends Component {
 					)
 				}
 				<br />
-				<button className="teamplayer-button" onClick={() => { 
+				<button className="teamplayer-button" onClick={() => {
 					setTeamPlayers([...mainPlayers, ...extraPlayers]);
-					this.setState({ 
-						mainPlayers: Array(11).fill(null).map(() => ({ name: '' })),
-						extraPlayers: Array(5).fill(null).map(() => ({ name: '' }))
-					});
+					// this.setState({ 
+					// 	mainPlayers: Array(11).fill(null).map(() => ({ name: '' })),
+					// 	extraPlayers: Array(5).fill(null).map(() => ({ name: '' }))
+					// });
 				}}>
 					{
 						(teamNo === 1) ?

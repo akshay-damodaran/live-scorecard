@@ -7,6 +7,9 @@ class Home extends React.Component {
 
   constructor(props) {
     super(props);
+    // const endpoint = 'http://127.0.0.1:4002';
+    // const socket = socketIOClient(endpoint);
+
     this.state = {
       currentTab: 0,
       team1: {},
@@ -16,16 +19,13 @@ class Home extends React.Component {
       bowler: {},
       bowlingStatus: [],
       tabs: ['Live-Score', 'Score-Board'],
-      scoreBoardDetails: []
+      scoreBoardDetails: [],
+      socket
     }
   }
 
   componentDidMount() {
-
-    // console.log('cdm');
-    // const endpoint = 'http://127.0.0.4001';
-    // const socket = socketIOClient(endpoint);
-
+    // const { socket } = this.state;
     // socket.on('scoreBoard', liveScoreBoard => {
     //   console.log('Live Score Board: ', liveScoreBoard);
     //   window.sessionStorage.setItem('scoreBoardDetails', JSON.stringify(liveScoreBoard.scoreBoardDetails));
@@ -109,6 +109,7 @@ class Home extends React.Component {
     this.state.tabs.map((item, i) => {
       document.getElementById(`tab${i}`).style.backgroundColor = '#660033';
       document.getElementById(`tab${i}`).style.fontWeight = 'normal';
+      return null;
     });
     document.getElementById(`tab${tabNo}`).style.backgroundColor = '#ba124c';
     document.getElementById(`tab${tabNo}`).style.fontWeight = 'bold';
@@ -127,12 +128,12 @@ class Home extends React.Component {
         </div>
         <div className="home-teams">
           <div className="team" style={{ backgroundColor: '#66ccff' }}>
-            <img src={this.state.team1.logo} width="50" height="50" className="team-logo" />
-            <h4>&nbsp;{this.state.team1.name}</h4>
+            <img src={team1.logo} width="50" height="50" className="team-logo" alt={team1.name} />
+            <h4>&nbsp;{team1.name}</h4>
           </div>
           <div className="team" style={{ backgroundColor: '#ccccff' }}>
-            <img src={this.state.team2.logo} width="50" height="50" className="team-logo" />
-            <h4>&nbsp;{this.state.team2.name}</h4>
+            <img src={team2.logo} width="50" height="50" className="team-logo" alt={team2.name} />
+            <h4>&nbsp;{team2.name}</h4>
           </div>
         </div>
         <div className="toss-win">
@@ -145,7 +146,7 @@ class Home extends React.Component {
         </div>
         <div className="home-body">
           {
-            (this.state.currentTab == 0) ?
+            (this.state.currentTab === 0) ?
               <div className="home-card">
                 <table className="score-board">
                   <thead>

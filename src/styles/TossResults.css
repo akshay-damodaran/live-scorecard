@@ -22,3 +22,7 @@
       align-items: center;
       justify-content: center;
 }
+
+.toss-button {
+      width: 250px;
+}

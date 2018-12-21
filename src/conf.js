@@ -1,5 +1,5 @@
 const conf = {
-  base_url: 'localhost:3000',
+  base_url: 'http://localhost:4000/',
 }
 
 export default conf;
