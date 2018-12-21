@@ -53,7 +53,6 @@ class AdminScoreBoard extends Component {
 
       setBowler(elementName) {
             const bowler = document.getElementsByName(elementName)[0].value;
-            console.log(bowler);
             this.setState({ bowler });
       }
 
@@ -79,10 +78,11 @@ class AdminScoreBoard extends Component {
       setOver(ballNo, i) {
             switch (ballNo) {
                   case '+': {
-                        this.setState({ newOver: true });
+                        this.setState({ newOver: true, bowls: [1, 2, 3, 4, 5, 6, '+'] });
                         break;
                   }
                   default: {
+                        document.getElementById(`bowl_${i}`).style.backgroundColor = '#ba124c';
                         const bowlStatus = ['WD', 'WK', 'NB', 'B', 'LB', 'R'];
                         const bowlingStatus = <div className="over-count">
                               {
@@ -101,7 +101,8 @@ class AdminScoreBoard extends Component {
                                     )
                               }
                         </div>;
-                        this.setState({ bowlingStatus, currentBowl: this.state.currentBowl + 1 });
+                        const currentBowl = (document.getElementById(`bowl_${i}`).style.backgroundColor !== '#ba124c') ? (this.state.currentBowl !== 1) ? this.state.currentBowl + 1 : this.state.currentBowl : this.state.currentBowl;
+                        this.setState({ bowlingStatus, currentBowl });
                         break;
                   }
             }
@@ -297,7 +298,7 @@ class AdminScoreBoard extends Component {
                                                       <div className="overs-section-body">
                                                             <div className="overs-status">
                                                                   <span className="overs">Total: {this.state.totalOvers}</span>
-                                                                  <span className="overs">Current: {`${((this.state.currentBowl+1) / 6)}.${(this.state.currentBowl+1) % 6}`}</span>
+                                                                  <span className="overs">Current: {`${Math.floor((this.state.currentBowl + 1) / 6)}.${(this.state.currentBowl + 1) % 6}`}</span>
                                                                   {/* <span className="overs">Remaining: {this.state.totalOvers - this.state.currentOvers}</span> */}
                                                             </div>
                                                             <div className="overs">
@@ -305,7 +306,7 @@ class AdminScoreBoard extends Component {
                                                                         <span>Overs:</span>
                                                                         {
                                                                               bowls.map((item, i) =>
-                                                                                    <div className="bowl" onClick={() => this.setOver(item, i)}>{item}</div>
+                                                                                    <div id={`bowl_${i}`} className="bowl" onClick={() => this.setOver(item, i)}>{item}</div>
                                                                               )
                                                                         }
                                                                   </div>
