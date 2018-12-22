@@ -30,13 +30,17 @@ class AdminScoreBoard extends Component {
                         fours: 2,
                         sixes: 0
                   },
-                  striker: '',
+                  striker: {
+                        name: '',
+                        runs: 0,
+
+                  },
                   bowlingStatus: [],
                   currentBowl: 0,
                   team1Players: [],
                   team2Players: [],
                   newOver: false,
-                  matchStart: false,
+                  matchStart: true,
                   isWicket: false,
                   outBatsman: ''
             }
@@ -45,11 +49,7 @@ class AdminScoreBoard extends Component {
       componentDidMount() {
             const team1Players = ['Virat', 'Dhoni', 'Jadeja', 'Singh'];
             const team2Players = ['Kohli', 'Mahendra', 'Ravindra', 'Harbhjan'];
-            let { currentBowl, newOver, matchStart } = this.state;
-            currentBowl = currentBowl + 1;
-            newOver = (currentBowl % 6 === 1) ? true : false;
-            matchStart = (currentBowl === 1) ? true : false;
-            this.setState({ currentBowl, team1Players, team2Players, newOver, matchStart });
+            this.setState({ team1Players, team2Players });
       }
 
       setBowler(elementName) {
@@ -59,7 +59,7 @@ class AdminScoreBoard extends Component {
 
       setStriker() {
             const striker = document.getElementsByName("striker")[0].value;
-            this.setState({ striker });
+            // this.setState({ striker });
       }
 
       setNonStriker() {
@@ -68,7 +68,10 @@ class AdminScoreBoard extends Component {
       }
 
       setBoardDisplay() {
-            this.setState({ newOver: true, matchStart: false });
+            const striker = {
+
+            }
+            this.setState({ matchStart: false });
       }
 
       setOverDetails() {
@@ -77,7 +80,7 @@ class AdminScoreBoard extends Component {
       }
 
       setWicketDetails() {
-            this.setState({  });
+            this.setState({ isWicket: false });
       }
 
       setOver(ballNo, i) {
@@ -87,7 +90,6 @@ class AdminScoreBoard extends Component {
                         break;
                   }
                   default: {
-                        document.getElementById(`bowl_${i}`).style.backgroundColor = '#ba124c';
                         const bowlStatus = ['WD', 'WK', 'NB', 'B', 'LB', 'R'];
                         const bowlingStatus = <div className="over-count">
                               {
@@ -98,7 +100,9 @@ class AdminScoreBoard extends Component {
                                                 onClick={() => {
                                                       const bowls = this.state.bowls;
                                                       bowls[i] = item;
-                                                      this.setState({ bowls, bowlingStatus: [], isWicket: (item === 'WK') });
+                                                      const currentBowl = (document.getElementById(`bowl_${i}`).style.backgroundColor === "rgb(186, 18, 76)") ? this.state.currentBowl : this.state.currentBowl + 1;
+                                                      document.getElementById(`bowl_${i}`).style.backgroundColor = '#ba124c';
+                                                      this.setState({ bowls, bowlingStatus: [], isWicket: (item === 'WK'), currentBowl });
                                                 }
                                                 }>
                                                 {item}
@@ -106,11 +110,40 @@ class AdminScoreBoard extends Component {
                                     )
                               }
                         </div>;
-                        const currentBowl = (document.getElementById(`bowl_${i}`).style.backgroundColor !== '#ba124c') ? (this.state.currentBowl !== 1) ? this.state.currentBowl + 1 : this.state.currentBowl : this.state.currentBowl;
-                        this.setState({ bowlingStatus, currentBowl });
+                        this.setState({ bowlingStatus });
                         break;
                   }
             }
+            // const newOver = (this.state.currentBowl === 0) ? true : false;
+            // this.setState({ newOver });
+      }
+
+      renderTeam1DropDown() {
+            const { team1Players } = this.state;
+            return (
+                  <select id="strikerNames" name="striker" onChange={() => this.setStriker()}>
+                        <option value="selected">{"Select Player"}</option>
+                        {
+                              team1Players.map((item, i) =>
+                                    <option key={i} value={item}>{item}</option>
+                              )
+                        }
+                  </select>
+            );
+      }
+
+      renderTeam2DropDown() {
+            const { team2Players } = this.state;
+            return (
+                  <select id="strikerNames" name="striker" onChange={() => this.setStriker()}>
+                        <option value="selected">{"Select Player"}</option>
+                        {
+                              team2Players.map((item, i) =>
+                                    <option key={i} value={item}>{item}</option>
+                              )
+                        }
+                  </select>
+            )
       }
 
       render() {
@@ -140,65 +173,38 @@ class AdminScoreBoard extends Component {
                               }
                         </div>
                         {
-                              (this.state.newOver) ?
-                                    (this.state.matchStart) ?
-                                          <div className="scoreboard-body-match-start">
-                                                <div>
-                                                      <div className="section-header">
-                                                            <span>{`Match Start Details`}</span>
+                              (this.state.matchStart) ?
+                                    <div className="scoreboard-body-match-start">
+                                          <div>
+                                                <div className="section-header">
+                                                      <span>{`Match Start Details`}</span>
+                                                </div>
+                                                <div className="match-start-section">
+                                                      <div className="dropdown-list">
+                                                            <div className="dd-list-half">{"Striker"}</div>
+                                                            <div className="dd-list-half">
+                                                                  {
+                                                                        (battingTeam === 1) ?
+                                                                              this.renderTeam1DropDown()
+                                                                              :
+                                                                              this.renderTeam2DropDown()
+                                                                  }
+                                                            </div>
                                                       </div>
-                                                      <div className="match-start-section">
-                                                            <div className="dropdown-list">
-                                                                  <div className="dd-list-half">{"Striker"}</div>
-                                                                  <div className="dd-list-half">
-                                                                        {
-                                                                              (battingTeam === 1) ?
-                                                                                    <select id="strikerNames" name="striker" onChange={() => this.setStriker()}>
-                                                                                          <option value="selected">{"Select Striker"}</option>
-                                                                                          {
-                                                                                                team1Players.map((item, i) =>
-                                                                                                      <option key={i} value={item}>{item}</option>
-                                                                                                )
-                                                                                          }
-                                                                                    </select>
-                                                                                    :
-                                                                                    <select id="strikerNames" name="striker" onChange={() => this.setStriker()}>
-                                                                                          <option value="selected">{"Select Striker"}</option>
-                                                                                          {
-                                                                                                team2Players.map((item, i) =>
-                                                                                                      <option key={i} value={item}>{item}</option>
-                                                                                                )
-                                                                                          }
-                                                                                    </select>
-                                                                        }
-                                                                  </div>
+                                                      <div className="dropdown-list">
+                                                            <div className="dd-list-half">{"Non-Striker"}</div>
+                                                            <div className="dd-list-half">
+                                                                  {
+                                                                        (battingTeam === 1) ?
+                                                                              this.renderTeam1DropDown()
+                                                                              :
+                                                                              this.renderTeam2DropDown()
+                                                                  }
                                                             </div>
-                                                            <div className="dropdown-list">
-                                                                  <div className="dd-list-half">{"Non-Striker"}</div>
-                                                                  <div className="dd-list-half">
-                                                                        {
-                                                                              (battingTeam === 1) ?
-                                                                                    <select id="nonStrikerNames" name="nonStriker" onChange={() => this.setNonStriker()}>
-                                                                                          <option value="selected">{"Select Non-Striker"}</option>
-                                                                                          {
-                                                                                                team1Players.map((item, i) =>
-                                                                                                      <option key={i} value={item}>{item}</option>
-                                                                                                )
-                                                                                          }
-                                                                                    </select>
-                                                                                    :
-                                                                                    <select id="nonStrikerNames" name="nonStriker" onChange={() => this.setNonStriker()}>
-                                                                                          <option value="selected">{"Select Non-Striker"}</option>
-                                                                                          {
-                                                                                                team2Players.map((item, i) =>
-                                                                                                      <option key={i} value={item}>{item}</option>
-                                                                                                )
-                                                                                          }
-                                                                                    </select>
-                                                                        }
-                                                                  </div>
-                                                            </div>
-                                                            <div className="">
+                                                      </div>
+                                                      <div className="dropdown-list">
+                                                            <div className="dd-list-half">{"Total Overs"}</div>
+                                                            <div className="dd-list-half">
                                                                   <input
                                                                         className="sb-input"
                                                                         value={this.state.totalOvers}
@@ -208,12 +214,14 @@ class AdminScoreBoard extends Component {
                                                                         onChange={(e) => this.setState({ totalOvers: e.target.value })}
                                                                   />
                                                             </div>
-                                                            <button className="scoreboard-button" onClick={() => this.setBoardDisplay()}>OK</button>
                                                       </div>
+                                                      <button className="scoreboard-button" onClick={() => this.setBoardDisplay()}>OK</button>
                                                 </div>
-
                                           </div>
-                                          :
+
+                                    </div>
+                                    :
+                                    (this.state.newOver) ?
                                           <div className="scoreboard-body">
                                                 <div>
                                                       <div className="section-header">
@@ -225,23 +233,9 @@ class AdminScoreBoard extends Component {
                                                                   <div className="dd-list-half">
                                                                         {
                                                                               (battingTeam === 1) ?
-                                                                                    <select id="bowlerNames-over" name="bowler-over-start" onChange={() => this.setBowler("bowler-over-start")}>
-                                                                                          <option value="selected">{"Select Bowler"}</option>
-                                                                                          {
-                                                                                                team2Players.map((item, i) =>
-                                                                                                      <option key={i} value={item}>{item}</option>
-                                                                                                )
-                                                                                          }
-                                                                                    </select>
+                                                                                    this.renderTeam2DropDown()
                                                                                     :
-                                                                                    <select id="bowlerNames-over" name="bowler-over-start" onChange={() => this.setBowler("bowler-over-start")}>
-                                                                                          <option value="selected">{"Select Bowler"}</option>
-                                                                                          {
-                                                                                                team1Players.map((item, i) =>
-                                                                                                      <option key={i} value={item}>{item}</option>
-                                                                                                )
-                                                                                          }
-                                                                                    </select>
+                                                                                    this.renderTeam1DropDown()
                                                                         }
                                                                   </div>
                                                             </div>
@@ -249,141 +243,127 @@ class AdminScoreBoard extends Component {
                                                       </div>
                                                 </div>
                                           </div>
-                                    :
-                                    (this.state.isWicket) ?
-                                          <div className="scoreboard-body">
-                                                <div>
-                                                      <div className="section-header">
-                                                            <span>{`Who's out`}</span>
-                                                      </div>
-                                                      <div className="section-body">
-                                                            <button className="scoreboard-button">{this.state.striker}</button>
-                                                            <button className="scoreboard-button">{this.state.nonStriker}</button>
-                                                      </div>
-                                                </div>
-                                                <div>
-                                                      <div className="section-header">
-                                                            <span>{`Reason for out`}</span>
-                                                      </div>
-                                                      <div className="section-body">
-                                                            <button className="scoreboard-button">{`Catch Out`}</button>
-                                                            <button className="scoreboard-button">{`Run Out`}</button>
-                                                            <button className="scoreboard-button">{`Bold`}</button>
-                                                      </div>
-                                                </div>
-                                                <div>
-                                                      <div className="section-header">
-                                                            <span>{`Next Striker`}</span>
-                                                      </div>
-                                                      <div className="dropdown-list">
-                                                            <div className="dd-list-half">{"Striker"}</div>
-                                                            <div className="dd-list-half">
-                                                                  {
-                                                                        (battingTeam === 1) ?
-                                                                              <select id="strikerNames" name="striker" onChange={() => this.setStriker()}>
-                                                                                    <option value="selected">{"Select Striker"}</option>
-                                                                                    {
-                                                                                          team1Players.map((item, i) =>
-                                                                                                <option key={i} value={item}>{item}</option>
-                                                                                          )
-                                                                                    }
-                                                                              </select>
-                                                                              :
-                                                                              <select id="strikerNames" name="striker" onChange={() => this.setStriker()}>
-                                                                                    <option value="selected">{"Select Striker"}</option>
-                                                                                    {
-                                                                                          team2Players.map((item, i) =>
-                                                                                                <option key={i} value={item}>{item}</option>
-                                                                                          )
-                                                                                    }
-                                                                              </select>
-                                                                  }
-                                                            </div>
-                                                      </div>
-                                                </div>
-                                                <button className="scoreboard-button" onClick={() => this.setWicketDetails()}>OK</button>
-                                          </div>
                                           :
-                                          <div className="scoreboard-body">
-                                                <div className="match-section">
-                                                      <div className="section-header">
-                                                            <span>Striker / Non-Striker</span>
-                                                      </div>
-                                                      <div className="section-body">
-                                                            <div className="striker-headings">
-                                                                  <div className="batsman">Striker</div>
-                                                                  <div className="batsman">Runs</div>
-                                                                  <div className="batsman">Balls</div>
-                                                                  <div className="batsman">Fours</div>
-                                                                  <div className="batsman">Sixes</div>
+                                          (this.state.isWicket) ?
+                                                <div className="scoreboard-body">
+                                                      <div>
+                                                            <div className="section-header">
+                                                                  <span>{`Who's out`}</span>
                                                             </div>
-                                                            <div className="striker">
-                                                                  {
-                                                                        Object.keys(batsman1).map((item, i) =>
-                                                                              <div key={`batsman1_${item}`} className="batsman">{batsman1[item]}</div>
-                                                                        )
-                                                                  }
-                                                            </div>
-                                                            <div className="striker">
-                                                                  {
-                                                                        Object.keys(batsman2).map((item, i) =>
-                                                                              <div key={`batsman2_${item}`} className="batsman">{batsman2[item]}</div>
-                                                                        )
-                                                                  }
+                                                            <div className="section-body">
+                                                                  <div>{this.state.striker}</div>
+                                                                  <div>{this.state.nonStriker}</div>
                                                             </div>
                                                       </div>
-                                                </div>
-                                                <div className="bowler-section">
-                                                      <div className="section-header">
-                                                            <span>Bowler Section</span>
-                                                      </div>
-                                                      <div className="section-body">
-                                                            <span>{this.state.bowler}</span>
-                                                      </div>
-                                                </div>
-                                                <div className="scores-section">
-                                                      <div className="section-header">
-                                                            <span>Scores Section</span>
-                                                      </div>
-                                                      <div className="section-body">
-                                                            <div className="runs">
-                                                                  <span>Runs</span>
-                                                                  <div className="score-minus" onClick={() => this.setState({ runs: (runs === 0) ? 0 : runs - 1 })}><span>{'-'}</span></div>
-                                                                  <div className="score">{runs}</div>
-                                                                  <div className="score-add" onClick={() => this.setState({ runs: runs + 1 })}><span>{'+'}</span></div>
+                                                      <div>
+                                                            <div className="section-header">
+                                                                  <span>{`Reason for out`}</span>
                                                             </div>
-                                                            <div className="wickets">
-                                                                  <span>Wickets</span>
-                                                                  <div className="score-minus" onClick={() => this.setState({ wickets: (wickets === 0) ? 0 : wickets - 1 })}><span>{'-'}</span></div>
-                                                                  <div className="score">{wickets}</div>
-                                                                  <div className="score-add" onClick={() => this.setState({ wickets: wickets + 1, isWicket: true })}><span>{'+'}</span></div>
+                                                            <div className="section-body">
+                                                                  <button className="scoreboard-button">{`Catch Out`}</button>
+                                                                  <button className="scoreboard-button">{`Run Out`}</button>
+                                                                  <button className="scoreboard-button">{`Bold`}</button>
                                                             </div>
                                                       </div>
-                                                </div>
-                                                <div className="overs-section">
-                                                      <div className="section-header">
-                                                            <span>Overs Section</span>
-                                                      </div>
-                                                      <div className="overs-section-body">
-                                                            <div className="overs-status">
-                                                                  <span className="overs">Total: {this.state.totalOvers}</span>
-                                                                  <span className="overs">Current: {`${Math.floor((this.state.currentBowl + 1) / 6)}.${(this.state.currentBowl + 1) % 6}`}</span>
-                                                                  {/* <span className="overs">Remaining: {this.state.totalOvers - this.state.currentOvers}</span> */}
+                                                      <div>
+                                                            <div className="section-header">
+                                                                  <span>{`Next Striker`}</span>
                                                             </div>
-                                                            <div className="overs">
-                                                                  <div className="over-count">
-                                                                        <span>Overs:</span>
+                                                            <div className="dropdown-list">
+                                                                  <div className="dd-list-half">{"Striker"}</div>
+                                                                  <div className="dd-list-half">
                                                                         {
-                                                                              bowls.map((item, i) =>
-                                                                                    <div id={`bowl_${i}`} className="bowl" onClick={() => this.setOver(item, i)}>{item}</div>
+                                                                              (battingTeam === 1) ?
+                                                                                    this.renderTeam1DropDown()
+                                                                                    :
+                                                                                    this.renderTeam2DropDown()
+                                                                        }
+                                                                  </div>
+                                                            </div>
+                                                      </div>
+                                                      <button className="scoreboard-button" onClick={() => this.setWicketDetails()}>OK</button>
+                                                </div>
+                                                :
+                                                <div className="scoreboard-body">
+                                                      <div className="match-section">
+                                                            <div className="section-header">
+                                                                  <span>Striker / Non-Striker</span>
+                                                            </div>
+                                                            <div className="section-body">
+                                                                  <div className="striker-headings">
+                                                                        <div className="batsman">Striker</div>
+                                                                        <div className="batsman">Runs</div>
+                                                                        <div className="batsman">Balls</div>
+                                                                        <div className="batsman">Fours</div>
+                                                                        <div className="batsman">Sixes</div>
+                                                                  </div>
+                                                                  <div className="striker">
+                                                                        {
+                                                                              Object.keys(batsman1).map((item, i) =>
+                                                                                    <div key={`batsman1_${item}`} className="batsman">{batsman1[item]}</div>
                                                                               )
                                                                         }
                                                                   </div>
-                                                                  {this.state.bowlingStatus}
+                                                                  <div className="striker">
+                                                                        {
+                                                                              Object.keys(batsman2).map((item, i) =>
+                                                                                    <div key={`batsman2_${item}`} className="batsman">{batsman2[item]}</div>
+                                                                              )
+                                                                        }
+                                                                  </div>
+                                                            </div>
+                                                      </div>
+                                                      <div className="scores-section">
+                                                            <div className="section-header">
+                                                                  <span>Scores Section</span>
+                                                            </div>
+                                                            <div className="section-body">
+                                                                  <div className="runs">
+                                                                        <span>Runs</span>
+                                                                        <div className="score-minus" onClick={() => this.setState({ runs: (runs === 0) ? 0 : runs - 1 })}><span>{'-'}</span></div>
+                                                                        <div className="score">{runs}</div>
+                                                                        <div className="score-add" onClick={() => this.setState({ runs: runs + 1 })}><span>{'+'}</span></div>
+                                                                  </div>
+                                                                  <div className="wickets">
+                                                                        <span>Wickets</span>
+                                                                        <div className="score-minus" onClick={() => this.setState({ wickets: (wickets === 0) ? 0 : wickets - 1 })}><span>{'-'}</span></div>
+                                                                        <div className="score">{wickets}</div>
+                                                                        <div className="score-add" onClick={() => this.setState({ wickets: wickets + 1, isWicket: true })}><span>{'+'}</span></div>
+                                                                  </div>
+                                                            </div>
+                                                      </div>
+                                                      <div className="bowler-section">
+                                                            <div className="section-header">
+                                                                  <span>Bowler Section</span>
+                                                            </div>
+                                                            <div className="section-body">
+                                                                  <span>{this.state.bowler}</span>
+                                                            </div>
+                                                      </div>
+                                                      <div className="overs-section">
+                                                            <div className="section-header">
+                                                                  <span>Overs Section</span>
+                                                            </div>
+                                                            <div className="overs-section-body">
+                                                                  <div className="overs-status">
+                                                                        <span className="overs">Total: {this.state.totalOvers}</span>
+                                                                        <span className="overs">Current: {`${Math.floor((this.state.currentBowl) / 6)}.${(this.state.currentBowl) % 6}`}</span>
+                                                                        {/* <span className="overs">Remaining: {this.state.totalOvers - this.state.currentOvers}</span> */}
+                                                                  </div>
+                                                                  <div className="overs">
+                                                                        <div className="over-count">
+                                                                              <span>Overs:</span>
+                                                                              {
+                                                                                    bowls.map((item, i) =>
+                                                                                          <div id={`bowl_${i}`} className="bowl" onClick={() => this.setOver(item, i)}>{item}</div>
+                                                                                    )
+                                                                              }
+                                                                        </div>
+                                                                        {this.state.bowlingStatus}
+                                                                  </div>
                                                             </div>
                                                       </div>
                                                 </div>
-                                          </div>
                         }
                   </div>
             );
