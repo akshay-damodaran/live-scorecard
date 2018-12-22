@@ -11,6 +11,14 @@
       flex-direction: row;
 }
 
+.match-start-section {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      width: 100vw;
+      align-items: center;
+}
+
 .scoreboard-header {
       display: flex;
       width: 100%;
@@ -103,7 +111,8 @@
 .section-body {
       display: flex;
       flex-direction: row;
-      flex: 1
+      flex: 1;
+      /* padding: 10px; */
 }
 
 .striker-headings {
