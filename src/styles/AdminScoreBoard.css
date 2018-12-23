@@ -66,17 +66,17 @@
       /* border-radius: 20px; */
 }
 
-#strikerNames {
+.team-dropdown {
       width: 200px;
       height: 40px;
       font-size: 15px;
 }
 
-#nonStrikerNames {
+/* #nonStrikerNames {
       width: 200px;
       height: 40px;
       font-size: 15px;
-}
+} */
 
 #bowlerNames-over {
       width: 200px;

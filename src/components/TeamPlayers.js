@@ -33,8 +33,8 @@ class TeamPlayers extends Component {
 	render() {
 		const { teamNo, teamName, setTeamPlayers } = this.props;
 		let { mainPlayers, extraPlayers } = this.state;
-		mainPlayers = Array(11).fill(null).map(() => ({ name: (this.props.teamNo === 1) ? 'Mum' : 'Pun' })); // remove by default data
-		extraPlayers = Array(5).fill(null).map(() => ({ name: (this.props.teamNo === 1) ? 'Mum' : 'Pun' })); // remove by default data
+		mainPlayers = Array(11).fill(null).map((item, i) => ({ id: i, name: (this.props.teamNo === 1) ? `Mum${i}` : `Pun${i}` })); // remove by default data
+		extraPlayers = Array(5).fill(null).map((item, i) => ({ id: 12+i, name: (this.props.teamNo === 1) ? `Mum${12+i}` : `Pun${12+i}` })); // remove by default data
 		return (
 			<div className="teamplayers">
 				<h2>{`Team ${teamNo}: ${teamName}`}</h2>

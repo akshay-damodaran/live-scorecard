@@ -1,154 +1,67 @@
 import React, { Component } from "react";
 
 import '../styles/AdminScoreBoard.css';
-import Popup from "./Popup";
+// import Popup from "./Popup";
+import ScoresSection from '../components/ScoresSection';
+import BatsmanSection from '../components/BatsmanSection';
+import OversSection from '../components/OversSection';
 
 class AdminScoreBoard extends Component {
 
       constructor(props) {
             super(props);
             this.state = {
-                  runs: 0,
-                  wickets: 0,
-                  totalOvers: 20,
-                  // overs: 0,
-                  bowls: [1, 2, 3, 4, 5, 6, '+'],
-                  // showPopup: false,
-                  // popupChildren: [],
-                  bowler: '',
                   batsman1: {
-                        name: 'Virat Kohli',
-                        runs: 9,
-                        balls: 6,
-                        fours: 2,
-                        sixes: 0
-                  },
-                  batsman2: {
-                        name: 'Mahendra Dhoni',
-                        runs: 9,
-                        balls: 6,
-                        fours: 2,
-                        sixes: 0
-                  },
-                  striker: {
                         name: '',
                         runs: 0,
-
+                        balls: 0,
+                        fours: 0,
+                        sixes: 0,
+                        isStriker: true
                   },
-                  bowlingStatus: [],
-                  currentBowl: 0,
-                  team1Players: [],
-                  team2Players: [],
-                  newOver: false,
-                  matchStart: true,
-                  isWicket: false,
-                  outBatsman: ''
+                  batsman2: {
+                        name: '',
+                        runs: 0,
+                        balls: 0,
+                        fours: 0,
+                        sixes: 0,
+                        isStriker: false
+                  },
+                  battingTeamPlayers: [],
+                  bowlingTeamPlayers: [],
+                  runs: 0,
+                  isWicket: false
             }
       }
 
       componentDidMount() {
-            const team1Players = ['Virat', 'Dhoni', 'Jadeja', 'Singh'];
-            const team2Players = ['Kohli', 'Mahendra', 'Ravindra', 'Harbhjan'];
-            this.setState({ team1Players, team2Players });
-      }
-
-      setBowler(elementName) {
-            const bowler = document.getElementsByName(elementName)[0].value;
-            this.setState({ bowler });
-      }
-
-      setStriker() {
-            const striker = document.getElementsByName("striker")[0].value;
-            // this.setState({ striker });
-      }
-
-      setNonStriker() {
-            const nonStriker = document.getElementsByName("nonStriker")[0].value;
-            this.setState({ nonStriker });
-      }
-
-      setBoardDisplay() {
-            const striker = {
-
+            const { battingTeam, team1Players, team2Players } = this.props;
+            let battingTeamPlayers, bowlingTeamPlayers;
+            if (battingTeam === 1) {
+                  battingTeamPlayers = team1Players;
+                  bowlingTeamPlayers = team2Players;
+            } else {
+                  battingTeamPlayers = team2Players;
+                  bowlingTeamPlayers = team1Players;
             }
-            this.setState({ matchStart: false });
+            this.setState({ battingTeamPlayers, bowlingTeamPlayers });
       }
 
-      setOverDetails() {
-            // const bowler = document.getElementsByName("bowler-over-start")[0].value;
-            this.setState({ newOver: false });
+      setBatsmenDetails(batsman1, batsman2) {
+            this.setState({ batsman1, batsman2 });
       }
 
-      setWicketDetails() {
-            this.setState({ isWicket: false });
+      updateRuns(runs) {
+            this.setState({ runs });
       }
 
-      setOver(ballNo, i) {
-            switch (ballNo) {
-                  case '+': {
-                        this.setState({ newOver: true, bowls: [1, 2, 3, 4, 5, 6, '+'] });
-                        break;
-                  }
-                  default: {
-                        const bowlStatus = ['WD', 'WK', 'NB', 'B', 'LB', 'R'];
-                        const bowlingStatus = <div className="over-count">
-                              {
-                                    bowlStatus.map((item, j) =>
-                                          <div
-                                                key={`bowledStatus_${j}`}
-                                                className="bowl"
-                                                onClick={() => {
-                                                      const bowls = this.state.bowls;
-                                                      bowls[i] = item;
-                                                      const currentBowl = (document.getElementById(`bowl_${i}`).style.backgroundColor === "rgb(186, 18, 76)") ? this.state.currentBowl : this.state.currentBowl + 1;
-                                                      document.getElementById(`bowl_${i}`).style.backgroundColor = '#ba124c';
-                                                      this.setState({ bowls, bowlingStatus: [], isWicket: (item === 'WK'), currentBowl });
-                                                }
-                                                }>
-                                                {item}
-                                          </div>
-                                    )
-                              }
-                        </div>;
-                        this.setState({ bowlingStatus });
-                        break;
-                  }
-            }
-            // const newOver = (this.state.currentBowl === 0) ? true : false;
-            // this.setState({ newOver });
-      }
-
-      renderTeam1DropDown() {
-            const { team1Players } = this.state;
-            return (
-                  <select id="strikerNames" name="striker" onChange={() => this.setStriker()}>
-                        <option value="selected">{"Select Player"}</option>
-                        {
-                              team1Players.map((item, i) =>
-                                    <option key={i} value={item}>{item}</option>
-                              )
-                        }
-                  </select>
-            );
-      }
-
-      renderTeam2DropDown() {
-            const { team2Players } = this.state;
-            return (
-                  <select id="strikerNames" name="striker" onChange={() => this.setStriker()}>
-                        <option value="selected">{"Select Player"}</option>
-                        {
-                              team2Players.map((item, i) =>
-                                    <option key={i} value={item}>{item}</option>
-                              )
-                        }
-                  </select>
-            )
+      setWicket() {
+            this.setState({ isWicket: true });
       }
 
       render() {
             const { team1, team2, tossResult, battingTeam } = this.props;
-            const { runs, wickets, overs, bowls, batsman1, batsman2, team1Players, team2Players } = this.state;
+            const { battingTeamPlayers, bowlingTeamPlayers } = this.state;
             return (
                   <div className="admin-scoreboard">
                         <div className="scoreboard-header">
@@ -156,11 +69,11 @@ class AdminScoreBoard extends Component {
                         </div>
                         <div className="admin-teams">
                               <div className="team" style={{ backgroundColor: '#66ccff' }}>
-                                    <img src={require('../images/team1.png')} width="50" height="50" className="team-logo" alt={team1} />
+                                    <img src={(battingTeam === 1) ? require('../images/team1.png') : require('../images/team2.png')} width="50" height="50" className="team-logo" alt={team1} />
                                     <h4>&nbsp;{team1}</h4>
                               </div>
                               <div className="team" style={{ backgroundColor: '#ccccff' }}>
-                                    <img src={require('../images/team2.png')} width="50" height="50" className="team-logo" alt={team2} />
+                                    <img src={(battingTeam !== 1) ? require('../images/team1.png') : require('../images/team2.png')} width="50" height="50" className="team-logo" alt={team2} />
                                     <h4>&nbsp;{team2}</h4>
                               </div>
                         </div>
@@ -172,199 +85,23 @@ class AdminScoreBoard extends Component {
                                           <span>{`${team2} won the toss and elected to do ${(battingTeam === 2) ? 'batting' : 'fielding'}.`}</span>
                               }
                         </div>
-                        {
-                              (this.state.matchStart) ?
-                                    <div className="scoreboard-body-match-start">
-                                          <div>
-                                                <div className="section-header">
-                                                      <span>{`Match Start Details`}</span>
-                                                </div>
-                                                <div className="match-start-section">
-                                                      <div className="dropdown-list">
-                                                            <div className="dd-list-half">{"Striker"}</div>
-                                                            <div className="dd-list-half">
-                                                                  {
-                                                                        (battingTeam === 1) ?
-                                                                              this.renderTeam1DropDown()
-                                                                              :
-                                                                              this.renderTeam2DropDown()
-                                                                  }
-                                                            </div>
-                                                      </div>
-                                                      <div className="dropdown-list">
-                                                            <div className="dd-list-half">{"Non-Striker"}</div>
-                                                            <div className="dd-list-half">
-                                                                  {
-                                                                        (battingTeam === 1) ?
-                                                                              this.renderTeam1DropDown()
-                                                                              :
-                                                                              this.renderTeam2DropDown()
-                                                                  }
-                                                            </div>
-                                                      </div>
-                                                      <div className="dropdown-list">
-                                                            <div className="dd-list-half">{"Total Overs"}</div>
-                                                            <div className="dd-list-half">
-                                                                  <input
-                                                                        className="sb-input"
-                                                                        value={this.state.totalOvers}
-                                                                        placeholder="Enter total overs"
-                                                                        min="20"
-                                                                        max="50"
-                                                                        onChange={(e) => this.setState({ totalOvers: e.target.value })}
-                                                                  />
-                                                            </div>
-                                                      </div>
-                                                      <button className="scoreboard-button" onClick={() => this.setBoardDisplay()}>OK</button>
-                                                </div>
-                                          </div>
-
-                                    </div>
-                                    :
-                                    (this.state.newOver) ?
-                                          <div className="scoreboard-body">
-                                                <div>
-                                                      <div className="section-header">
-                                                            <span>{`Over Start Details`}</span>
-                                                      </div>
-                                                      <div className="match-start-section">
-                                                            <div className="dropdown-list">
-                                                                  <div className="dd-list-half">{"Bowler"}</div>
-                                                                  <div className="dd-list-half">
-                                                                        {
-                                                                              (battingTeam === 1) ?
-                                                                                    this.renderTeam2DropDown()
-                                                                                    :
-                                                                                    this.renderTeam1DropDown()
-                                                                        }
-                                                                  </div>
-                                                            </div>
-                                                            <button className="scoreboard-button" onClick={() => this.setOverDetails()}>OK</button>
-                                                      </div>
-                                                </div>
-                                          </div>
-                                          :
-                                          (this.state.isWicket) ?
-                                                <div className="scoreboard-body">
-                                                      <div>
-                                                            <div className="section-header">
-                                                                  <span>{`Who's out`}</span>
-                                                            </div>
-                                                            <div className="section-body">
-                                                                  <div>{this.state.striker}</div>
-                                                                  <div>{this.state.nonStriker}</div>
-                                                            </div>
-                                                      </div>
-                                                      <div>
-                                                            <div className="section-header">
-                                                                  <span>{`Reason for out`}</span>
-                                                            </div>
-                                                            <div className="section-body">
-                                                                  <button className="scoreboard-button">{`Catch Out`}</button>
-                                                                  <button className="scoreboard-button">{`Run Out`}</button>
-                                                                  <button className="scoreboard-button">{`Bold`}</button>
-                                                            </div>
-                                                      </div>
-                                                      <div>
-                                                            <div className="section-header">
-                                                                  <span>{`Next Striker`}</span>
-                                                            </div>
-                                                            <div className="dropdown-list">
-                                                                  <div className="dd-list-half">{"Striker"}</div>
-                                                                  <div className="dd-list-half">
-                                                                        {
-                                                                              (battingTeam === 1) ?
-                                                                                    this.renderTeam1DropDown()
-                                                                                    :
-                                                                                    this.renderTeam2DropDown()
-                                                                        }
-                                                                  </div>
-                                                            </div>
-                                                      </div>
-                                                      <button className="scoreboard-button" onClick={() => this.setWicketDetails()}>OK</button>
-                                                </div>
-                                                :
-                                                <div className="scoreboard-body">
-                                                      <div className="match-section">
-                                                            <div className="section-header">
-                                                                  <span>Striker / Non-Striker</span>
-                                                            </div>
-                                                            <div className="section-body">
-                                                                  <div className="striker-headings">
-                                                                        <div className="batsman">Striker</div>
-                                                                        <div className="batsman">Runs</div>
-                                                                        <div className="batsman">Balls</div>
-                                                                        <div className="batsman">Fours</div>
-                                                                        <div className="batsman">Sixes</div>
-                                                                  </div>
-                                                                  <div className="striker">
-                                                                        {
-                                                                              Object.keys(batsman1).map((item, i) =>
-                                                                                    <div key={`batsman1_${item}`} className="batsman">{batsman1[item]}</div>
-                                                                              )
-                                                                        }
-                                                                  </div>
-                                                                  <div className="striker">
-                                                                        {
-                                                                              Object.keys(batsman2).map((item, i) =>
-                                                                                    <div key={`batsman2_${item}`} className="batsman">{batsman2[item]}</div>
-                                                                              )
-                                                                        }
-                                                                  </div>
-                                                            </div>
-                                                      </div>
-                                                      <div className="scores-section">
-                                                            <div className="section-header">
-                                                                  <span>Scores Section</span>
-                                                            </div>
-                                                            <div className="section-body">
-                                                                  <div className="runs">
-                                                                        <span>Runs</span>
-                                                                        <div className="score-minus" onClick={() => this.setState({ runs: (runs === 0) ? 0 : runs - 1 })}><span>{'-'}</span></div>
-                                                                        <div className="score">{runs}</div>
-                                                                        <div className="score-add" onClick={() => this.setState({ runs: runs + 1 })}><span>{'+'}</span></div>
-                                                                  </div>
-                                                                  <div className="wickets">
-                                                                        <span>Wickets</span>
-                                                                        <div className="score-minus" onClick={() => this.setState({ wickets: (wickets === 0) ? 0 : wickets - 1 })}><span>{'-'}</span></div>
-                                                                        <div className="score">{wickets}</div>
-                                                                        <div className="score-add" onClick={() => this.setState({ wickets: wickets + 1, isWicket: true })}><span>{'+'}</span></div>
-                                                                  </div>
-                                                            </div>
-                                                      </div>
-                                                      <div className="bowler-section">
-                                                            <div className="section-header">
-                                                                  <span>Bowler Section</span>
-                                                            </div>
-                                                            <div className="section-body">
-                                                                  <span>{this.state.bowler}</span>
-                                                            </div>
-                                                      </div>
-                                                      <div className="overs-section">
-                                                            <div className="section-header">
-                                                                  <span>Overs Section</span>
-                                                            </div>
-                                                            <div className="overs-section-body">
-                                                                  <div className="overs-status">
-                                                                        <span className="overs">Total: {this.state.totalOvers}</span>
-                                                                        <span className="overs">Current: {`${Math.floor((this.state.currentBowl) / 6)}.${(this.state.currentBowl) % 6}`}</span>
-                                                                        {/* <span className="overs">Remaining: {this.state.totalOvers - this.state.currentOvers}</span> */}
-                                                                  </div>
-                                                                  <div className="overs">
-                                                                        <div className="over-count">
-                                                                              <span>Overs:</span>
-                                                                              {
-                                                                                    bowls.map((item, i) =>
-                                                                                          <div id={`bowl_${i}`} className="bowl" onClick={() => this.setOver(item, i)}>{item}</div>
-                                                                                    )
-                                                                              }
-                                                                        </div>
-                                                                        {this.state.bowlingStatus}
-                                                                  </div>
-                                                            </div>
-                                                      </div>
-                                                </div>
-                        }
+                        <div className="scoreboard-body">
+                              <ScoresSection
+                                    runs={this.state.runs}
+                                    updateRuns={this.updateRuns.bind(this)}
+                              />
+                              <BatsmanSection
+                                    battingTeamPlayers={battingTeamPlayers}
+                                    setBatsmenDetails={this.setBatsmenDetails.bind(this)}
+                                    isWicket={this.state.isWicket}
+                              />
+                              <OversSection
+                                    bowlingTeamPlayers={bowlingTeamPlayers}
+                                    updateRuns={this.updateRuns.bind(this)}
+                                    setWicket={this.setWicket.bind(this)}
+                              />
+                              
+                        </div>
                   </div>
             );
       }
