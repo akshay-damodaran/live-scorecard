@@ -9,6 +9,7 @@ import TeamPlayers from '../components/TeamPlayers';
 import DisplayTeams from '../components/DisplayTeams';
 import TossResults from '../components/TossResults';
 import AdminScoreBoard from '../components/AdminScoreBoard';
+import Login from '../components/Login';
 
 // import conf from '../conf';
 
@@ -19,7 +20,7 @@ class Admin extends Component {
     // const socket = socketIOClient(endpoint);
 
     this.state = {
-      pageComponent: 1,
+      pageComponent: 2,
       currentTeam: 1,
       team1: 'Mumbai',
       team2: 'Pune',
@@ -40,10 +41,28 @@ class Admin extends Component {
     // });
   }
 
+  prevScreen() {
+    let {
+      pageComponent,
+      socket
+    } = this.state;
+    // No of screens
+    let n = 6;
+    if (pageComponent === 0) {
+      pageComponent = -1;
+    }
+    this.setState({
+      pageComponent: pageComponent - 1,
+    });
+
+    // Send sockent message for next screen
+    // socket.emit('nextScreen', pageComponent + 1);
+  }
+
   nextScreen() {
-    let { 
-      pageComponent, 
-      socket 
+    let {
+      pageComponent,
+      socket
     } = this.state;
     // No of screens
     let n = 6;
@@ -103,6 +122,13 @@ class Admin extends Component {
   renderComponent() {
     const { team1, team2, team1Players, team2Players, tossResult, battingTeam } = this.state;
     switch (this.state.pageComponent) {
+      case 0: {
+        return (
+          <Login
+            nextScreen={() => this.nextScreen()}
+          />
+        )
+      }
       case 1: {
         return (
           <Teams
@@ -119,6 +145,7 @@ class Admin extends Component {
             teamNo={1}
             teamName={this.state.team1}
             setTeamPlayers={teamPlayers => this.setTeamPlayers(1, team1, teamPlayers)}
+            prevScreen={() => this.prevScreen()}
           />
         );
       }
@@ -128,6 +155,7 @@ class Admin extends Component {
             teamNo={2}
             teamName={this.state.team2}
             setTeamPlayers={teamPlayers => this.setTeamPlayers(2, team2, teamPlayers)}
+            prevScreen={() => this.prevScreen()}
           />
         )
       }
@@ -139,6 +167,7 @@ class Admin extends Component {
             team1Players={team1Players}
             team2Players={team2Players}
             nextScreen={() => this.nextScreen()}
+            prevScreen={() => this.prevScreen()}
           />
         );
       }

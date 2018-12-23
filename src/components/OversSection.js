@@ -72,7 +72,7 @@ class OversSection extends Component {
 
       render() {
             const { bowls } = this.state;
-            const bowlStatus = ['WD', 'WK', 'NB', 'B', 'LB', 'R'];
+            const bowlStatus = ['WD', 'WK', 'NB', 'B', 'LB', 'R', 'CP'];
             return (
                   <div className="overs-section">
                         <div className="section-header">

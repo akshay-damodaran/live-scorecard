@@ -41,16 +41,13 @@ class BatsmanSection extends Component {
                         isBold: false,
                         catchedByWhom: ''
                   },
-                  wicketReason: ''
-                  // wicketReasons: ['Catch Out', 'Run Out', 'Bold']
+                  wicketReason: '',
+                  wicketReasons: ['Catch Out', 'Run Out', 'Bold']
             }
       }
 
       componentWillReceiveProps(nextProps) {
-            console.log('batsman: ', nextProps.isWicket);
-            this.setState({ isWicket: nextProps.isWicket }, () => {
-                  console.log(this.state.isWicket);
-            });
+            this.setState({ isWicket: nextProps.isWicket });
       }
 
       setPlayer(e, type) {
@@ -77,12 +74,12 @@ class BatsmanSection extends Component {
                         switch (this.state.currentOutPlayer) {
                               case 'striker': {
                                     player.isStriker = true;
-                                    this.setState({ nextPlayer: player, striker: player });
+                                    this.setState({ nextPlayer: player });
                                     break
                               }
                               case 'nonStriker': {
                                     player.isStriker = false;
-                                    this.setState({ nextPlayer: player, nonStriker: player });
+                                    this.setState({ nextPlayer: player });
                                     break;
                               }
                         }
@@ -128,6 +125,22 @@ class BatsmanSection extends Component {
             });
       }
 
+      setWicketDetails() {
+            (this.state.nextPlayer.isStriker) ?
+                  this.setState({ striker: this.state.nextPlayer, isWicket: false })
+                  :
+                  this.setState({ nonStriker: this.state.nextPlayer, isWicket: false });
+      }
+
+      handleWicketReason(item) {
+            this.state.wicketReasons.map((item) => {
+                  document.getElementById(`wicketReason_${item}`).style.backgroundColor = '#e6e6e6';
+                  return null;
+            })
+            document.getElementById(`wicketReason_${item}`).style.backgroundColor = '#ba124c';
+            this.setState({ wicketReason: item });
+      }
+
       handleWicketPlayer(player) {
             let currentOutPlayer;
             switch (player) {
@@ -152,7 +165,6 @@ class BatsmanSection extends Component {
 
       render() {
             const { striker, nonStriker } = this.state;
-            console.log(striker, nonStriker);
             return (
                   <div className="match-section">
                         <div className="section-header">
@@ -191,10 +203,14 @@ class BatsmanSection extends Component {
                                                       <span>{`Who's out?`}</span>
                                                       <button id="striker-out" onClick={() => this.handleWicketPlayer('striker')}>{striker.name}</button>
                                                       <button id="nonStriker-out" onClick={() => this.handleWicketPlayer('nonStriker')}>{nonStriker.name}</button>
-                                                      <span>{`Next batsman?`}</span>
-                                                      <button id="catch-out" onClick={() => this.setState({ wicketReason: 'Catch Out' })}>{'Catch Out'}</button>
-                                                      <button id="run-out" onClick={() => this.setState({ wicketReason: 'Run Out' })}>{'Run Out'}</button>
-                                                      <button id="bold-out" onClick={() => this.setState({ wicketReason: 'Bold' })}>{'Bold'}</button>
+                                                      <div>
+                                                            <span>{`\nWicket Reason?`}</span>
+                                                            {
+                                                                  this.state.wicketReasons.map((item, i) =>
+                                                                        <button id={`wicketReason_${item}`} onClick={() => this.handleWicketReason(item)}>{item}</button>
+                                                                  )
+                                                            }
+                                                      </div>
                                                       <span>{`\nNext batsman?`}</span>
                                                       <div className="dropdown-list">
                                                             <div className="dd-list-half">{"Select next player:"}</div>
@@ -204,6 +220,7 @@ class BatsmanSection extends Component {
                                                                   }
                                                             </div>
                                                       </div>
+                                                      <button id="wicket-details-button" className="scoreboard-button" onClick={() => this.setWicketDetails()}>OK</button>
                                                       {/* </div> */}
                                                 </div>
                                                 :
