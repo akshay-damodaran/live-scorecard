@@ -19,11 +19,27 @@
 
 .team-player {
       display: flex;
-      width: 90%;
+      width: 100%;
       align-items: center;
       justify-content: center;
-      height: 30px;
-      background-color: #e6e6e6;
+      height: 32px;
+      background-image: linear-gradient(-90deg, #999999, #e6e6e6);
       font-weight: bold;
       font-size: 14px;
+}
+
+#team-1, #team-2 {
+      color: #ffffff;
+      font-weight: bold;
+      height: 80px;
+      font-size: 16px;
+      text-align: center;
+}
+
+#team-1 {
+      background-image: linear-gradient(#003399, #0066cc);
+}
+
+#team-2 {
+      background-image: linear-gradient(#4b6600, #99cc00);
 }

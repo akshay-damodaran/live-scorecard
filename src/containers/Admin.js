@@ -20,7 +20,7 @@ class Admin extends Component {
     // const socket = socketIOClient(endpoint);
 
     this.state = {
-      pageComponent: 2,
+      pageComponent: 4,
       currentTeam: 1,
       team1: 'Mumbai',
       team2: 'Pune',
@@ -178,6 +178,7 @@ class Admin extends Component {
             team2={team2}
             setTossData={data => this.setState({ ...data })}
             setTossResults={() => this.setTossResults()}
+            prevScreen={() => this.prevScreen()}
           />
         );
       }
