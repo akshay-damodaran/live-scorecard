@@ -20,7 +20,7 @@ class Admin extends Component {
     // const socket = socketIOClient(endpoint);
 
     this.state = {
-      pageComponent: 4,
+      pageComponent: 1,
       currentTeam: 1,
       team1: 'Mumbai',
       team2: 'Pune',

@@ -2,13 +2,25 @@
       display: flex;
       flex: 1;
       flex-direction: column;
-      width: 100vw;
-      /* min-height: 80vh; */
+      width: 100%;
 }
 
 .admin-teams {
       display: flex;
+      flex: 1;
+      width: 100%;
       flex-direction: row;
+      background-color: #333333;
+}
+
+.toss-win {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      background-color: #e6f5ff;
+      text-align: center;
+      font-weight: bold;
 }
 
 .match-start-section {
@@ -52,7 +64,7 @@
 
 .dd-list-half {
       display: flex;
-      flex: 0.5;  
+      flex: 0.5; 
       align-items: center;
       justify-content: center;
       height: 50px;
@@ -63,7 +75,6 @@
       width: 200px;
       height: 40px;
       font-size: 15px;
-      /* border-radius: 20px; */
 }
 
 .team-dropdown {
@@ -72,24 +83,10 @@
       font-size: 15px;
 }
 
-/* #nonStrikerNames {
-      width: 200px;
-      height: 40px;
-      font-size: 15px;
-} */
-
 #bowlerNames-over {
       width: 200px;
       height: 40px;
       font-size: 15px;
-}
-
-.sb-input {
-      width: 200px;
-      height: 40px;
-      border-radius: 20px;
-      margin-bottom: 20px;
-      padding-left: 10px;
 }
 
 .scoreboard-button {
@@ -152,11 +149,12 @@
 
 .runs {
       display: flex;
-      flex: 0.5;
+      flex: 1;
       height: 60px;
       align-items: center;
       justify-content: center;
       background-color: #eeeeee;
+      font-weight: bold;
 }
 
 .wickets {
@@ -178,7 +176,6 @@
       background-color: #ff0000;
       color: #ffffff;
       font-weight: bold;
-      /* margin-left: 10px; */
 }
 
 .score-add {
@@ -191,7 +188,6 @@
       background-color: #00ff00;
       color: #ffffff;
       font-weight: bold;
-      /* margin-right: 10px; */
 }
 
 .score {
@@ -199,8 +195,9 @@
       align-items: center;
       justify-content: center;
       background-color: #ffffff;
-      width: 50px;
-      height: 30px;
+      width: 100px;
+      height: 40px;
+      font-size: 35px;
       font-weight: bold;
 }
 
@@ -208,6 +205,17 @@
       display: flex;
       flex-direction: column;
       flex: 1
+}     
+
+.overs-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 40px;
+      background-color: #e6e6e6;
+      font-weight: bold;
+      /* font-size: 14px; */
 }
 
 .overs-status {
@@ -217,7 +225,8 @@
       height: 40px;
       align-items: center;
       justify-content: center;
-      background-color: #ccff99;
+      font-weight: bold;
+      /* background-color: #ccff99; */
 }
 
 .overs {
@@ -226,6 +235,7 @@
       flex-direction: column;
       justify-content: center;
       text-align: center;
+      /* background-color: #e6e6ee; */
 }
 
 .over-count {
@@ -236,7 +246,8 @@
       align-items: center;
       justify-content: center;
       height: 50px;
-      background-color: #b3ecff;
+      font-weight: bold;
+      /* background-color: #b3ecff; */
       /* padding-top: 10px; */
 }
 

@@ -104,7 +104,9 @@ class BatsmanSection extends Component {
                         id={team}
                         className="team-dropdown"
                         value={this.state[team].name}
-                        onChange={(e) => this.setPlayer(e, team)}>
+                        onChange={(e) => this.setPlayer(e, team)}
+                        autoFocus={(team === 'striker')}
+                        >
                         <option>{`Select player`}</option>
                         {
                               battingTeamPlayers.map((item, i) =>
@@ -192,7 +194,7 @@ class BatsmanSection extends Component {
                                                                         }
                                                                   </div>
                                                             </div>
-                                                            <button className="scoreboard-button" onClick={() => this.setMatchStartDetails()}>OK</button>
+                                                            <button onClick={() => this.setMatchStartDetails()}>OK</button>
                                                       </div>
                                                 </div>
                                           </div>
@@ -220,7 +222,7 @@ class BatsmanSection extends Component {
                                                                   }
                                                             </div>
                                                       </div>
-                                                      <button id="wicket-details-button" className="scoreboard-button" onClick={() => this.setWicketDetails()}>OK</button>
+                                                      <button id="wicket-details-button" onClick={() => this.setWicketDetails()}>OK</button>
                                                       {/* </div> */}
                                                 </div>
                                                 :
