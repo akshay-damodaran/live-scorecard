@@ -133,6 +133,12 @@ class BatsmanSection extends Component {
                   this.setState({ striker: this.state.nextPlayer, isWicket: false })
                   :
                   this.setState({ nonStriker: this.state.nextPlayer, isWicket: false });
+            if (this.state.changePlayer) {
+                  this.setState({ changePlayer: false });
+                  this.props.setChangePlayer(false);
+            } else {
+                  this.props.updateWickets(1);
+            }
       }
 
       handleWicketReason(item) {
@@ -239,6 +245,16 @@ class BatsmanSection extends Component {
                                                                         <button id="nonStriker-out" onClick={() => this.handleWicketPlayer('nonStriker')}>{nonStriker.name}</button>
                                                                   </div>
                                                             </div>
+                                                            <span>{`\nNext batsman?`}</span>
+                                                            <div className="dropdown-list">
+                                                                  <div className="dd-list-half">{"Select next player:"}</div>
+                                                                  <div className="dd-list-half">
+                                                                        {
+                                                                              this.renderBattingTeamDropDown('nextPlayer')
+                                                                        }
+                                                                  </div>
+                                                            </div>
+                                                            <button id="wicket-details-button" onClick={() => this.setWicketDetails()}>OK</button>
                                                       </div>
                                                       :
                                                       <div className="match-section">

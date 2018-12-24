@@ -166,11 +166,12 @@
 
 .wickets {
       display: flex;
-      flex: 0.5;
+      flex: 1;
       height: 60px;
       align-items: center;
       justify-content: center;
       background-color: #cccccc;
+      font-weight: bold;
 }
 
 .score-minus {

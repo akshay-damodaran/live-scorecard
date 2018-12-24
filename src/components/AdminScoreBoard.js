@@ -29,8 +29,10 @@ class AdminScoreBoard extends Component {
                   battingTeamPlayers: [],
                   bowlingTeamPlayers: [],
                   runs: 0,
+                  wickets: 0,
                   isWicket: false,
-                  changePlayer: false
+                  changePlayer: false,
+                  endGame: false
             }
       }
 
@@ -61,8 +63,18 @@ class AdminScoreBoard extends Component {
             this.setState({ isWicket: true });
       }
 
-      setChangePlayer() {
-            this.setState({ changePlayer: true });
+      updateWickets(addWicket) {
+            let { wickets } = this.state;
+            wickets = wickets + addWicket;
+            this.setState({ wickets });
+      }
+
+      setChangePlayer(boolean) {
+            this.setState({ changePlayer: boolean });
+      }
+
+      setEndGame() {
+            this.setState({ endGame: true });
       }
 
       render() {
@@ -92,32 +104,45 @@ class AdminScoreBoard extends Component {
                                           <span>{`${team2} won the toss and elected to do ${(battingTeam === 2) ? 'batting' : 'fielding'}.`}</span>
                               }
                         </div>
-                        <div className="scoreboard-body">
-                              <div className="scores-section">
-                                    <div className="section-header">
-                                          <span>Scores Section</span>
-                                    </div>
-                                    <div className="section-body">
-                                          <div className="runs">
-                                                <span>Runs:&nbsp;&nbsp;&nbsp;</span>
-                                                <div className="score">{this.state.runs}</div>
-                                          </div>
-                                    </div>
-                              </div>
-                              <BatsmanSection
-                                    battingTeamPlayers={battingTeamPlayers}
-                                    setBatsmenDetails={this.setBatsmenDetails.bind(this)}
-                                    isWicket={this.state.isWicket}
-                                    changePlayer={this.state.changePlayer}
-                              />
-                              <OversSection
-                                    bowlingTeamPlayers={bowlingTeamPlayers}
-                                    updateRuns={this.updateRuns.bind(this)}
-                                    setWicket={this.setWicket.bind(this)}
-                                    setChangePlayer={this.setChangePlayer.bind(this)}
-                              />
 
-                        </div>
+                        {
+                              (!this.state.endGame) ?
+                                    <div className="scoreboard-body">
+                                          <div className="scores-section">
+                                                <div className="section-header">
+                                                      <span>Scores Section</span>
+                                                </div>
+                                                <div className="section-body">
+                                                      <div className="runs">
+                                                            <span>Runs:&nbsp;&nbsp;&nbsp;</span>
+                                                            <div className="score">{this.state.runs}</div>
+                                                      </div>
+                                                      <div className="wickets">
+                                                            <span>Wickets:&nbsp;&nbsp;&nbsp;</span>
+                                                            <div className="score">{this.state.wickets}</div>
+                                                      </div>
+                                                </div>
+                                          </div>
+                                          <BatsmanSection
+                                                battingTeamPlayers={battingTeamPlayers}
+                                                setBatsmenDetails={this.setBatsmenDetails.bind(this)}
+                                                isWicket={this.state.isWicket}
+                                                changePlayer={this.state.changePlayer}
+                                                setChangePlayer={this.setChangePlayer.bind(this)}
+                                                updateWickets={this.updateWickets.bind(this)}
+                                          />
+                                          <OversSection
+                                                bowlingTeamPlayers={bowlingTeamPlayers}
+                                                updateRuns={this.updateRuns.bind(this)}
+                                                setWicket={this.setWicket.bind(this)}
+                                                setChangePlayer={this.setChangePlayer.bind(this)}
+                                          />
+                                    </div>
+                                    :
+                                    <div className="scoreboard-body">
+                                    </div>
+                        }
+
                   </div>
             );
       }

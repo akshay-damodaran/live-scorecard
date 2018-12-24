@@ -118,19 +118,7 @@ class OversSection extends Component {
                                                 </div>
                                           </div>
                                           :
-                                          (this.state.changeBowler) ?
-                                                <div className="">
-                                                      <div className="dropdown-list">
-                                                            <div className="dd-list-half">{"Bowler for the over: "}</div>
-                                                            <div className="dd-list-half">
-                                                                  {
-                                                                        this.renderBowlingTeamDropDown()
-                                                                  }
-                                                            </div>
-                                                      </div>
-                                                      <button onClick={() => this.setState({ changeBowler: false })}>OK</button>
-                                                </div>
-                                                :
+                                          (!this.state.changeBowler) ?
                                                 <div className="">
                                                       <div className="overs-header">
                                                             <span>Bowler: {this.state.bowler.name}</span>
@@ -166,7 +154,7 @@ class OversSection extends Component {
                                                                                                       if (item === 'WK') {
                                                                                                             this.props.setWicket();
                                                                                                       } else if (item === 'CBM') {
-                                                                                                            this.props.setChangePlayer();
+                                                                                                            this.props.setChangePlayer(true);
                                                                                                       }
                                                                                                       this.setState({ bowls, changeBowler: (item === 'CB') });
                                                                                                 }
@@ -204,6 +192,18 @@ class OversSection extends Component {
                                                             }
                                                             {/* {this.state.bowlingStatus} */}
                                                       </div>
+                                                </div>
+                                                :
+                                                <div className="">
+                                                      <div className="dropdown-list">
+                                                            <div className="dd-list-half">{"Bowler for the over: "}</div>
+                                                            <div className="dd-list-half">
+                                                                  {
+                                                                        this.renderBowlingTeamDropDown()
+                                                                  }
+                                                            </div>
+                                                      </div>
+                                                      <button onClick={() => this.setState({ changeBowler: false })}>OK</button>
                                                 </div>
                               }
                         </div>
