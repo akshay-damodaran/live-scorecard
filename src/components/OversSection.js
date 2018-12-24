@@ -17,7 +17,8 @@ class OversSection extends Component {
                   bowls: [1, 2, 3, 4, 5, 6, '+'],
                   ballNo: 0,
                   runs: 0,
-                  showBowlStatus: false
+                  showBowlStatus: false,
+                  changeBowler: false
             }
       }
 
@@ -47,7 +48,7 @@ class OversSection extends Component {
                   default: {
                         // document.getElementById("lock-bowl").disabled = false;
                         document.getElementById(`bowl_${i}`).style.backgroundColor = '#ffff00';
-                        this.setState({ currentBowl: i + 1, runs: 0, showBowlStatus: true  });
+                        this.setState({ currentBowl: i + 1, runs: 0, showBowlStatus: true });
                         break;
                   }
             }
@@ -75,7 +76,7 @@ class OversSection extends Component {
 
       render() {
             const { bowls } = this.state;
-            const bowlStatus = ['WD', 'WK', 'NB', 'B', 'LB', 'R', 'CP'];
+            const bowlStatus = ['WD', 'WK', 'NB', 'B', 'LB', 'R', 'CBM', 'CB'];
             return (
                   <div className="overs-section">
                         <div className="section-header">
@@ -117,79 +118,93 @@ class OversSection extends Component {
                                                 </div>
                                           </div>
                                           :
-                                          <div className="">
-                                                <div className="overs-header">
-                                                      <span>Bowler: {this.state.bowler.name}</span>
-                                                </div>
-                                                <div className="overs-status">
-                                                      <span className="overs">Total: {this.state.totalOvers}</span>
-                                                      <span className="overs">Current: {this.state.currentOvers}</span>
-                                                      {/* <span className="overs">Remaining: {this.state.totalOvers - this.state.currentOvers}</span> */}
-                                                </div>
-                                                <div className="overs">
-                                                      <div className="over-count">
-                                                            <span>Overs:</span>
-                                                            {
-                                                                  bowls.map((item, i) =>
-                                                                        <div key={`bowl_${i}`} id={`bowl_${i}`} className="bowl" onClick={() => {this.setBowlStatus(item, i)}}>{item}</div>
-                                                                  )
-                                                            }
-                                                      </div>
-                                                      {
-                                                            (this.state.showBowlStatus) &&
-                                                            <div>
-                                                                  <div className="over-count">
-                                                                        <span>Select status:</span>
-                                                                        {
-                                                                              bowlStatus.map((item, j) =>
-                                                                                    <div
-                                                                                          id={`status_${item}`}
-                                                                                          key={`bowledStatus_${j}`}
-                                                                                          className="bowl"
-                                                                                          onClick={() => {
-                                                                                                let { currentBowl, bowls } = this.state;
-                                                                                                bowls[currentBowl - 1] = item;
-                                                                                                const isWicket = (item === 'WK');
-                                                                                                if (isWicket) {
-                                                                                                      this.props.setWicket();
-                                                                                                }
-                                                                                                this.setState({ bowls });
-                                                                                          }
-                                                                                          }>
-                                                                                          {item}
-                                                                                    </div>
-                                                                              )
-                                                                        }
-                                                                  </div>
-                                                                  <div className="dropdown-list">
-                                                                        <div className="dd-list-half">{"Total Runs for the current ball: "}</div>
-                                                                        <div className="dd-list-half">
-                                                                              <input
-                                                                                    value={this.state.runs}
-                                                                                    placeholder="Enter runs"
-                                                                                    type="number"
-                                                                                    min="0"
-                                                                                    max="10"
-                                                                                    step="1"
-                                                                                    onChange={(e) => {
-                                                                                          let { runs } = this.state;
-                                                                                          runs = parseInt(e.target.value);
-                                                                                          this.setState({ runs });
-                                                                                    }}
-                                                                                    onBlur={(e) => {
-                                                                                          let { runs } = this.state;
-                                                                                          runs = parseInt(e.target.value);
-                                                                                          this.setState({ runs });
-                                                                                    }}
-                                                                              />
-                                                                        </div>
-                                                                  </div>
-                                                                  <button id="lock-bowl" onClick={() => this.lockBowl()}>OK</button>
+                                          (this.state.changeBowler) ?
+                                                <div className="">
+                                                      <div className="dropdown-list">
+                                                            <div className="dd-list-half">{"Bowler for the over: "}</div>
+                                                            <div className="dd-list-half">
+                                                                  {
+                                                                        this.renderBowlingTeamDropDown()
+                                                                  }
                                                             </div>
-                                                      }
-                                                      {/* {this.state.bowlingStatus} */}
+                                                      </div>
+                                                      <button onClick={() => this.setState({ changeBowler: false })}>OK</button>
                                                 </div>
-                                          </div>
+                                                :
+                                                <div className="">
+                                                      <div className="overs-header">
+                                                            <span>Bowler: {this.state.bowler.name}</span>
+                                                      </div>
+                                                      <div className="overs-status">
+                                                            <span className="overs">Total: {this.state.totalOvers}</span>
+                                                            <span className="overs">Current: {this.state.currentOvers}</span>
+                                                            {/* <span className="overs">Remaining: {this.state.totalOvers - this.state.currentOvers}</span> */}
+                                                      </div>
+                                                      <div className="overs">
+                                                            <div className="over-count">
+                                                                  <span>Overs:</span>
+                                                                  {
+                                                                        bowls.map((item, i) =>
+                                                                              <div key={`bowl_${i}`} id={`bowl_${i}`} className="bowl" onClick={() => { this.setBowlStatus(item, i) }}>{item}</div>
+                                                                        )
+                                                                  }
+                                                            </div>
+                                                            {
+                                                                  (this.state.showBowlStatus) &&
+                                                                  <div>
+                                                                        <div className="over-count">
+                                                                              {/* <span>Select status:</span> */}
+                                                                              {
+                                                                                    bowlStatus.map((item, j) =>
+                                                                                          <div
+                                                                                                id={`status_${item}`}
+                                                                                                key={`bowledStatus_${j}`}
+                                                                                                className="bowl"
+                                                                                                onClick={() => {
+                                                                                                      let { currentBowl, bowls } = this.state;
+                                                                                                      bowls[currentBowl - 1] = item;
+                                                                                                      if (item === 'WK') {
+                                                                                                            this.props.setWicket();
+                                                                                                      } else if (item === 'CBM') {
+                                                                                                            this.props.setChangePlayer();
+                                                                                                      }
+                                                                                                      this.setState({ bowls, changeBowler: (item === 'CB') });
+                                                                                                }
+                                                                                                }>
+                                                                                                {item}
+                                                                                          </div>
+                                                                                    )
+                                                                              }
+                                                                        </div>
+                                                                        <div className="dropdown-list">
+                                                                              <div className="dd-list-half">{"Total Runs for the current ball: "}</div>
+                                                                              <div className="dd-list-half">
+                                                                                    <input
+                                                                                          value={this.state.runs}
+                                                                                          placeholder="Enter runs"
+                                                                                          type="number"
+                                                                                          min="0"
+                                                                                          max="10"
+                                                                                          step="1"
+                                                                                          onChange={(e) => {
+                                                                                                let { runs } = this.state;
+                                                                                                runs = parseInt(e.target.value);
+                                                                                                this.setState({ runs });
+                                                                                          }}
+                                                                                          onBlur={(e) => {
+                                                                                                let { runs } = this.state;
+                                                                                                runs = parseInt(e.target.value);
+                                                                                                this.setState({ runs });
+                                                                                          }}
+                                                                                    />
+                                                                              </div>
+                                                                        </div>
+                                                                        <button id="lock-bowl" onClick={() => this.lockBowl()}>OK</button>
+                                                                  </div>
+                                                            }
+                                                            {/* {this.state.bowlingStatus} */}
+                                                      </div>
+                                                </div>
                               }
                         </div>
                   </div>

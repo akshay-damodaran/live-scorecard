@@ -1,5 +1,30 @@
+.wicket-section {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      flex-direction: column;
+      width: 100vw;
+      justify-content: center;
+}
+
 .section-body {
       display: flex;
       flex-direction: row;
       width: 100vw;
+}
+
+#striker-out, #nonStriker-out {
+      display: flex;
+      flex: 0.5;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+}
+
+.wicket-reason {
+      display: flex;
+      flex: 0.333;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
 }

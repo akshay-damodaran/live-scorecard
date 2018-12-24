@@ -29,7 +29,8 @@ class AdminScoreBoard extends Component {
                   battingTeamPlayers: [],
                   bowlingTeamPlayers: [],
                   runs: 0,
-                  isWicket: false
+                  isWicket: false,
+                  changePlayer: false
             }
       }
 
@@ -58,6 +59,10 @@ class AdminScoreBoard extends Component {
 
       setWicket() {
             this.setState({ isWicket: true });
+      }
+
+      setChangePlayer() {
+            this.setState({ changePlayer: true });
       }
 
       render() {
@@ -103,11 +108,13 @@ class AdminScoreBoard extends Component {
                                     battingTeamPlayers={battingTeamPlayers}
                                     setBatsmenDetails={this.setBatsmenDetails.bind(this)}
                                     isWicket={this.state.isWicket}
+                                    changePlayer={this.state.changePlayer}
                               />
                               <OversSection
                                     bowlingTeamPlayers={bowlingTeamPlayers}
                                     updateRuns={this.updateRuns.bind(this)}
                                     setWicket={this.setWicket.bind(this)}
+                                    setChangePlayer={this.setChangePlayer.bind(this)}
                               />
 
                         </div>

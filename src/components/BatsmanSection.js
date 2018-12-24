@@ -24,6 +24,7 @@ class BatsmanSection extends Component {
                         sixes: 0,
                         isStriker: false
                   },
+                  changePlayer: this.props.changePlayer,
                   isWicket: this.props.isWicket,
                   currentOutPlayer: '',
                   nextPlayer: {
@@ -47,7 +48,7 @@ class BatsmanSection extends Component {
       }
 
       componentWillReceiveProps(nextProps) {
-            this.setState({ isWicket: nextProps.isWicket });
+            this.setState({ isWicket: nextProps.isWicket, changePlayer: nextProps.changePlayer });
       }
 
       setPlayer(e, type) {
@@ -106,7 +107,7 @@ class BatsmanSection extends Component {
                         value={this.state[team].name}
                         onChange={(e) => this.setPlayer(e, team)}
                         autoFocus={(team === 'striker')}
-                        >
+                  >
                         <option>{`Select player`}</option>
                         {
                               battingTeamPlayers.map((item, i) =>
@@ -201,69 +202,83 @@ class BatsmanSection extends Component {
                                           :
                                           (this.state.isWicket) ?
                                                 <div className="match-section">
-                                                      {/* <div> */}
-                                                      <span>{`Who's out?`}</span>
-                                                      <button id="striker-out" onClick={() => this.handleWicketPlayer('striker')}>{striker.name}</button>
-                                                      <button id="nonStriker-out" onClick={() => this.handleWicketPlayer('nonStriker')}>{nonStriker.name}</button>
-                                                      <div>
-                                                            <span>{`\nWicket Reason?`}</span>
-                                                            {
-                                                                  this.state.wicketReasons.map((item, i) =>
-                                                                        <button id={`wicketReason_${item}`} onClick={() => this.handleWicketReason(item)}>{item}</button>
-                                                                  )
-                                                            }
-                                                      </div>
-                                                      <span>{`\nNext batsman?`}</span>
-                                                      <div className="dropdown-list">
-                                                            <div className="dd-list-half">{"Select next player:"}</div>
-                                                            <div className="dd-list-half">
+                                                      <div className="wicket-section">
+                                                            <div className="overs-header">{`Who's out?`}</div>
+                                                            <div className="player-out">
+                                                                  <button id="striker-out" onClick={() => this.handleWicketPlayer('striker')}>{striker.name}</button>
+                                                                  <button id="nonStriker-out" onClick={() => this.handleWicketPlayer('nonStriker')}>{nonStriker.name}</button>
+                                                            </div>
+                                                            <div className="overs-header">{`Wicket Reason?`}</div>
+                                                            <div className="player-out">
+                                                                  {/* <span>{`\nWicket Reason?`}</span> */}
                                                                   {
-                                                                        this.renderBattingTeamDropDown('nextPlayer')
+                                                                        this.state.wicketReasons.map((item, i) =>
+                                                                              <button className="wicket-reason" id={`wicketReason_${item}`} onClick={() => this.handleWicketReason(item)}>{item}</button>
+                                                                        )
                                                                   }
                                                             </div>
+                                                            <span>{`\nNext batsman?`}</span>
+                                                            <div className="dropdown-list">
+                                                                  <div className="dd-list-half">{"Select next player:"}</div>
+                                                                  <div className="dd-list-half">
+                                                                        {
+                                                                              this.renderBattingTeamDropDown('nextPlayer')
+                                                                        }
+                                                                  </div>
+                                                            </div>
+                                                            <button id="wicket-details-button" onClick={() => this.setWicketDetails()}>OK</button>
                                                       </div>
-                                                      <button id="wicket-details-button" onClick={() => this.setWicketDetails()}>OK</button>
-                                                      {/* </div> */}
                                                 </div>
                                                 :
-                                                <div className="match-section">
-                                                      <div className="section-body">
-                                                            <div className="striker-headings">
-                                                                  <div className="batsman">Name</div>
-                                                                  <div className="batsman">Runs</div>
-                                                                  <div className="batsman">Balls</div>
-                                                                  <div className="batsman">Fours</div>
-                                                                  <div className="batsman">Sixes</div>
-                                                                  <div className="batsman">Striker</div>
-                                                            </div>
-                                                            <div className="striker">
-                                                                  {
-                                                                        Object.keys(striker).map((item, i) =>
-                                                                              <div
-                                                                                    key={`batsman1_${item}`}
-                                                                                    className="batsman"
-                                                                              // onClick={() => this.switchStriker()}
-                                                                              >
-                                                                                    {(item === 'isStriker') ? (striker[item]) ? 'Yes' : 'No' : striker[item]}
-                                                                              </div>
-                                                                        )
-                                                                  }
-                                                            </div>
-                                                            <div className="striker">
-                                                                  {
-                                                                        Object.keys(nonStriker).map((item, i) =>
-                                                                              <div
-                                                                                    key={`batsman2_${item}`}
-                                                                                    className="batsman"
-                                                                                    onClick={() => this.switchStriker()}
-                                                                              >
-                                                                                    {(item === 'isStriker') ? (nonStriker[item]) ? 'Yes' : 'No' : nonStriker[item]}
-                                                                              </div>
-                                                                        )
-                                                                  }
+                                                (this.state.changePlayer) ?
+                                                      <div className="match-section">
+                                                            <div className="wicket-section">
+                                                                  <div className="overs-header">{`Change Player?`}</div>
+                                                                  <div className="player-out">
+                                                                        <button id="striker-out" onClick={() => this.handleWicketPlayer('striker')}>{striker.name}</button>
+                                                                        <button id="nonStriker-out" onClick={() => this.handleWicketPlayer('nonStriker')}>{nonStriker.name}</button>
+                                                                  </div>
                                                             </div>
                                                       </div>
-                                                </div>
+                                                      :
+                                                      <div className="match-section">
+                                                            <div className="section-body">
+                                                                  <div className="striker-headings">
+                                                                        <div className="batsman">Name</div>
+                                                                        <div className="batsman">Runs</div>
+                                                                        <div className="batsman">Balls</div>
+                                                                        <div className="batsman">Fours</div>
+                                                                        <div className="batsman">Sixes</div>
+                                                                        <div className="batsman">Striker</div>
+                                                                  </div>
+                                                                  <div className="striker">
+                                                                        {
+                                                                              Object.keys(striker).map((item, i) =>
+                                                                                    <div
+                                                                                          key={`batsman1_${item}`}
+                                                                                          className="batsman"
+                                                                                    // onClick={() => this.switchStriker()}
+                                                                                    >
+                                                                                          {(item === 'isStriker') ? (striker[item]) ? 'Yes' : 'No' : striker[item]}
+                                                                                    </div>
+                                                                              )
+                                                                        }
+                                                                  </div>
+                                                                  <div className="striker">
+                                                                        {
+                                                                              Object.keys(nonStriker).map((item, i) =>
+                                                                                    <div
+                                                                                          key={`batsman2_${item}`}
+                                                                                          className="batsman"
+                                                                                          onClick={() => this.switchStriker()}
+                                                                                    >
+                                                                                          {(item === 'isStriker') ? (nonStriker[item]) ? 'Yes' : 'No' : nonStriker[item]}
+                                                                                    </div>
+                                                                              )
+                                                                        }
+                                                                  </div>
+                                                            </div>
+                                                      </div>
                               }
                         </div>
                   </div>
