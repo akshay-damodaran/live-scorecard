@@ -14,12 +14,14 @@ class TeamPlayers extends Component {
 		switch (playerType) {
 			case 'main': {
 				let mainPlayers = this.state.mainPlayers;
+				mainPlayers[i].id = i+1;
 				mainPlayers[i].name = playerName;
 				this.setState({ mainPlayers });
 				break;
 			}
 			case 'extra': {
 				let extraPlayers = this.state.extraPlayers;
+				extraPlayers[i].id = i+12;
 				extraPlayers[i].name = playerName;
 				this.setState({ extraPlayers });
 				break;
@@ -49,9 +51,8 @@ class TeamPlayers extends Component {
 				</div>
 				{
 					mainPlayers.map((player, i) =>
-						<div className="teamplayer-input">
+						<div key={`mainplayer_${i}`} className="teamplayer-input">
 							<input
-								key={`mainplayer_${i}`}
 								placeholder={`Player ${i + 1} name`}
 								value={player.name}
 								onChange={(e) => this.setPlayer(e.target.value, i, 'main')}
@@ -66,9 +67,8 @@ class TeamPlayers extends Component {
 				</div>
 				{
 					extraPlayers.map((player, i) =>
-						<div className="teamplayer-input">
+						<div key={`extraplayer_${i}`} className="teamplayer-input">
 							<input
-								key={`extraplayer_${i}`}
 								placeholder={`Player ${i + 12} name`}
 								value={player.name}
 								onChange={(e) => this.setPlayer(e.target.value, i, 'extra')}
