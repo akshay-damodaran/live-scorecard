@@ -1,4 +1,5 @@
 import React from 'react';
+import socketIOClient from 'socket.io-client';
 // import socketIOClient from 'socket.io-client';
 
 import '../styles/Home.css';
@@ -7,11 +8,13 @@ class Home extends React.Component {
 
   constructor(props) {
     super(props);
-    // const endpoint = 'http://127.0.0.1:4002';
-    // const socket = socketIOClient(endpoint);
+    const endpoint = 'http://127.0.0.1:4002';
+    const socket = socketIOClient(endpoint);
 
     this.state = {
       currentTab: 0,
+      
+      
       team1: {},
       team2: {},
       batsman1: {},
@@ -20,12 +23,36 @@ class Home extends React.Component {
       bowlingStatus: [],
       tabs: ['Live-Score', 'Score-Board'],
       scoreBoardDetails: [],
-      // socket
+
+
+      socket,
+      team1_runs: 0,
+      team1_wickets: 0,
+      team2_runs: 0,
+      team2_wickets: 0,
+      team1_total_balls: 0,
+      team2_total_balls: 0,
+      current_striker: 1,
+      currentBatsman: [{
+        id: 1,
+        name: 'Akshay Damodaran',
+        runs: 40,
+        balls: 7,
+        fours: 1,
+        sixes: 6,
+      }, {
+        id: 2,
+        name: 'Sudarshana Patil',
+        runs: 0,
+        balls: 10,
+        fours: 0,
+        sixes: 0,
+      },]
     }
   }
 
   componentDidMount() {
-    // const { socket } = this.state;
+    const { socket } = this.state;
     // socket.on('scoreBoard', liveScoreBoard => {
     //   console.log('Live Score Board: ', liveScoreBoard);
     //   window.sessionStorage.setItem('scoreBoardDetails', JSON.stringify(liveScoreBoard.scoreBoardDetails));
@@ -36,6 +63,30 @@ class Home extends React.Component {
     //   }
     //   this.setState({ liveScoreBoard });
     // });
+
+    socket.on('initialize', data => {
+      this.setState(data);
+    });
+
+    socket.on('eachBallUpdate', data => {
+      const {
+        runScored,
+        teamId,
+        playerId,
+        strikerId,
+      } = data;
+
+      let { currentBatsman } = this.state;
+      currentBatsman = currentBatsman.map(batsman => {
+        if (batsman.id === playerId) {
+          batsman.runs += runScored
+        }
+        return batsman;
+      });
+
+
+    });
+
 
     document.getElementById(`tab${this.state.currentTab}`).style.backgroundColor = '#ba124c';
     document.getElementById(`tab${this.state.currentTab}`).style.fontWeight = 'bold';
@@ -51,20 +102,6 @@ class Home extends React.Component {
         logo: require('../images/team2.png'),
         wonToss: false,
         isBattingTeam: false
-      },
-      batsman1: {
-        name: 'Virat Kohli',
-        runs: 9,
-        balls: 6,
-        fours: 2,
-        sixes: 0
-      },
-      batsman2: {
-        name: 'Mahendra Dhoni',
-        runs: 9,
-        balls: 6,
-        fours: 2,
-        sixes: 0
       },
       bowler: {
         name: 'S Abbasi',
@@ -97,8 +134,8 @@ class Home extends React.Component {
     this.setState({
       team1: liveScoreBoard.team1,
       team2: liveScoreBoard.team2,
-      batsman1: liveScoreBoard.batsman1,
-      batsman2: liveScoreBoard.batsman2,
+      // batsman1: liveScoreBoard.batsman1,
+      // batsman2: liveScoreBoard.batsman2,
       bowler: liveScoreBoard.bowler,
       bowlingStatus: liveScoreBoard.bowlingStatus,
       scoreBoardDetails: liveScoreBoard.scoreBoardDetails
@@ -117,7 +154,16 @@ class Home extends React.Component {
   }
 
   render() {
-    const { team1, team2, batsman1, batsman2, bowler, bowlingStatus, tabs, scoreBoardDetails } = this.state;
+    const {
+      team1,
+      team2,
+      bowler,
+      bowlingStatus,
+      tabs,
+      scoreBoardDetails,
+      current_striker,
+      currentBatsman,
+    } = this.state;
     return (
       <div className="home">
         <div className="home-header">
@@ -160,22 +206,16 @@ class Home extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      {
-                        Object.keys(batsman1).map((item, i) =>
-                          <td key={`batsman1_${item}`}>{batsman1[item]}</td>
-                        )
-                      }
-                      <td key={`batsman1_strikeRate`}>{batsman1.runs / batsman1.balls * 100}</td>
-                    </tr>
-                    <tr>
-                      {
-                        Object.keys(batsman2).map((item, i) =>
-                          <td key={`batsman2_${item}`}>{batsman2[item]}</td>
-                        )
-                      }
-                      <td key={`batsman2_strikeRate`}>{batsman2.runs / batsman2.balls * 100}</td>
-                    </tr>
+                    {currentBatsman.map(batsman => (
+                      <tr key={batsman.id}>
+                        <td>{ `${batsman.name}${batsman.id === current_striker ? '*': ''}` }</td>
+                        <td>{ batsman.runs }</td>
+                        <td>{ batsman.balls }</td>
+                        <td>{ batsman.fours }</td>
+                        <td>{ batsman.sixes }</td>
+                        <td>{ batsman.balls ? Math.round(batsman.runs / batsman.balls * 10000) / 100 : 0 }</td>
+                      </tr>
+                    ))}
                   </tbody>
                   <thead>
                     <tr>
