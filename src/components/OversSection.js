@@ -8,6 +8,7 @@ class OversSection extends Component {
                   // inning details
                   inningNo: this.props.inningNo,
                   battingTeam: this.props.battingTeam,
+                  inningEnd: false,
 
                   // player details
                   striker: this.props.striker,
@@ -56,6 +57,13 @@ class OversSection extends Component {
                   if (bowls[currentBowl - 1].bowlStatus === 'WD' && bowls[currentBowl - 1].bowlStatus === 'NB') {
                         currentOverBowls = currentOverBowls + 1;
                         totalBowls = totalBowls + 1;
+
+                        // Event - extra
+                        // socket.emit('extra', {
+                        //    score: runs,
+                        //    teamId: battingTeam,
+                        //    type: bowls[currentBowl - 1].bowlStatus
+                        // });
                   }
                   totalBowls = totalBowls + 1;
                   currentOvers = (parseInt(currentOvers) + ((currentBowl) * 0.1)).toFixed(1);
@@ -82,6 +90,12 @@ class OversSection extends Component {
                         bowls[currentBowl - 1].isLocked = true;
                         bowls[currentBowl - 1].striker = striker;
                         this.setState({ totalBowls, currentOvers, showBowlStatus: false, bowls });
+
+                        // if (bowls.length === totalBowls) {
+                              
+                              // this.setState({ inningEnd: true });
+                              // this.props.setInningEnd(true); // or set the above event in AdminScoreBoard page
+                        // }
                   } else {
                         this.setState({ isOverStart: true });
                   }
@@ -155,7 +169,7 @@ class OversSection extends Component {
                                                       let { currentBowl, bowls } = this.state;
                                                       bowls[currentBowl - 1].bowlStatus = item;
                                                       if (item === 'WK') {
-                                                            this.props.setWicket(true);
+                                                            this.props.setWicket(true, {});
                                                       }
                                                       this.setState({ bowls, changeBowler: (item === 'CB') });
                                                 }}

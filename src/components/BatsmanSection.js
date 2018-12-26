@@ -31,6 +31,7 @@ class BatsmanSection extends Component {
                         catchedByWhom: ''
                   },
                   wicketReason: '',
+                  wicketBy: '',
                   wicketReasons: ['Catch Out', 'Run Out', 'Bold']
             }
       }
@@ -47,24 +48,6 @@ class BatsmanSection extends Component {
                   isWicket: nextProps.isWicket,
                   changePlayer: nextProps.changePlayer
             });
-      }
-
-      renderPlayer(player) {
-            return (
-                  <div className="striker">
-                        {
-                              Object.keys(player).map((item, i) =>
-                                    <div
-                                          key={`batsman_${item}`}
-                                          className="batsman"
-                                    // onClick={() => this.switchStriker()}
-                                    >
-                                          {(item === 'id') ? null : player[item]}
-                                    </div>
-                              )
-                        }
-                  </div>
-            );
       }
 
       setPlayer(e, type) {
@@ -171,33 +154,19 @@ class BatsmanSection extends Component {
 
       setWicketDetails(e) {
             // e.preventDefault();
-            let { currentOutPlayer, nextPlayer, battingTeam, wicketReason, striker, nonStriker } = this.state;
-
-            // Event - wicket
-            // let wicketDetails = {
-            //       wicketBy: 0, // to be taken 
-            //       wicketType: wicketReason, 
-            //       playerId: (currentOutPlayer === 'striker') ? striker.id : nonStriker.id, // to be updated 
-            //       teamId: battingTeam, 
-            //       newPlayerId: nextPlayer.id, 
-            //       newPlayerName: nextPlayer.name,
-            //       strikerId: striker.id, 
-            //       bowlerId: 0, // to be passed
-            //       runScored: 
-            // }
-            // socket.emit('wicket', wicketDetails)
+            let { currentOutPlayer, nextPlayer, wicketBy, wicketReason, striker, nonStriker } = this.state;
 
             switch (currentOutPlayer) {
                   case 'striker': {
                         switch (nextPlayer.isStriker) {
                               case true: {
-                                    // delete nextPlayer['isStriker'];
+                                    delete nextPlayer['isStriker'];
                                     this.setState({ striker: nextPlayer, isWicket: false, changePlayer: false });
                                     break;
                               }
                               case false: {
                                     this.switchStriker();
-                                    // delete nextPlayer['isStriker'];
+                                    delete nextPlayer['isStriker'];
                                     this.setState({ nonStriker: nextPlayer, isWicket: false, changePlayer: false });
                                     break;
                               }
@@ -209,12 +178,12 @@ class BatsmanSection extends Component {
                         switch (nextPlayer.isStriker) {
                               case true: {
                                     this.switchStriker();
-                                    // delete nextPlayer['isStriker'];
+                                    delete nextPlayer['isStriker'];
                                     this.setState({ striker: nextPlayer, isWicket: false, changePlayer: false });
                                     break;
                               }
                               case false: {
-                                    // delete nextPlayer['isStriker'];
+                                    delete nextPlayer['isStriker'];
                                     this.setState({ nonStriker: nextPlayer, isWicket: false, changePlayer: false });
                                     break;
                               }
@@ -225,12 +194,16 @@ class BatsmanSection extends Component {
                   default: break;
             }
             this.props.updateWickets(1);
-            // this.props.setWicket(false);
-            // if (this.state.changePlayer) {
-            //       this.setState({ changePlayer: false });
-            // } else {
-            //       this.props.updateWickets(1); // (noOfWickets, isWicket)
-            // }
+            this.props.setWicket(false, {
+                  wicketBy: wicketBy, // input to be taken
+                  wicketType: wicketReason,
+                  playerId: (currentOutPlayer === 'striker') ? striker.id : nonStriker.id,
+                  newPlayerId: nextPlayer.id, 
+                  newPlayerName: nextPlayer.name,
+                  strikerId: striker.id,
+                  striker: (nextPlayer.isStriker) ? nextPlayer : striker,
+                  nonStriker: (nextPlayer.isStriker) ? nonStriker : nextPlayer,
+            });
       }
 
       handleWicketReason(item) {
@@ -264,6 +237,23 @@ class BatsmanSection extends Component {
             this.setState({ currentOutPlayer });
       }
 
+      renderPlayer(player) {
+            return (
+                  <div className="striker">
+                        {
+                              Object.keys(player).map((item, i) =>
+                                    <div
+                                          key={`batsman_${item}`}
+                                          className="batsman"
+                                    >
+                                          {(item === 'id') ? null : player[item]}
+                                    </div>
+                              )
+                        }
+                  </div>
+            );
+      }
+
       renderPlayerChange(reason = '') { // reason = wicket | playerChange
             const { striker, nonStriker } = this.state;
             return (
@@ -285,6 +275,15 @@ class BatsmanSection extends Component {
                                                             <button key={`wicket_reason_${i}`} className="wicket-reason" id={`wicketReason_${item}`} onClick={() => this.handleWicketReason(item)}>{item}</button>
                                                       )
                                                 }
+                                          </div>
+                                          <div className="overs-header">{`Wicket By?`}</div>
+                                          <div className="player-out">
+                                                <input
+                                                      type="text"
+                                                      value={this.state.wicketBy}
+                                                      onChange={(e) => this.setState({ wicketBy: e.target.value })}
+                                                 />
+                                                 {/* future: to render bowling team */}
                                           </div>
                                     </div>      
                               }

@@ -63,7 +63,7 @@ class AdminScoreBoard extends Component {
 
                   totalRuns: 0,
                   totalOvers: 0,
-                  
+
                   wickets: 0,
                   isWicket: false,
                   changePlayer: false,
@@ -128,14 +128,42 @@ class AdminScoreBoard extends Component {
             }
       }
 
-      setWicket(isWicket) {
+      setWicket(isWicket, wicketDetails) {
+            // Event - wicket
+            // let wicketDetails = {
+            //       wicketBy: wicketDetails.wicketBy, // to be taken 
+            //       wicketType: wicketDetails.wicketReason, 
+            //       playerId: wicketDetails.playerId, // to be updated 
+            //       teamId: this.props.battingTeam, 
+            //       newPlayerId: wicketDetails.newPlayerId, 
+            //       newPlayerName: wicketDetails.newPlayerName,
+            //       strikerId: wicketDetails.strikerId, 
+            //       bowlerId: this.state.bowler.id, // to be passed
+            //       runScored: this.state.totalRuns // is player runs for the current ball set in batsman section
+            // }
+            // socket.emit('wicket', wicketDetails);
             this.setState({ isWicket });
+            if (!isWicket) { // hack - code to be revised - isWicket = false comes from Batsman section and true from Overs section
+                  this.setState({
+                        striker: wicketDetails.striker, nonStriker: wicketDetails.nonStriker // this does not update striker and non striker in batsman section
+                  });
+            }
       }
 
       updateWickets(addWicket) {
             let { wickets } = this.state;
             wickets = wickets + addWicket;
             this.setState({ wickets });
+      }
+
+      setInningEnd(isInningEnd) {
+            this.setState({ inningEnd: isInningEnd });
+            // Event - inningEnd
+            // socket.emit('inningEnd', {
+            //    teamId: battingTeam,
+            //    totalScore: this.state.totalRuns,
+            //    totalWicket: this.state.totalWicket
+            // });
       }
 
       // setEndGame() {
