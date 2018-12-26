@@ -18,7 +18,7 @@ const DisplayTeams = ({ team1, team2, team1Players, team2Players, nextScreen, pr
 				<div className="team-players">
 					{
 						team1Players.map((item, i) =>
-							<div className="team-player">
+							<div key={`item_${item.id}`} className="team-player">
 								<span>{item.name}</span>
 							</div>
 						)
@@ -33,7 +33,7 @@ const DisplayTeams = ({ team1, team2, team1Players, team2Players, nextScreen, pr
 				<div className="team-players">
 					{
 						team2Players.map((item, i) =>
-							<div className="team-player">
+							<div key={`item_${item.id}`} className="team-player">
 								<span>{item.name}</span>
 							</div>
 						)

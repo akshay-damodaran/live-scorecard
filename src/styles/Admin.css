@@ -69,6 +69,12 @@ input, button, select {
       outline: none;
 }
 
+input[type=submit] {
+      background-color:#33ccff;
+      border: 1px solid #ccc;
+      font-weight: bold;
+}
+
 input:focus, select:focus {
       border: 3px solid #555;
 }

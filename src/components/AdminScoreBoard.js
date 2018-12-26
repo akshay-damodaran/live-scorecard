@@ -10,35 +10,76 @@ class AdminScoreBoard extends Component {
       constructor(props) {
             super(props);
             this.state = {
-                  batsman1: {
+                  // socket data
+                  team1: {
+                        name: '',
+                        logo: '',
+                        wonToss: false,
+                        isBatting: true,
+                        runs: 0,
+                        wickets: 0,
+                        ballsFaced: 0
+                  },
+                  team2: {
+                        name: '',
+                        logo: '',
+                        wonToss: false,
+                        isBatting: true,
+                        runs: 0,
+                        wickets: 0,
+                        ballsFaced: 0
+                  },
+                  inningId: 1,
+                  heading: '',
+                  striker: {
+                        id: 0,
                         name: '',
                         runs: 0,
                         balls: 0,
                         fours: 0,
-                        sixes: 0,
-                        isStriker: true
+                        sixes: 0
                   },
-                  batsman2: {
+                  nonStriker: {
+                        id: 0,
                         name: '',
                         runs: 0,
                         balls: 0,
                         fours: 0,
-                        sixes: 0,
-                        isStriker: false
+                        sixes: 0
                   },
+                  bowler: {
+                        id: 0,
+                        name: '',
+                        runsGiven: 0,
+                        overs: 0.0,
+                        maiden: 0,
+                        wickets: 0
+                  },
+                  overArray: Array(6).fill(0),
+
+                  // extra data needed
                   battingTeamPlayers: [],
                   bowlingTeamPlayers: [],
-                  runs: 0,
+                  totalRuns: 0,
                   wickets: 0,
                   isWicket: false,
                   changePlayer: false,
-                  endGame: false
+                  inningEnd: false
             }
       }
 
       componentDidMount() {
-            const { battingTeam, team1Players, team2Players } = this.props;
+            const { inningId, striker, nonStriker, tossResult, battingTeam, team1, team2, team1Players, team2Players, socket } = this.props;
+
+            // Event - inningStart
+            // socket.emit('nextScreen', {
+            //       inningId,
+            //       strikerId: striker.id,
+            //       nonStrikerId: nonStriker.id,
+            // });
+
             let battingTeamPlayers, bowlingTeamPlayers;
+
             if (battingTeam === 1) {
                   battingTeamPlayers = team1Players;
                   bowlingTeamPlayers = team2Players;
@@ -46,21 +87,52 @@ class AdminScoreBoard extends Component {
                   battingTeamPlayers = team2Players;
                   bowlingTeamPlayers = team1Players;
             }
-            this.setState({ battingTeamPlayers, bowlingTeamPlayers });
+
+            let heading = (tossResult === 1) ?
+                  `${team1} won the toss and elected to do ${(battingTeam === 1) ? 'batting' : 'fielding'}.`
+                  :
+                  `${team2} won the toss and elected to do ${(battingTeam === 2) ? 'batting' : 'fielding'}.`;
+
+            let teamOne = {
+                  name: team1,
+                  logo: '',
+                  wonToss: (tossResult === 1),
+                  isBatting: (battingTeam === 1),
+                  runs: 0,
+                  wickets: 0,
+                  ballsFaced: 0
+            };
+            let teamTwo = {
+                  name: team2,
+                  logo: '',
+                  wonToss: (tossResult === 2),
+                  isBatting: (battingTeam === 2),
+                  runs: 0,
+                  wickets: 0,
+                  ballsFaced: 0
+            }
+
+            this.setState({ battingTeamPlayers, bowlingTeamPlayers, heading, team1: teamOne, team2: teamTwo });
       }
 
-      setBatsmenDetails(batsman1, batsman2) {
-            this.setState({ batsman1, batsman2 });
+      setBatsmenDetails(striker, nonStriker) {
+            this.setState({ striker, nonStriker });
       }
 
       updateRuns(addRuns) {
-            let { runs } = this.state;
-            runs = runs + addRuns;
-            this.setState({ runs });
+            let { totalRuns, striker, nonStriker } = this.state;
+            totalRuns = totalRuns + addRuns;
+            striker.runs = striker.runs + addRuns;
+            striker.balls = striker.balls + 1;
+            if (totalRuns % 2 !== 0) {
+                  this.setState({ striker: nonStriker, nonStriker: striker, totalRuns });
+            } else {
+                  this.setState({ totalRuns, striker });
+            }
       }
 
-      setWicket() {
-            this.setState({ isWicket: true });
+      setWicket(isWicket) {
+            this.setState({ isWicket });
       }
 
       updateWickets(addWicket) {
@@ -73,12 +145,12 @@ class AdminScoreBoard extends Component {
             this.setState({ changePlayer: boolean });
       }
 
-      setEndGame() {
-            this.setState({ endGame: true });
-      }
+      // setEndGame() {
+      //       this.setState({ endGame: true });
+      // }
 
       render() {
-            const { team1, team2, tossResult, battingTeam } = this.props;
+            const { team1, team2, battingTeam } = this.props;
             const { battingTeamPlayers, bowlingTeamPlayers } = this.state;
             return (
                   <div className="admin-scoreboard">
@@ -96,13 +168,7 @@ class AdminScoreBoard extends Component {
                               </div>
                         </div>
                         <div className="toss-win">
-
-                              {
-                                    (tossResult === 1) ?
-                                          <span>{`${team1} won the toss and elected to do ${(battingTeam === 1) ? 'batting' : 'fielding'}.`}</span>
-                                          :
-                                          <span>{`${team2} won the toss and elected to do ${(battingTeam === 2) ? 'batting' : 'fielding'}.`}</span>
-                              }
+                              <span>{this.state.heading}</span>
                         </div>
 
                         {
@@ -115,7 +181,7 @@ class AdminScoreBoard extends Component {
                                                 <div className="section-body">
                                                       <div className="runs">
                                                             <span>Runs:&nbsp;&nbsp;&nbsp;</span>
-                                                            <div className="score">{this.state.runs}</div>
+                                                            <div className="score">{this.state.totalRuns}</div>
                                                       </div>
                                                       <div className="wickets">
                                                             <span>Wickets:&nbsp;&nbsp;&nbsp;</span>
@@ -124,15 +190,21 @@ class AdminScoreBoard extends Component {
                                                 </div>
                                           </div>
                                           <BatsmanSection
+                                                striker={this.state.striker}
+                                                nonStriker={this.state.nonStriker}
                                                 battingTeamPlayers={battingTeamPlayers}
                                                 setBatsmenDetails={this.setBatsmenDetails.bind(this)}
                                                 isWicket={this.state.isWicket}
+                                                setWicket={this.setWicket.bind(this)}
                                                 changePlayer={this.state.changePlayer}
                                                 setChangePlayer={this.setChangePlayer.bind(this)}
                                                 updateWickets={this.updateWickets.bind(this)}
                                           />
                                           <OversSection
+                                                striker={this.state.striker}
+                                                nonStriker={this.state.nonStriker}
                                                 bowlingTeamPlayers={bowlingTeamPlayers}
+                                                setBatsmenDetails={this.setBatsmenDetails.bind(this)}
                                                 updateRuns={this.updateRuns.bind(this)}
                                                 setWicket={this.setWicket.bind(this)}
                                                 setChangePlayer={this.setChangePlayer.bind(this)}

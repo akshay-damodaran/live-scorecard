@@ -8,22 +8,8 @@ class BatsmanSection extends Component {
             super(props);
             this.state = {
                   isMatchStart: true,
-                  striker: {
-                        name: 'Select Striker',
-                        runs: 0,
-                        balls: 0,
-                        fours: 0,
-                        sixes: 0,
-                        isStriker: true
-                  },
-                  nonStriker: {
-                        name: 'Select Non Striker',
-                        runs: 0,
-                        balls: 0,
-                        fours: 0,
-                        sixes: 0,
-                        isStriker: false
-                  },
+                  striker: {},
+                  nonStriker: {},
                   changePlayer: this.props.changePlayer,
                   isWicket: this.props.isWicket,
                   currentOutPlayer: '',
@@ -47,8 +33,36 @@ class BatsmanSection extends Component {
             }
       }
 
+      componentDidMount() {
+            let { striker, nonStriker } = this.props;
+            this.setState({ striker, nonStriker });
+      }
+
       componentWillReceiveProps(nextProps) {
-            this.setState({ isWicket: nextProps.isWicket, changePlayer: nextProps.changePlayer });
+            this.setState({
+                  striker: nextProps.striker,
+                  nonStriker: nextProps.nonStriker,
+                  isWicket: nextProps.isWicket,
+                  changePlayer: nextProps.changePlayer
+            });
+      }
+
+      renderPlayer(player) {
+            return (
+                  <div className="striker">
+                        {
+                              Object.keys(player).map((item, i) =>
+                                    <div
+                                          key={`batsman_${item}`}
+                                          className="batsman"
+                                    // onClick={() => this.switchStriker()}
+                                    >
+                                          {(item === 'isStriker') ? (player[item]) ? 'Yes' : 'No' : (item === 'id') ? null : player[item]}
+                                    </div>
+                              )
+                        }
+                  </div>
+            );
       }
 
       setPlayer(e, type) {
@@ -83,6 +97,7 @@ class BatsmanSection extends Component {
                                     this.setState({ nextPlayer: player });
                                     break;
                               }
+                              default: break;
                         }
                         break;
                   }
@@ -92,7 +107,8 @@ class BatsmanSection extends Component {
             }
       }
 
-      setMatchStartDetails() {
+      setMatchStartDetails(e) {
+            e.preventDefault();
             const { striker, nonStriker } = this.state;
             this.props.setBatsmenDetails(striker, nonStriker);
             this.setState({ isMatchStart: false });
@@ -107,8 +123,9 @@ class BatsmanSection extends Component {
                         value={this.state[team].name}
                         onChange={(e) => this.setPlayer(e, team)}
                         autoFocus={(team === 'striker')}
+                        required={true}
                   >
-                        <option>{`Select player`}</option>
+                        <option value="">{`Select player`}</option>
                         {
                               battingTeamPlayers.map((item, i) =>
                                     <option key={i} value={item.name}>{item.name}</option>
@@ -126,18 +143,70 @@ class BatsmanSection extends Component {
                   striker: nonStriker,
                   nonStriker: striker
             });
+            // this.props.setBatsmenDetails(nonStriker, striker);
       }
 
-      setWicketDetails() {
-            (this.state.nextPlayer.isStriker) ?
-                  this.setState({ striker: this.state.nextPlayer, isWicket: false })
-                  :
-                  this.setState({ nonStriker: this.state.nextPlayer, isWicket: false });
+      setNextPlayerDetails(isStriker) {
+            let { nextPlayer } = this.state;
+            nextPlayer.isStriker = isStriker;
+            this.setState({ nextPlayer });
+            switch (isStriker) {
+                  case true: {
+                        document.getElementById('nextplayer-striker').style.backgroundColor = '#ba124c';
+                        document.getElementById('nextplayer-nonStriker').style.backgroundColor = '#e6e6e6';
+                        break;
+                  }
+                  case false: {
+                        document.getElementById('nextplayer-striker').style.backgroundColor = '#e6e6e6';
+                        document.getElementById('nextplayer-nonStriker').style.backgroundColor = '#ba124c';
+                        break;
+                  }
+                  default: break;
+            }
+      }
+
+      setWicketDetails(e) {
+            // e.preventDefault();
+            let { currentOutPlayer, nextPlayer } = this.state;
+            switch (currentOutPlayer) {
+                  case 'striker': {
+                        switch (nextPlayer.isStriker) {
+                              case true: {
+                                    this.setState({ striker: nextPlayer, isWicket: false });
+                                    break;
+                              }
+                              case false: {
+                                    this.switchStriker();
+                                    this.setState({ nonStriker: nextPlayer, isWicket: false });
+                                    break;
+                              }
+                              default: break;
+                        }
+                        break;
+                  }
+                  case 'nonStriker': {
+                        switch (nextPlayer.isStriker) {
+                              case true: {
+                                    this.switchStriker();
+                                    this.setState({ striker: nextPlayer, isWicket: false });
+                                    break;
+                              }
+                              case false: {
+                                    this.setState({ nonStriker: nextPlayer, isWicket: false });
+                                    break;
+                              }
+                              default: break;
+                        }
+                        break;
+                  }
+                  default: break;
+            }
+            this.props.setWicket(false);
             if (this.state.changePlayer) {
                   this.setState({ changePlayer: false });
                   this.props.setChangePlayer(false);
             } else {
-                  this.props.updateWickets(1);
+                  this.props.updateWickets(1); // (noOfWickets, isWicket)
             }
       }
 
@@ -183,7 +252,7 @@ class BatsmanSection extends Component {
                               {
                                     (this.state.isMatchStart) ?
                                           <div className="scoreboard-body-match-start">
-                                                <div>
+                                                <form onSubmit={(e) => this.setMatchStartDetails(e)}>
                                                       <div className="match-start-section">
                                                             <div className="dropdown-list">
                                                                   <div className="dd-list-half">{"Striker"}</div>
@@ -201,9 +270,13 @@ class BatsmanSection extends Component {
                                                                         }
                                                                   </div>
                                                             </div>
-                                                            <button onClick={() => this.setMatchStartDetails()}>OK</button>
+                                                            <input type="submit" value="OK" />
+                                                            {/* <div className="player-out">
+                                                                  <input type="submit" value="OK" />
+                                                                  <input type="submit" value="CANCEL" onClick={() => this.setState({ isMatchStart: false })} />
+                                                            </div> */}
                                                       </div>
-                                                </div>
+                                                </form>
                                           </div>
                                           :
                                           (this.state.isWicket) ?
@@ -219,11 +292,11 @@ class BatsmanSection extends Component {
                                                                   {/* <span>{`\nWicket Reason?`}</span> */}
                                                                   {
                                                                         this.state.wicketReasons.map((item, i) =>
-                                                                              <button className="wicket-reason" id={`wicketReason_${item}`} onClick={() => this.handleWicketReason(item)}>{item}</button>
+                                                                              <button key={`wicket_reason_${i}`} className="wicket-reason" id={`wicketReason_${item}`} onClick={() => this.handleWicketReason(item)}>{item}</button>
                                                                         )
                                                                   }
                                                             </div>
-                                                            <span>{`\nNext batsman?`}</span>
+                                                            <div className="overs-header">{`Next batsman?`}</div>
                                                             <div className="dropdown-list">
                                                                   <div className="dd-list-half">{"Select next player:"}</div>
                                                                   <div className="dd-list-half">
@@ -232,7 +305,15 @@ class BatsmanSection extends Component {
                                                                         }
                                                                   </div>
                                                             </div>
-                                                            <button id="wicket-details-button" onClick={() => this.setWicketDetails()}>OK</button>
+                                                            <div className="overs-header">{`As Striker?`}</div>
+                                                            <div className="player-out">
+                                                                  <button id="nextplayer-striker" onClick={() => this.setNextPlayerDetails(true)}>{`Yes`}</button>
+                                                                  <button id="nextplayer-nonStriker" onClick={() => this.setNextPlayerDetails(false)}>{'No'}</button>
+                                                            </div>
+                                                            <div className="player-out">
+                                                                  <input type="submit" value="OK" onClick={() => this.setWicketDetails()} />
+                                                                  <input type="submit" value="CANCEL" onClick={() => this.setState({ isWicket: false })} />
+                                                            </div>
                                                       </div>
                                                 </div>
                                                 :
@@ -267,7 +348,9 @@ class BatsmanSection extends Component {
                                                                         <div className="batsman">Sixes</div>
                                                                         <div className="batsman">Striker</div>
                                                                   </div>
-                                                                  <div className="striker">
+                                                                  {this.renderPlayer(this.state.striker)}
+                                                                  {this.renderPlayer(this.state.nonStriker)}
+                                                                  {/* <div className="striker">
                                                                         {
                                                                               Object.keys(striker).map((item, i) =>
                                                                                     <div
@@ -286,13 +369,13 @@ class BatsmanSection extends Component {
                                                                                     <div
                                                                                           key={`batsman2_${item}`}
                                                                                           className="batsman"
-                                                                                          onClick={() => this.switchStriker()}
+                                                                                    // onClick={() => this.switchStriker()}
                                                                                     >
                                                                                           {(item === 'isStriker') ? (nonStriker[item]) ? 'Yes' : 'No' : nonStriker[item]}
                                                                                     </div>
                                                                               )
                                                                         }
-                                                                  </div>
+                                                                  </div> */}
                                                             </div>
                                                       </div>
                               }

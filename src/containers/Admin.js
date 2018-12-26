@@ -28,6 +28,7 @@ class Admin extends Component {
       team2Players: Array(16).fill(null).map(() => ({ name: '' })),
       tossResult: 0,
       battingTeam: 0,
+      totalOvers: 20
       // socket,
 
     }
@@ -44,10 +45,10 @@ class Admin extends Component {
   prevScreen() {
     let {
       pageComponent,
-      socket
+      // socket
     } = this.state;
     // No of screens
-    let n = 6;
+    // let n = 6;
     if (pageComponent === 0) {
       pageComponent = -1;
     }
@@ -62,7 +63,7 @@ class Admin extends Component {
   nextScreen() {
     let {
       pageComponent,
-      socket
+      // socket
     } = this.state;
     // No of screens
     let n = 6;
@@ -83,6 +84,10 @@ class Admin extends Component {
     });
   }
 
+  setTotalOvers(totalOvers) {
+    this.setState({ totalOvers });
+  }
+
   setTeamPlayers(teamId, teamName, teamPlayers) {
     // const url = `${conf.base_url}apis/createteam`;
     // axios.post(
@@ -91,6 +96,7 @@ class Admin extends Component {
     //     teamName,
     //     teamId,
     //     teamPlayers,
+    //     totalOvers: this.state.totalOvers
     //   })
     //   .then(res => {
     //     console.log('Res : ', res);
@@ -120,7 +126,7 @@ class Admin extends Component {
   }
 
   renderComponent() {
-    const { team1, team2, team1Players, team2Players, tossResult, battingTeam } = this.state;
+    const { team1, team2, totalOvers, team1Players, team2Players, tossResult, battingTeam } = this.state;
     switch (this.state.pageComponent) {
       case 0: {
         return (
@@ -136,6 +142,7 @@ class Admin extends Component {
             team2={team2}
             nextScreen={() => this.nextScreen()}
             changeTeamName={(teamName) => this.changeTeamName(teamName)}
+            setTotalOvers={(totalOvers) => this.setTotalOvers(totalOvers)}
           />
         );
       }
@@ -187,10 +194,12 @@ class Admin extends Component {
           <AdminScoreBoard
             team1={team1}
             team2={team2}
+            totalOvers={totalOvers}
             team1Players={team1Players}
             team2Players={team2Players}
             tossResult={tossResult}
             battingTeam={battingTeam}
+            socket={this.state.socket}
           />
         );
       }
