@@ -10,6 +10,8 @@ class BatsmanSection extends Component {
                   isMatchStart: true,
                   striker: {},
                   nonStriker: {},
+                  battingTeam: this.props.battingTeam,
+
                   changePlayer: this.props.changePlayer,
                   isWicket: this.props.isWicket,
                   currentOutPlayer: '',
@@ -75,12 +77,10 @@ class BatsmanSection extends Component {
             }
             switch (type) {
                   case 'striker': {
-                        // player.isStriker = true;
                         this.setState({ striker: player });
                         break;
                   }
                   case 'nonStriker': {
-                        // player.isStriker = false;
                         this.setState({ nonStriker: player });
                         break;
                   }
@@ -111,6 +111,13 @@ class BatsmanSection extends Component {
             const { striker, nonStriker } = this.state;
             this.props.setBatsmenDetails(striker, nonStriker);
             this.setState({ isMatchStart: false });
+
+            // Event - inningStart
+            // socket.emit('inningStart', {
+            //       inningId,
+            //       strikerId: striker.id,
+            //       nonStrikerId: nonStriker.id,
+            // });
       }
 
       renderBattingTeamDropDown(team) {
@@ -164,18 +171,33 @@ class BatsmanSection extends Component {
 
       setWicketDetails(e) {
             // e.preventDefault();
-            let { currentOutPlayer, nextPlayer } = this.state;
+            let { currentOutPlayer, nextPlayer, battingTeam, wicketReason, striker, nonStriker } = this.state;
+
+            // Event - wicket
+            // let wicketDetails = {
+            //       wicketBy: 0, // to be taken 
+            //       wicketType: wicketReason, 
+            //       playerId: (currentOutPlayer === 'striker') ? striker.id : nonStriker.id, // to be updated 
+            //       teamId: battingTeam, 
+            //       newPlayerId: nextPlayer.id, 
+            //       newPlayerName: nextPlayer.name,
+            //       strikerId: striker.id, 
+            //       bowlerId: 0, // to be passed
+            //       runScored: 
+            // }
+            // socket.emit('wicket', wicketDetails)
+
             switch (currentOutPlayer) {
                   case 'striker': {
                         switch (nextPlayer.isStriker) {
                               case true: {
-                                    delete nextPlayer['isStriker'];
+                                    // delete nextPlayer['isStriker'];
                                     this.setState({ striker: nextPlayer, isWicket: false, changePlayer: false });
                                     break;
                               }
                               case false: {
                                     this.switchStriker();
-                                    delete nextPlayer['isStriker'];
+                                    // delete nextPlayer['isStriker'];
                                     this.setState({ nonStriker: nextPlayer, isWicket: false, changePlayer: false });
                                     break;
                               }
@@ -187,12 +209,12 @@ class BatsmanSection extends Component {
                         switch (nextPlayer.isStriker) {
                               case true: {
                                     this.switchStriker();
-                                    delete nextPlayer['isStriker'];
+                                    // delete nextPlayer['isStriker'];
                                     this.setState({ striker: nextPlayer, isWicket: false, changePlayer: false });
                                     break;
                               }
                               case false: {
-                                    delete nextPlayer['isStriker'];
+                                    // delete nextPlayer['isStriker'];
                                     this.setState({ nonStriker: nextPlayer, isWicket: false, changePlayer: false });
                                     break;
                               }
@@ -202,6 +224,7 @@ class BatsmanSection extends Component {
                   }
                   default: break;
             }
+            this.props.updateWickets(1);
             // this.props.setWicket(false);
             // if (this.state.changePlayer) {
             //       this.setState({ changePlayer: false });

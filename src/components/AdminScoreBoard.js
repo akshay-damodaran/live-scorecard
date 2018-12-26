@@ -60,24 +60,20 @@ class AdminScoreBoard extends Component {
                   // extra data needed
                   battingTeamPlayers: [],
                   bowlingTeamPlayers: [],
+
                   totalRuns: 0,
-                  wickets: 0,
                   totalOvers: 0,
+                  
+                  wickets: 0,
                   isWicket: false,
                   changePlayer: false,
+
                   inningEnd: false
             }
       }
 
       componentDidMount() {
             const { inningId, striker, nonStriker, totalOvers, tossResult, battingTeam, team1, team2, team1Players, team2Players, socket } = this.props;
-
-            // Event - inningStart
-            // socket.emit('nextScreen', {
-            //       inningId,
-            //       strikerId: striker.id,
-            //       nonStrikerId: nonStriker.id,
-            // });
 
             let battingTeamPlayers, bowlingTeamPlayers;
 
@@ -147,8 +143,8 @@ class AdminScoreBoard extends Component {
       // }
 
       render() {
-            const { team1, team2, battingTeam } = this.props;
-            const { battingTeamPlayers, bowlingTeamPlayers } = this.state;
+            const { battingTeam } = this.props;
+            const { team1, team2, battingTeamPlayers, bowlingTeamPlayers } = this.state;
             return (
                   <div className="admin-scoreboard">
                         <div className="scoreboard-header">
@@ -157,11 +153,13 @@ class AdminScoreBoard extends Component {
                         <div className="admin-teams">
                               <div className="team" id="team-1" style={{ backgroundColor: '#66ccff' }}>
                                     <img src={(battingTeam === 1) ? require('../images/team1.png') : require('../images/team2.png')} width="50" height="50" className="team-logo" alt={team1} />
-                                    <h4>&nbsp;&nbsp;&nbsp;{team1}</h4>
+                                    <h4>&nbsp;&nbsp;&nbsp;{(battingTeam === 1) ? team1.name : team2.name}</h4>
+                                    {/* <h4>&nbsp;&nbsp;&nbsp;{`(${(battingTeam === 1) ? team1.runs : team2.runs})`}</h4> */}
                               </div>
                               <div className="team" id="team-2" style={{ backgroundColor: '#ccccff' }}>
                                     <img src={(battingTeam !== 1) ? require('../images/team1.png') : require('../images/team2.png')} width="50" height="50" className="team-logo" alt={team2} />
-                                    <h4>&nbsp;&nbsp;&nbsp;{team2}</h4>
+                                    <h4>&nbsp;&nbsp;&nbsp;{(battingTeam !== 1) ? team1.name : team2.name}</h4>
+                                    {/* <h4>&nbsp;&nbsp;&nbsp;{`(${(battingTeam !== 1) ? team1.runs : team2.runs})`}</h4> */}
                               </div>
                         </div>
                         <div className="toss-win">
@@ -189,20 +187,24 @@ class AdminScoreBoard extends Component {
                                           <BatsmanSection
                                                 striker={this.state.striker}
                                                 nonStriker={this.state.nonStriker}
+                                                battingTeam={this.state.battingTeam}
                                                 battingTeamPlayers={battingTeamPlayers}
                                                 setBatsmenDetails={this.setBatsmenDetails.bind(this)}
                                                 isWicket={this.state.isWicket}
                                                 setWicket={this.setWicket.bind(this)}
                                                 updateWickets={this.updateWickets.bind(this)}
+                                                socket={this.state.socket}
                                           />
                                           <OversSection
                                                 striker={this.state.striker}
                                                 nonStriker={this.state.nonStriker}
                                                 totalOvers={this.state.totalOvers}
+                                                battingTeam={this.state.battingTeam}
                                                 bowlingTeamPlayers={bowlingTeamPlayers}
                                                 setBatsmenDetails={this.setBatsmenDetails.bind(this)}
                                                 updateRuns={this.updateRuns.bind(this)}
                                                 setWicket={this.setWicket.bind(this)}
+                                                socket={this.state.socket}
                                           />
                                     </div>
                                     :

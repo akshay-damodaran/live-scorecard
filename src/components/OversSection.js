@@ -1,36 +1,44 @@
 import React, { Component } from 'react';
 
-// let eachBallUpdate = [{
-//       ballNo: 1, // ball number in an inning
-//       ballStatus: '', // ['WD', 'WK', 'NB', 'B', 'LB', 'R', 'CBM', 'CB']
-//       runs: 0, // number of runs scored for the ball
-//       strikerId: 1, // striker id who took the runs
-//       teamId: 1, // team whom batsman belongs
-// }];
-
 class OversSection extends Component {
 
       constructor(props) {
             super(props);
             this.state = {
+                  // inning details
                   inningNo: this.props.inningNo,
+                  battingTeam: this.props.battingTeam,
+
+                  // player details
                   striker: this.props.striker,
                   nonStriker: this.props.nonStriker,
+
+                  // current over details
                   isOverStart: true,
                   totalOvers: 20,
                   currentOvers: 0,
                   remainingOvers: 0,
-                  currentBowl: 0,
-                  totalBowls: 0,
+                  currentOverBowls: 6,
+                  overRuns: [1, 2, 3, 4, 5, 6],
+
+                  // current bowl details
+                  totalBowls: 0, // total bowls for the inning (not sure if needed - maybe in extra balls cases)
+                  currentBowl: 0, // ball number of the current over
                   bowler: {
                         name: 'Select Bowler'
                   },
-                  bowls: [''],
-                  ballNo: 0,
+                  bowls: [{
+                        bowlNo: 1,
+                        bowlStatus: null,
+                        bowlRuns: 0,
+                        isLocked: false
+                  }],
+
                   runs: 0,
                   showBowlStatus: false,
                   changeBowler: false,
-                  // currentOverHistory: {}
+
+                  socket: this.props.socket
             }
       }
 
@@ -43,59 +51,65 @@ class OversSection extends Component {
       }
 
       lockBowl() {
-            let { currentBowl, currentOvers, runs, totalBowls, bowls, currentOverHistory, striker, inningNo } = this.state;
-            if (bowls[currentBowl - 1] !== 'WD') {
+            let { currentBowl, currentOvers, runs, totalBowls, bowls, currentOverBowls, striker, battingTeam } = this.state;
+            if (!bowls[currentBowl - 1].isLocked) {
+                  if (bowls[currentBowl - 1].bowlStatus === 'WD' && bowls[currentBowl - 1].bowlStatus === 'NB') {
+                        currentOverBowls = currentOverBowls + 1;
+                        totalBowls = totalBowls + 1;
+                  }
                   totalBowls = totalBowls + 1;
                   currentOvers = (parseInt(currentOvers) + ((currentBowl) * 0.1)).toFixed(1);
+                  document.getElementById(`bowl_${currentBowl - 1}`).style.backgroundColor = '#333333';
+                  document.getElementById(`bowl_${currentBowl - 1}`).style.color = '#ffffff';
+                  this.props.updateRuns(runs);
+
+                  // Event - eachBallUpdate
+                  // socket.emit('eachBallUpdate', {
+                  //       runScored: runs,
+                  //       teamId: battingTeam
+                  //       strikerId: striker.id,
+                  //       bowlerId: bowler.id,
+                  // });
+
+                  if (bowls.length <= currentOverBowls && !bowls[currentBowl - 1].isLocked) {
+                        bowls.push({
+                              bowlNo: currentBowl,
+                              bowlStatus: null,
+                              bowlRuns: 0,
+                              isLocked: false,
+                              striker: {}
+                        });
+                        bowls[currentBowl - 1].isLocked = true;
+                        bowls[currentBowl - 1].striker = striker;
+                        this.setState({ totalBowls, currentOvers, showBowlStatus: false, bowls });
+                  } else {
+                        this.setState({ isOverStart: true });
+                  }
+            } else {
+                  console.log('yahpe aaya', bowls[currentBowl - 1]);
+                  let prevRuns = bowls[currentBowl - 1].bowlRuns;
+                  this.props.updateRuns(runs - prevRuns);
+                  bowls[currentBowl - 1].bowlRuns = runs;
+                  bowls[currentBowl - 1].striker.runs = bowls[currentBowl - 1].striker.runs - bowls[currentBowl - 1].bowlRuns + runs;
+                  console.log('yahpe aaya 2', bowls[currentBowl - 1]);
             }
-            document.getElementById(`bowl_${currentBowl - 1}`).style.backgroundColor = '#333333';
-            document.getElementById(`bowl_${currentBowl - 1}`).style.color = '#ffffff';
-            // if ((currentBowl - 2) >= 1) document.getElementById(`bowl_${currentBowl - 2}`).style.pointerEvents = 'none';
-            // document.getElementById("lock-bowl").disabled = true;    
-            this.props.updateRuns(runs);
 
-            // update currentOverHistory
-            // let ballUpdate = {
-            //       ballNo: currentBowl,
-            //       status: bowls[currentBowl-1],
-            //       runs,
-            //       strikerId: striker.id,
-            //       overNo: parseInt(currentOvers),
-            //       inningNo
-            // };
-            // currentOverHistory[currentBowl] = ballUpdate;
-
-            bowls.push('');
-
-            this.setState({ totalBowls, currentOvers, showBowlStatus: false, bowls });
       }
 
       setBowlStatus(ballNo, i) {
-            // document.getElementById("lock-bowl").disabled = true;
-            switch (ballNo) {
-                  case '+': {
-                        // set current colors to white for cowls
-                        let bowls = [1, 2, 3, 4, 5, 6, '+'];
-                        let { currentOvers, totalOvers, inningNo } = this.state;
-                        currentOvers = (parseInt(currentOvers) + 1);
-                        if (currentOvers <= totalOvers) {
-                              this.setState({ isOverStart: true, bowls, currentOvers });
-                        } else {
-                              if (inningNo === 1) {
-                                    this.setState({ inningEnd: true });
-                              } else {
-                                    this.setState({ endGame: true });
-                              }
-                        }
-                        break;
-                  }
-                  default: {
-                        // document.getElementById("lock-bowl").disabled = false;
-                        document.getElementById(`bowl_${i}`).style.backgroundColor = '#ffff00';
-                        this.setState({ currentBowl: i + 1, runs: 0, showBowlStatus: true });
-                        break;
-                  }
-            }
+            document.getElementById(`bowl_${i}`).style.backgroundColor = '#ffff00';
+            this.setState({ currentBowl: i + 1, runs: 0, showBowlStatus: true });
+      }
+
+      setOverStartDetails() {
+            this.setState({ isOverStart: false });
+
+            // Event - overStart
+            // socket.emit('overStart', {
+            //       bowlerId: this.state.bowler.id,
+            //       strikerId: this.state.striker.id,
+            //       nonStrikerId: this.state.nonStriker.id,
+            // });
       }
 
       setBowler(e) {
@@ -117,7 +131,7 @@ class OversSection extends Component {
                                           className="bowl"
                                           onClick={() => { this.setBowlStatus(item, i) }}
                                     >
-                                          {item}
+                                          {(item.bowlStatus === null) ? item.bowlNo : item.bowlStatus}
                                     </div>
                               )
                         }
@@ -126,7 +140,7 @@ class OversSection extends Component {
       }
 
       renderOver() {
-            const bowlStatus = ['WD', 'WK', 'NB', 'B', 'LB', 'CB'];
+            const bowlStatus = ['WD', 'WK', 'NB', 'B', 'LB'];
             return (
                   <div>
                         <div className="over-count">
@@ -139,7 +153,7 @@ class OversSection extends Component {
                                                 className="bowl"
                                                 onClick={() => {
                                                       let { currentBowl, bowls } = this.state;
-                                                      bowls[currentBowl - 1] = item;
+                                                      bowls[currentBowl - 1].bowlStatus = item;
                                                       if (item === 'WK') {
                                                             this.props.setWicket(true);
                                                       }
@@ -152,28 +166,44 @@ class OversSection extends Component {
                               }
                         </div>
                         <div className="dropdown-list">
-                              <div className="dd-list-half">{"Total Runs for the current ball: "}</div>
+                              <div className="dd-list-half">{"Runs Scored: "}</div>
                               <div className="dd-list-half">
-                                    <input
-                                          value={this.state.runs}
-                                          placeholder="Enter runs"
-                                          type="number"
-                                          min="0"
-                                          max="10"
-                                          step="1"
-                                          onChange={(e) => {
-                                                let { runs } = this.state;
-                                                runs = parseInt(e.target.value);
-                                                this.setState({ runs });
-                                          }}
-                                          onBlur={(e) => {
-                                                let { runs } = this.state;
-                                                runs = parseInt(e.target.value);
-                                                this.setState({ runs });
-                                          }}
-                                    />
+                                    {
+                                          this.state.overRuns.map((item, i) =>
+                                                <div
+                                                      id={`status_${item}`}
+                                                      key={`runsscores_${i}`}
+                                                      className="bowl"
+                                                      onClick={() => {
+                                                            let { runs } = this.state;
+                                                            runs = parseInt(item);
+                                                            this.setState({ runs });
+                                                      }}
+                                                >
+                                                      {item}
+                                                </div>
+                                          )
+                                    }
                               </div>
                         </div>
+                        <input
+                              value={this.state.runs}
+                              placeholder="Enter runs scored"
+                              type="number"
+                              min="0"
+                              max="10"
+                              step="1"
+                              onChange={(e) => {
+                                    let { runs } = this.state;
+                                    runs = parseInt(e.target.value);
+                                    this.setState({ runs });
+                              }}
+                              onBlur={(e) => {
+                                    let { runs } = this.state;
+                                    runs = parseInt(e.target.value);
+                                    this.setState({ runs });
+                              }}
+                        />
                         <button id="lock-bowl" onClick={() => this.lockBowl()}>OK</button>
                   </div>
             );
@@ -218,7 +248,7 @@ class OversSection extends Component {
                                                                               }
                                                                         </div>
                                                                   </div>
-                                                                  <button onClick={() => this.setState({ isOverStart: false })}>OK</button>
+                                                                  <button onClick={() => this.setOverStartDetails()}>OK</button>
                                                             </div>
                                                       </div>
                                                 </div>
@@ -227,7 +257,8 @@ class OversSection extends Component {
                                           (!this.state.changeBowler) ?
                                                 <div className="">
                                                       <div className="overs-header">
-                                                            <span>Bowler: {this.state.bowler.name}</span>
+                                                            <div className="dd-list-half">{`Bowler: ${this.state.bowler.name}`}</div>
+                                                            <div className="dd-list-half" onClick={() => this.setState({ changeBowler: true })}>Change Bowler</div>
                                                       </div>
                                                       <div className="overs-status">
                                                             <span className="overs">Total: {this.state.totalOvers}</span>
