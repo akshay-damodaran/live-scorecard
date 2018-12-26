@@ -257,7 +257,6 @@ class BatsmanSection extends Component {
                                     <div>
                                           <div className="overs-header">{`Wicket Reason?`}</div>
                                           <div className="player-out">
-                                                {/* <span>{`\nWicket Reason?`}</span> */}
                                                 {
                                                       this.state.wicketReasons.map((item, i) =>
                                                             <button key={`wicket_reason_${i}`} className="wicket-reason" id={`wicketReason_${item}`} onClick={() => this.handleWicketReason(item)}>{item}</button>
@@ -319,10 +318,6 @@ class BatsmanSection extends Component {
                                                                   </div>
                                                             </div>
                                                             <input type="submit" value="OK" />
-                                                            {/* <div className="player-out">
-                                                                  <input type="submit" value="OK" />
-                                                                  <input type="submit" value="CANCEL" onClick={() => this.setState({ isMatchStart: false })} />
-                                                            </div> */}
                                                       </div>
                                                 </form>
                                           </div>
@@ -335,16 +330,8 @@ class BatsmanSection extends Component {
                                                       :
                                                       <div className="match-section">
                                                             <div className="player-out">
-                                                                  <button id="change-batsman" onClick={() => {
-                                                                        this.setState({ changePlayer: true });
-                                                                        // document.getElementById('change-batsman').style.backgroundColor = '#ba124c';
-                                                                        // document.getElementById('swap-striker').style.backgroundColor = '#e6e6e6';
-                                                                  }}>{`Change Batsman`}</button>
-                                                                  <button id="swap-striker" onClick={() => {
-                                                                        this.switchStriker();
-                                                                        // document.getElementById('swap-striker').style.backgroundColor = '#ba124c';
-                                                                        // document.getElementById('change-batsman').style.backgroundColor = '#e6e6e6';
-                                                                  }}>{'Swap Striker'}</button>
+                                                                  <button id="change-batsman" onClick={() => this.setState({ changePlayer: true })}>{`Change Batsman`}</button>
+                                                                  <button id="swap-striker" onClick={() => this.switchStriker()}>{'Swap Striker'}</button>
                                                             </div>
                                                             <div className="section-body">
                                                                   <div className="striker-headings">
@@ -356,32 +343,6 @@ class BatsmanSection extends Component {
                                                                   </div>
                                                                   {this.renderPlayer(this.state.striker)}
                                                                   {this.renderPlayer(this.state.nonStriker)}
-                                                                  {/* <div className="striker">
-                                                                        {
-                                                                              Object.keys(striker).map((item, i) =>
-                                                                                    <div
-                                                                                          key={`batsman1_${item}`}
-                                                                                          className="batsman"
-                                                                                    // onClick={() => this.switchStriker()}
-                                                                                    >
-                                                                                          {(item === 'isStriker') ? (striker[item]) ? 'Yes' : 'No' : striker[item]}
-                                                                                    </div>
-                                                                              )
-                                                                        }
-                                                                  </div>
-                                                                  <div className="striker">
-                                                                        {
-                                                                              Object.keys(nonStriker).map((item, i) =>
-                                                                                    <div
-                                                                                          key={`batsman2_${item}`}
-                                                                                          className="batsman"
-                                                                                    // onClick={() => this.switchStriker()}
-                                                                                    >
-                                                                                          {(item === 'isStriker') ? (nonStriker[item]) ? 'Yes' : 'No' : nonStriker[item]}
-                                                                                    </div>
-                                                                              )
-                                                                        }
-                                                                  </div> */}
                                                             </div>
                                                       </div>
                               }
