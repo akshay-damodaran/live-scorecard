@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 
-let eachBallUpdate = [{
-      ballNo: 1, // ball number in an inning
-      ballStatus: '', // ['WD', 'WK', 'NB', 'B', 'LB', 'R', 'CBM', 'CB']
-      runs: 0, // number of runs scored for the ball
-      strikerId: 1, // striker id who took the runs
-      teamId: 1, // team whom batsman belongs
-}];
+// let eachBallUpdate = [{
+//       ballNo: 1, // ball number in an inning
+//       ballStatus: '', // ['WD', 'WK', 'NB', 'B', 'LB', 'R', 'CBM', 'CB']
+//       runs: 0, // number of runs scored for the ball
+//       strikerId: 1, // striker id who took the runs
+//       teamId: 1, // team whom batsman belongs
+// }];
 
 class OversSection extends Component {
 
@@ -17,7 +17,7 @@ class OversSection extends Component {
                   striker: this.props.striker,
                   nonStriker: this.props.nonStriker,
                   isOverStart: true,
-                  totalOvers: this.props.totalOvers,
+                  totalOvers: 20,
                   currentOvers: 0,
                   remainingOvers: 0,
                   currentBowl: 0,
@@ -25,19 +25,20 @@ class OversSection extends Component {
                   bowler: {
                         name: 'Select Bowler'
                   },
-                  bowls: [1, 2, 3, 4, 5, 6, '+'],
+                  bowls: [''],
                   ballNo: 0,
                   runs: 0,
                   showBowlStatus: false,
                   changeBowler: false,
-                  currentOverHistory: {}
+                  // currentOverHistory: {}
             }
       }
 
       componentWillReceiveProps(nextProps) {
             this.setState({
                   striker: nextProps.striker,
-                  nonStriker: nextProps.nonStriker
+                  nonStriker: nextProps.nonStriker,
+                  totalOvers: nextProps.totalOvers
             });
       }
 
@@ -49,22 +50,24 @@ class OversSection extends Component {
             }
             document.getElementById(`bowl_${currentBowl - 1}`).style.backgroundColor = '#333333';
             document.getElementById(`bowl_${currentBowl - 1}`).style.color = '#ffffff';
-            if ((currentBowl - 2) >= 1) document.getElementById(`bowl_${currentBowl - 2}`).style.pointerEvents = 'none';
+            // if ((currentBowl - 2) >= 1) document.getElementById(`bowl_${currentBowl - 2}`).style.pointerEvents = 'none';
             // document.getElementById("lock-bowl").disabled = true;    
             this.props.updateRuns(runs);
 
             // update currentOverHistory
-            let ballUpdate = {
-                  ballNo: currentBowl,
-                  status: bowls[currentBowl-1],
-                  runs,
-                  strikerId: striker.id,
-                  overNo: parseInt(currentOvers),
-                  inningNo
-            };
-            currentOverHistory[currentBowl] = ballUpdate;
+            // let ballUpdate = {
+            //       ballNo: currentBowl,
+            //       status: bowls[currentBowl-1],
+            //       runs,
+            //       strikerId: striker.id,
+            //       overNo: parseInt(currentOvers),
+            //       inningNo
+            // };
+            // currentOverHistory[currentBowl] = ballUpdate;
 
-            this.setState({ totalBowls, currentOvers, showBowlStatus: false, currentOverHistory });
+            bowls.push('');
+
+            this.setState({ totalBowls, currentOvers, showBowlStatus: false, bowls });
       }
 
       setBowlStatus(ballNo, i) {
@@ -123,7 +126,7 @@ class OversSection extends Component {
       }
 
       renderOver() {
-            const bowlStatus = ['WD', 'WK', 'NB', 'B', 'LB', 'CBM', 'CB'];
+            const bowlStatus = ['WD', 'WK', 'NB', 'B', 'LB', 'CB'];
             return (
                   <div>
                         <div className="over-count">
@@ -139,8 +142,6 @@ class OversSection extends Component {
                                                       bowls[currentBowl - 1] = item;
                                                       if (item === 'WK') {
                                                             this.props.setWicket(true);
-                                                      } else if (item === 'CBM') {
-                                                            this.props.setChangePlayer(true);
                                                       }
                                                       this.setState({ bowls, changeBowler: (item === 'CB') });
                                                 }}

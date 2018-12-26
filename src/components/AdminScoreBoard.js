@@ -62,6 +62,7 @@ class AdminScoreBoard extends Component {
                   bowlingTeamPlayers: [],
                   totalRuns: 0,
                   wickets: 0,
+                  totalOvers: 0,
                   isWicket: false,
                   changePlayer: false,
                   inningEnd: false
@@ -69,7 +70,7 @@ class AdminScoreBoard extends Component {
       }
 
       componentDidMount() {
-            const { inningId, striker, nonStriker, tossResult, battingTeam, team1, team2, team1Players, team2Players, socket } = this.props;
+            const { inningId, striker, nonStriker, totalOvers, tossResult, battingTeam, team1, team2, team1Players, team2Players, socket } = this.props;
 
             // Event - inningStart
             // socket.emit('nextScreen', {
@@ -112,7 +113,7 @@ class AdminScoreBoard extends Component {
                   ballsFaced: 0
             }
 
-            this.setState({ battingTeamPlayers, bowlingTeamPlayers, heading, team1: teamOne, team2: teamTwo });
+            this.setState({ battingTeamPlayers, bowlingTeamPlayers, heading, team1: teamOne, team2: teamTwo, totalOvers });
       }
 
       setBatsmenDetails(striker, nonStriker) {
@@ -139,10 +140,6 @@ class AdminScoreBoard extends Component {
             let { wickets } = this.state;
             wickets = wickets + addWicket;
             this.setState({ wickets });
-      }
-
-      setChangePlayer(boolean) {
-            this.setState({ changePlayer: boolean });
       }
 
       // setEndGame() {
@@ -196,18 +193,16 @@ class AdminScoreBoard extends Component {
                                                 setBatsmenDetails={this.setBatsmenDetails.bind(this)}
                                                 isWicket={this.state.isWicket}
                                                 setWicket={this.setWicket.bind(this)}
-                                                changePlayer={this.state.changePlayer}
-                                                setChangePlayer={this.setChangePlayer.bind(this)}
                                                 updateWickets={this.updateWickets.bind(this)}
                                           />
                                           <OversSection
                                                 striker={this.state.striker}
                                                 nonStriker={this.state.nonStriker}
+                                                totalOvers={this.state.totalOvers}
                                                 bowlingTeamPlayers={bowlingTeamPlayers}
                                                 setBatsmenDetails={this.setBatsmenDetails.bind(this)}
                                                 updateRuns={this.updateRuns.bind(this)}
                                                 setWicket={this.setWicket.bind(this)}
-                                                setChangePlayer={this.setChangePlayer.bind(this)}
                                           />
                                     </div>
                                     :

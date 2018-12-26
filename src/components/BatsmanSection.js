@@ -57,7 +57,7 @@ class BatsmanSection extends Component {
                                           className="batsman"
                                     // onClick={() => this.switchStriker()}
                                     >
-                                          {(item === 'isStriker') ? (player[item]) ? 'Yes' : 'No' : (item === 'id') ? null : player[item]}
+                                          {(item === 'id') ? null : player[item]}
                                     </div>
                               )
                         }
@@ -71,17 +71,16 @@ class BatsmanSection extends Component {
                   runs: 0,
                   balls: 0,
                   fours: 0,
-                  sixes: 0,
-                  isStriker: false
+                  sixes: 0
             }
             switch (type) {
                   case 'striker': {
-                        player.isStriker = true;
+                        // player.isStriker = true;
                         this.setState({ striker: player });
                         break;
                   }
                   case 'nonStriker': {
-                        player.isStriker = false;
+                        // player.isStriker = false;
                         this.setState({ nonStriker: player });
                         break;
                   }
@@ -137,8 +136,6 @@ class BatsmanSection extends Component {
 
       switchStriker() {
             const { striker, nonStriker } = this.state;
-            striker.isStriker = false;
-            nonStriker.isStriker = true;
             this.setState({
                   striker: nonStriker,
                   nonStriker: striker
@@ -172,12 +169,14 @@ class BatsmanSection extends Component {
                   case 'striker': {
                         switch (nextPlayer.isStriker) {
                               case true: {
-                                    this.setState({ striker: nextPlayer, isWicket: false });
+                                    delete nextPlayer['isStriker'];
+                                    this.setState({ striker: nextPlayer, isWicket: false, changePlayer: false });
                                     break;
                               }
                               case false: {
                                     this.switchStriker();
-                                    this.setState({ nonStriker: nextPlayer, isWicket: false });
+                                    delete nextPlayer['isStriker'];
+                                    this.setState({ nonStriker: nextPlayer, isWicket: false, changePlayer: false });
                                     break;
                               }
                               default: break;
@@ -188,11 +187,13 @@ class BatsmanSection extends Component {
                         switch (nextPlayer.isStriker) {
                               case true: {
                                     this.switchStriker();
-                                    this.setState({ striker: nextPlayer, isWicket: false });
+                                    delete nextPlayer['isStriker'];
+                                    this.setState({ striker: nextPlayer, isWicket: false, changePlayer: false });
                                     break;
                               }
                               case false: {
-                                    this.setState({ nonStriker: nextPlayer, isWicket: false });
+                                    delete nextPlayer['isStriker'];
+                                    this.setState({ nonStriker: nextPlayer, isWicket: false, changePlayer: false });
                                     break;
                               }
                               default: break;
@@ -201,13 +202,12 @@ class BatsmanSection extends Component {
                   }
                   default: break;
             }
-            this.props.setWicket(false);
-            if (this.state.changePlayer) {
-                  this.setState({ changePlayer: false });
-                  this.props.setChangePlayer(false);
-            } else {
-                  this.props.updateWickets(1); // (noOfWickets, isWicket)
-            }
+            // this.props.setWicket(false);
+            // if (this.state.changePlayer) {
+            //       this.setState({ changePlayer: false });
+            // } else {
+            //       this.props.updateWickets(1); // (noOfWickets, isWicket)
+            // }
       }
 
       handleWicketReason(item) {
@@ -239,6 +239,54 @@ class BatsmanSection extends Component {
                   }
             }
             this.setState({ currentOutPlayer });
+      }
+
+      renderPlayerChange(reason = '') { // reason = wicket | playerChange
+            const { striker, nonStriker } = this.state;
+            return (
+                  <div className="match-section">
+                        <div className="wicket-section">
+                              <div className="overs-header">{`Who's out?`}</div>
+                              <div className="player-out">
+                                    <button id="striker-out" onClick={() => this.handleWicketPlayer('striker')}>{striker.name}</button>
+                                    <button id="nonStriker-out" onClick={() => this.handleWicketPlayer('nonStriker')}>{nonStriker.name}</button>
+                              </div>
+
+                              {
+                                    (reason === 'wicket') &&
+                                    <div>
+                                          <div className="overs-header">{`Wicket Reason?`}</div>
+                                          <div className="player-out">
+                                                {/* <span>{`\nWicket Reason?`}</span> */}
+                                                {
+                                                      this.state.wicketReasons.map((item, i) =>
+                                                            <button key={`wicket_reason_${i}`} className="wicket-reason" id={`wicketReason_${item}`} onClick={() => this.handleWicketReason(item)}>{item}</button>
+                                                      )
+                                                }
+                                          </div>
+                                    </div>      
+                              }
+                              <div className="overs-header">{`Next batsman?`}</div>
+                              <div className="dropdown-list">
+                                    <div className="dd-list-half">{"Select next player:"}</div>
+                                    <div className="dd-list-half">
+                                          {
+                                                this.renderBattingTeamDropDown('nextPlayer')
+                                          }
+                                    </div>
+                              </div>
+                              <div className="overs-header">{`As Striker?`}</div>
+                              <div className="player-out">
+                                    <button id="nextplayer-striker" onClick={() => this.setNextPlayerDetails(true)}>{`Yes`}</button>
+                                    <button id="nextplayer-nonStriker" onClick={() => this.setNextPlayerDetails(false)}>{'No'}</button>
+                              </div>
+                              <div className="player-out">
+                                    <input type="submit" value="OK" onClick={() => this.setWicketDetails()} />
+                                    <input type="submit" value="CANCEL" onClick={() => this.setState({ isWicket: false, changePlayer: false })} />
+                              </div>
+                        </div>
+                  </div>
+            )
       }
 
       render() {
@@ -280,65 +328,24 @@ class BatsmanSection extends Component {
                                           </div>
                                           :
                                           (this.state.isWicket) ?
-                                                <div className="match-section">
-                                                      <div className="wicket-section">
-                                                            <div className="overs-header">{`Who's out?`}</div>
-                                                            <div className="player-out">
-                                                                  <button id="striker-out" onClick={() => this.handleWicketPlayer('striker')}>{striker.name}</button>
-                                                                  <button id="nonStriker-out" onClick={() => this.handleWicketPlayer('nonStriker')}>{nonStriker.name}</button>
-                                                            </div>
-                                                            <div className="overs-header">{`Wicket Reason?`}</div>
-                                                            <div className="player-out">
-                                                                  {/* <span>{`\nWicket Reason?`}</span> */}
-                                                                  {
-                                                                        this.state.wicketReasons.map((item, i) =>
-                                                                              <button key={`wicket_reason_${i}`} className="wicket-reason" id={`wicketReason_${item}`} onClick={() => this.handleWicketReason(item)}>{item}</button>
-                                                                        )
-                                                                  }
-                                                            </div>
-                                                            <div className="overs-header">{`Next batsman?`}</div>
-                                                            <div className="dropdown-list">
-                                                                  <div className="dd-list-half">{"Select next player:"}</div>
-                                                                  <div className="dd-list-half">
-                                                                        {
-                                                                              this.renderBattingTeamDropDown('nextPlayer')
-                                                                        }
-                                                                  </div>
-                                                            </div>
-                                                            <div className="overs-header">{`As Striker?`}</div>
-                                                            <div className="player-out">
-                                                                  <button id="nextplayer-striker" onClick={() => this.setNextPlayerDetails(true)}>{`Yes`}</button>
-                                                                  <button id="nextplayer-nonStriker" onClick={() => this.setNextPlayerDetails(false)}>{'No'}</button>
-                                                            </div>
-                                                            <div className="player-out">
-                                                                  <input type="submit" value="OK" onClick={() => this.setWicketDetails()} />
-                                                                  <input type="submit" value="CANCEL" onClick={() => this.setState({ isWicket: false })} />
-                                                            </div>
-                                                      </div>
-                                                </div>
+                                                this.renderPlayerChange('wicket')
                                                 :
                                                 (this.state.changePlayer) ?
-                                                      <div className="match-section">
-                                                            <div className="wicket-section">
-                                                                  <div className="overs-header">{`Change Player?`}</div>
-                                                                  <div className="player-out">
-                                                                        <button id="striker-out" onClick={() => this.handleWicketPlayer('striker')}>{striker.name}</button>
-                                                                        <button id="nonStriker-out" onClick={() => this.handleWicketPlayer('nonStriker')}>{nonStriker.name}</button>
-                                                                  </div>
-                                                            </div>
-                                                            <span>{`\nNext batsman?`}</span>
-                                                            <div className="dropdown-list">
-                                                                  <div className="dd-list-half">{"Select next player:"}</div>
-                                                                  <div className="dd-list-half">
-                                                                        {
-                                                                              this.renderBattingTeamDropDown('nextPlayer')
-                                                                        }
-                                                                  </div>
-                                                            </div>
-                                                            <button id="wicket-details-button" onClick={() => this.setWicketDetails()}>OK</button>
-                                                      </div>
+                                                      this.renderPlayerChange('batsman')
                                                       :
                                                       <div className="match-section">
+                                                            <div className="player-out">
+                                                                  <button id="change-batsman" onClick={() => {
+                                                                        this.setState({ changePlayer: true });
+                                                                        // document.getElementById('change-batsman').style.backgroundColor = '#ba124c';
+                                                                        // document.getElementById('swap-striker').style.backgroundColor = '#e6e6e6';
+                                                                  }}>{`Change Batsman`}</button>
+                                                                  <button id="swap-striker" onClick={() => {
+                                                                        this.switchStriker();
+                                                                        // document.getElementById('swap-striker').style.backgroundColor = '#ba124c';
+                                                                        // document.getElementById('change-batsman').style.backgroundColor = '#e6e6e6';
+                                                                  }}>{'Swap Striker'}</button>
+                                                            </div>
                                                             <div className="section-body">
                                                                   <div className="striker-headings">
                                                                         <div className="batsman">Name</div>
@@ -346,7 +353,6 @@ class BatsmanSection extends Component {
                                                                         <div className="batsman">Balls</div>
                                                                         <div className="batsman">Fours</div>
                                                                         <div className="batsman">Sixes</div>
-                                                                        <div className="batsman">Striker</div>
                                                                   </div>
                                                                   {this.renderPlayer(this.state.striker)}
                                                                   {this.renderPlayer(this.state.nonStriker)}

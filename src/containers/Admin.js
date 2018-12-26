@@ -28,7 +28,7 @@ class Admin extends Component {
       team2Players: Array(16).fill(null).map(() => ({ name: '' })),
       tossResult: 0,
       battingTeam: 0,
-      totalOvers: 20
+      totalOvers: 0
       // socket,
 
     }
@@ -85,7 +85,7 @@ class Admin extends Component {
   }
 
   setTotalOvers(totalOvers) {
-    this.setState({ totalOvers });
+    this.setState({ totalOvers: totalOvers.totalOvers });
   }
 
   setTeamPlayers(teamId, teamName, teamPlayers) {
@@ -126,7 +126,7 @@ class Admin extends Component {
   }
 
   renderComponent() {
-    const { team1, team2, totalOvers, team1Players, team2Players, tossResult, battingTeam } = this.state;
+    const { team1, team2, team1Players, team2Players, tossResult, battingTeam } = this.state;
     switch (this.state.pageComponent) {
       case 0: {
         return (
@@ -194,7 +194,7 @@ class Admin extends Component {
           <AdminScoreBoard
             team1={team1}
             team2={team2}
-            totalOvers={totalOvers}
+            totalOvers={this.state.totalOvers}
             team1Players={team1Players}
             team2Players={team2Players}
             tossResult={tossResult}
