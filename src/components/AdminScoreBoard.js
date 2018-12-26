@@ -145,7 +145,7 @@ class AdminScoreBoard extends Component {
             this.setState({ isWicket });
             if (!isWicket) { // hack - code to be revised - isWicket = false comes from Batsman section and true from Overs section
                   this.setState({
-                        striker: wicketDetails.striker, nonStriker: wicketDetails.nonStriker // this does not update striker and non striker in batsman section
+                        striker: wicketDetails.striker, nonStriker: wicketDetails.nonStriker
                   });
             }
       }

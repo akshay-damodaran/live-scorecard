@@ -54,7 +54,7 @@ class OversSection extends Component {
       lockBowl() {
             let { currentBowl, currentOvers, runs, totalBowls, bowls, currentOverBowls, striker, battingTeam } = this.state;
             if (!bowls[currentBowl - 1].isLocked) {
-                  if (bowls[currentBowl - 1].bowlStatus === 'WD' && bowls[currentBowl - 1].bowlStatus === 'NB') {
+                  if (bowls[currentBowl - 1].bowlStatus === 'WD' || bowls[currentBowl - 1].bowlStatus === 'NB') {
                         currentOverBowls = currentOverBowls + 1;
                         totalBowls = totalBowls + 1;
 
@@ -81,7 +81,7 @@ class OversSection extends Component {
 
                   if (bowls.length <= currentOverBowls && !bowls[currentBowl - 1].isLocked) {
                         bowls.push({
-                              bowlNo: currentBowl,
+                              bowlNo: (bowls[currentBowl - 1].bowlStatus === 'WD' || bowls[currentBowl - 1].bowlStatus === 'NB') ? currentBowl : currentBowl + 1,
                               bowlStatus: null,
                               bowlRuns: 0,
                               isLocked: false,
@@ -97,7 +97,13 @@ class OversSection extends Component {
                               // this.props.setInningEnd(true); // or set the above event in AdminScoreBoard page
                         // }
                   } else {
-                        this.setState({ isOverStart: true });
+                        bowls = [{
+                              bowlNo: 1,
+                              bowlStatus: null,
+                              bowlRuns: 0,
+                              isLocked: false
+                        }]
+                        this.setState({ isOverStart: true, bowls });
                   }
             } else {
                   console.log('yahpe aaya', bowls[currentBowl - 1]);
