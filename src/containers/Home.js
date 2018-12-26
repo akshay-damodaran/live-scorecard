@@ -73,7 +73,7 @@ class Home extends React.Component {
         wickets: 3,
         ballsFaced:4
       },
-      inningId: '1',
+      inningId: 1,
       heading: {
         title: '2 won the toss and elected to do B.'
       },
@@ -123,15 +123,36 @@ class Home extends React.Component {
       ]
     }
 
-    const current_striker = data.striker.id;
-    const currentBatsman = [data.striker, data.nonStriker];
-
-    this.setState({ ...data, current_striker, currentBatsman });
+    // this.setState({ ...data, current_striker, currentBatsman });
 
     // On connection with server
     socket.on('initialize', data => {
-      console.log('Data : ', data);
-      this.setState({ ...data });
+      const current_striker = data.striker.id;
+      let currentBatsman = [];
+      if (data.striker && data.nonStriker) {
+        currentBatsman = [data.striker, data.nonStriker];
+      }
+      // let headline, teamName, balls, runs;
+      // if (inningId === 1) {
+      //   if (toss.teamId === 1) {
+      //     teamName = team1.name;
+      //   } else if (toss.teamId === 2) {
+      //     teamName = team2.name;
+      //   }
+      //   headline = `${teamName} won the toss and elected to ${toss.decision ? "Bowl" : "Bat"} first.`;
+      // } else if (inningsId === 2) {
+      //   if (battingTeam === 1) {
+      //     teamName = team1.name;
+      //     runs = team2.runs - team1.runs + 1;
+      //     balls = totalBalls - team1.ballsFaced;
+      //   } else if (battingTeam === 2) {
+      //     teamName = team2.name;
+      //     runs = team1.runs - team2.runs + 1;
+      //     balls = totalBalls - team2.balls;
+      //   }
+      //   headline = `${teamName} needs ${runs} runs to win from ${balls} balls.`
+      // }
+      this.setState({ ...data, current_striker, currentBatsman, });
     });
 
     // On each ball
