@@ -68,11 +68,11 @@ class OversSection extends Component {
             this.setState({ isOverStart: false });
 
             // Event - overStart
-            this.state.socket.emit('overStart', {
-                  bowlerId: this.state.bowler.id,
-                  strikerId: this.state.striker.id,
-                  nonStrikerId: this.state.nonStriker.id,
-            });
+            // this.state.socket.emit('overStart', {
+            //       bowlerId: this.state.bowler.id,
+            //       strikerId: this.state.striker.id,
+            //       nonStrikerId: this.state.nonStriker.id,
+            // });
       }
 
       renderOverBowls() {
@@ -161,7 +161,7 @@ class OversSection extends Component {
                               isLocked: false
                         }];
                         this.setState({ isOverStart: true, bowls, currentBowlNo, currentOverBowlNo, currentOvers, totalRuns });
-                  } else if (currentOvers == parseInt(totalOvers)) {
+                  } else if (currentOvers === parseInt(totalOvers)) {
                         let inningDetails = {
                               inningId: this.state.inningId,
                               inningRuns: this.state.inningRuns,

@@ -84,56 +84,55 @@ class AdminScoreBoard extends Component {
 
       componentDidMount() {
 
-            // const { totalOvers, tossResult, battingTeam, team1, team2, team1Players, team2Players } = this.props;
+            const { totalOvers, tossResult, battingTeam, team1, team2, team1Players, team2Players } = this.props;
 
-            // let battingTeamPlayers, bowlingTeamPlayers;
+            let battingTeamPlayers, bowlingTeamPlayers;
 
-            // if (battingTeam === 1) {
-            //       battingTeamPlayers = team1Players;
-            //       bowlingTeamPlayers = team2Players;
-            // } else {
-            //       battingTeamPlayers = team2Players;
-            //       bowlingTeamPlayers = team1Players;
-            // }
+            if (battingTeam === 1) {
+                  battingTeamPlayers = team1Players;
+                  bowlingTeamPlayers = team2Players;
+            } else {
+                  battingTeamPlayers = team2Players;
+                  bowlingTeamPlayers = team1Players;
+            }
 
-            // let heading = (tossResult === 1) ?
-            //       `${team1} won the toss and elected to do ${(battingTeam === 1) ? 'batting' : 'fielding'}.`
-            //       :
-            //       `${team2} won the toss and elected to do ${(battingTeam === 2) ? 'batting' : 'fielding'}.`;
+            let heading = (tossResult === 1) ?
+                  `${team1} won the toss and elected to do ${(battingTeam === 1) ? 'batting' : 'fielding'}.`
+                  :
+                  `${team2} won the toss and elected to do ${(battingTeam === 2) ? 'batting' : 'fielding'}.`;
 
-            // let teamOne = {
-            //       name: team1,
-            //       logo: '',
-            //       wonToss: (tossResult === 1),
-            //       isBatting: (battingTeam === 1),
-            //       runs: 0,
-            //       wickets: 0,
-            //       ballsFaced: 0
-            // };
-            // let teamTwo = {
-            //       name: team2,
-            //       logo: '',
-            //       wonToss: (tossResult === 2),
-            //       isBatting: (battingTeam === 2),
-            //       runs: 0,
-            //       wickets: 0,
-            //       ballsFaced: 0
-            // }
+            let teamOne = {
+                  name: team1,
+                  logo: '',
+                  wonToss: (tossResult === 1),
+                  isBatting: (battingTeam === 1),
+                  runs: 0,
+                  wickets: 0,
+                  ballsFaced: 0
+            };
+            let teamTwo = {
+                  name: team2,
+                  logo: '',
+                  wonToss: (tossResult === 2),
+                  isBatting: (battingTeam === 2),
+                  runs: 0,
+                  wickets: 0,
+                  ballsFaced: 0
+            }
+            this.setState({ battingTeamPlayers, bowlingTeamPlayers, heading, team1: teamOne, team2: teamTwo, totalOvers, tossResult, battingTeam });
 
-            const { socket, totalOvers } = this.props;
-            socket.on('scoreCardDisplay', (sbDetails) => { // score board details
-                  console.log('Score board details: ', sbDetails);
-                  this.initializeScoreBoard(sbDetails);
-            });
-            this.setState({ socket, totalOvers });
-
-            // this.setState({ battingTeamPlayers, bowlingTeamPlayers, heading, team1: teamOne, team2: teamTwo, totalOvers, tossResult, battingTeam });
+            // const { socket, totalOvers } = this.props;
+            // socket.on('scoreCardDisplay', (sbDetails) => { // score board details
+            //       console.log('Score board details: ', sbDetails);
+            //       this.initializeScoreBoard(sbDetails);
+            // });
+            // this.setState({ socket, totalOvers });       
 
       }
 
       initializeScoreBoard(sbDetails) {
             const { inningId, striker, nonStriker, heading, team1, team2, team1Players, team2Players } = sbDetails;
-            const { battingTeamPlayers, bowlingTeamPlayers, tossResult, battingTeam } = this.state;
+            let { battingTeamPlayers, bowlingTeamPlayers, tossResult, battingTeam } = this.state;
 
             tossResult = (team1.wonToss) ? 1 : 2;
             battingTeam = (team1.isBatting) ? 1 : 2;
@@ -165,10 +164,10 @@ class AdminScoreBoard extends Component {
 
       setWicket(isWicket, wicketDetails) {
             // Event - wicket ============================================================
-            wicketDetails.teamId = this.state.battingTeam;
-            wicketDetails.bowlerId = this.state.bowler.id; // to be passed
-            wicketDetails.runScored = this.state.totalRuns; // is player runs for the current ball set in batsman section
-            this.state.socket.emit('wicket', wicketDetails);
+            // wicketDetails.teamId = this.state.battingTeam;
+            // wicketDetails.bowlerId = this.state.bowler.id; // to be passed
+            // wicketDetails.runScored = this.state.totalRuns; // is player runs for the current ball set in batsman section
+            // this.state.socket.emit('wicket', wicketDetails);
             // ============================================================================
 
             this.setState({ isWicket });
@@ -220,8 +219,9 @@ class AdminScoreBoard extends Component {
                   maiden: 0,
                   wickets: 0
             };
+            let tempPlayers = battingTeamPlayers;
             battingTeamPlayers = bowlingTeamPlayers;
-            bowlingTeamPlayers = battingTeamPlayers;
+            bowlingTeamPlayers = tempPlayers;
             totalRuns = 0;
             wickets = 0;
             isWicket = false;
@@ -242,23 +242,23 @@ class AdminScoreBoard extends Component {
             inningHistory.push(inningDetails);
 
             let { inningId, team1, team2, totalRuns, wickets } = this.state;
-            if (inningId == 1) {
+            if (inningId === 1) {
                   team1.runs = totalRuns;
                   team1.wickets = wickets;
                   team1.ballsFaced = inningDetails.totalBowls;
                   this.setState({ inningEnd: isInningEnd, showPopup: true, team1 });
-            } else if (inningId == 2) {
+            } else if (inningId === 2) {
                   team2.runs = totalRuns;
                   team2.wickets = wickets;
                   team2.ballsFaced = inningDetails.totalBowls;
                   this.setState({ team2, endGame: true, showPopup: true });
             }
             // Event - inningEnd
-            this.state.socket.emit('inningEnd', {
-                  teamId: (team1.isBatting) ? 1 : 2,
-                  totalScore: this.state.totalRuns,
-                  totalWicket: this.state.totalWicket
-            });
+            // this.state.socket.emit('inningEnd', {
+            //       teamId: (team1.isBatting) ? 1 : 2,
+            //       totalScore: this.state.totalRuns,
+            //       totalWicket: this.state.totalWicket
+            // });
       }
 
       // setEndGame() {
@@ -376,19 +376,30 @@ class AdminScoreBoard extends Component {
                                           children={
                                                 <div className="popup">
                                                       <div id="popup-header">
-                                                            <span>Inning End</span>
+                                                            <span>Match Results</span>
                                                       </div>
                                                       <div id="popup-body">
                                                             <div className="dropdown-list">
                                                                   <div className="dd-list-half">{"Inning Runs: "}</div>
                                                                   <div className="dd-list-half">
-                                                                        {this.state.runs}
+                                                                        {this.state.totalRuns}
                                                                   </div>
                                                             </div>
                                                             <div className="dropdown-list">
                                                                   <div className="dd-list-half">{"Inning Wickets: "}</div>
                                                                   <div className="dd-list-half">
                                                                         {this.state.wickets}
+                                                                  </div>
+                                                            </div>
+                                                            <div className="dropdown-list">
+                                                                  <div className="dd-list-half">{"Winning Teams: "}</div>
+                                                                  <div className="dd-list-half">
+                                                                        {
+                                                                              (this.state.team1.runs > this.state.team2.runs) ?
+                                                                                    `${team1.name} won the match by ${team1.runs - team2.runs} runs`
+                                                                                    :
+                                                                                    `${team2.name} won the match by ${team2.runs - team1.runs} runs`
+                                                                        }
                                                                   </div>
                                                             </div>
                                                             <button onClick={() => this.setState({ showPopup: false })}>OK</button>

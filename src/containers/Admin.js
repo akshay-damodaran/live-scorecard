@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import socketIOClient from 'socket.io-client';
-import axios from 'axios';
+// import socketIOClient from 'socket.io-client';
+// import axios from 'axios';
 
 import '../styles/Admin.css';
 
@@ -11,13 +11,13 @@ import TossResults from '../components/TossResults';
 import AdminScoreBoard from '../components/AdminScoreBoard';
 import Login from '../components/Login';
 
-import conf from '../conf';
+// import conf from '../conf';
 
 class Admin extends Component {
   constructor(props) {
     super(props);
-    const endpoint = 'http://127.0.0.1:4001';
-    const socket = socketIOClient(endpoint);
+    // const endpoint = 'http://127.0.0.1:4001';
+    // const socket = socketIOClient(endpoint);
 
     this.state = {
       pageComponent: 1,
@@ -29,17 +29,17 @@ class Admin extends Component {
       tossResult: 0,
       battingTeam: 0,
       totalOvers: 0,
-      socket,
+      // socket,
 
     }
   }
 
   componentDidMount() {
-    const { socket } = this.state;
-    socket.on('initialize', pageComponent => {
-      console.log('Page Component : ', pageComponent);
-      this.setState({ pageComponent });
-    });
+    // const { socket } = this.state;
+    // socket.on('initialize', pageComponent => {
+    //   console.log('Page Component : ', pageComponent);
+    //   this.setState({ pageComponent });
+    // });
   }
 
   prevScreen() {
@@ -57,7 +57,7 @@ class Admin extends Component {
     });
 
     // Send sockent message for next screen
-    this.state.socket.emit('nextScreen', pageComponent + 1);
+    // this.state.socket.emit('nextScreen', pageComponent + 1);
   }
 
   nextScreen() {
@@ -75,7 +75,7 @@ class Admin extends Component {
     });
 
     // Send sockent message for next screen
-    this.state.socket.emit('nextScreen', pageComponent + 1);
+    // this.state.socket.emit('nextScreen', pageComponent + 1);
   }
 
   changeTeamName(teamName) {
@@ -89,19 +89,19 @@ class Admin extends Component {
   }
 
   setTeamPlayers(teamId, teamName, teamPlayers) {
-    const url = `${conf.base_url}apis/createteam`;
-    axios.post(
-      url,
-      {
-        teamName,
-        teamId,
-        teamPlayers,
-        totalOvers: this.state.totalOvers
-      })
-      .then(res => {
-        console.log('Res : ', res);
-      })
-      .catch(err => console.log('Error : ', err));
+    // const url = `${conf.base_url}apis/createteam`;
+    // axios.post(
+    //   url,
+    //   {
+    //     teamName,
+    //     teamId,
+    //     teamPlayers,
+    //     totalOvers: this.state.totalOvers
+    //   })
+    //   .then(res => {
+    //     console.log('Res : ', res);
+    //   })
+    //   .catch(err => console.log('Error : ', err));
     if (teamId === 1) {
       this.setState({ team1Players: teamPlayers });
     } else {
@@ -111,17 +111,17 @@ class Admin extends Component {
   }
 
   setTossResults() {
-    const { tossResult, battingTeam } = this.state;
-    const url = `${conf.base_url}apis/toss`;
-    const decision = (tossResult === battingTeam) ? '0' : '1';
-    axios.post(
-      url,
-      {
-        teamid: tossResult,
-        battingTeam,
-        decision,
-      }
-    )
+    // const { tossResult, battingTeam } = this.state;
+    // const url = `${conf.base_url}apis/toss`;
+    // const decision = (tossResult === battingTeam) ? '0' : '1';
+    // axios.post(
+    //   url,
+    //   {
+    //     teamid: tossResult,
+    //     battingTeam,
+    //     decision,
+    //   }
+    // )
     this.nextScreen();
   }
 

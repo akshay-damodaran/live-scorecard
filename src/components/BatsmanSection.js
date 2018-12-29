@@ -102,11 +102,11 @@ class BatsmanSection extends Component {
             // this.setState({ isInningStart: false });
 
             // Event - inningStart
-            this.state.socket.emit('inningStart', {
-                  inningId,
-                  strikerId: striker.id,
-                  nonStrikerId: nonStriker.id,
-            });
+            // this.state.socket.emit('inningStart', {
+            //       inningId,
+            //       strikerId: striker.id,
+            //       nonStrikerId: nonStriker.id,
+            // });
       }
 
       renderBattingTeamDropDown(team) {
