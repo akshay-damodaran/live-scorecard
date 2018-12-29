@@ -7,7 +7,9 @@ class BatsmanSection extends Component {
       constructor(props) {
             super(props);
             this.state = {
-                  isMatchStart: true,
+                  inningId: this.props.inningId,
+
+                  isInningStart: this.props.isInningStart,
                   striker: {},
                   nonStriker: {},
                   battingTeam: this.props.battingTeam,
@@ -32,7 +34,8 @@ class BatsmanSection extends Component {
                   },
                   wicketReason: '',
                   wicketBy: '',
-                  wicketReasons: ['Catch Out', 'Run Out', 'Bold']
+                  wicketReasons: ['Catch Out', 'Run Out', 'Bold'],
+                  socket: this.props.socket
             }
       }
 
@@ -41,12 +44,14 @@ class BatsmanSection extends Component {
             this.setState({ striker, nonStriker });
       }
 
-      componentWillReceiveProps(nextProps) {
+      componentWillReceiveProps(nextProps) {    
             this.setState({
                   striker: nextProps.striker,
                   nonStriker: nextProps.nonStriker,
                   isWicket: nextProps.isWicket,
-                  changePlayer: nextProps.changePlayer
+                  changePlayer: nextProps.changePlayer,
+                  inningId: nextProps.inningId,
+                  isInningStart: nextProps.isInningStart
             });
       }
 
@@ -91,16 +96,17 @@ class BatsmanSection extends Component {
 
       setMatchStartDetails(e) {
             e.preventDefault();
-            const { striker, nonStriker } = this.state;
+            const { striker, nonStriker, inningId } = this.state;
             this.props.setBatsmenDetails(striker, nonStriker);
-            this.setState({ isMatchStart: false });
+            this.props.setInningStart(false);
+            // this.setState({ isInningStart: false });
 
             // Event - inningStart
-            // socket.emit('inningStart', {
-            //       inningId,
-            //       strikerId: striker.id,
-            //       nonStrikerId: nonStriker.id,
-            // });
+            this.state.socket.emit('inningStart', {
+                  inningId,
+                  strikerId: striker.id,
+                  nonStrikerId: nonStriker.id,
+            });
       }
 
       renderBattingTeamDropDown(team) {
@@ -193,8 +199,9 @@ class BatsmanSection extends Component {
                   }
                   default: break;
             }
-            this.props.updateWickets(1);
+
             this.props.setWicket(false, {
+                  page: 'batsmanSection',
                   wicketBy: wicketBy, // input to be taken
                   wicketType: wicketReason,
                   playerId: (currentOutPlayer === 'striker') ? striker.id : nonStriker.id,
@@ -204,6 +211,7 @@ class BatsmanSection extends Component {
                   striker: (nextPlayer.isStriker) ? nextPlayer : striker,
                   nonStriker: (nextPlayer.isStriker) ? nonStriker : nextPlayer,
             });
+            this.props.updateWickets(1);            
       }
 
       handleWicketReason(item) {
@@ -323,7 +331,7 @@ class BatsmanSection extends Component {
                         </div>
                         <div className="section-body">
                               {
-                                    (this.state.isMatchStart) ?
+                                    (this.state.isInningStart) ?
                                           <div className="scoreboard-body-match-start">
                                                 <form onSubmit={(e) => this.setMatchStartDetails(e)}>
                                                       <div className="match-start-section">

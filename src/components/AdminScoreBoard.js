@@ -5,11 +5,16 @@ import Popup from "./Popup";
 import BatsmanSection from './BatsmanSection';
 import OversSection from './OversSection';
 
+let inningHistory = [];
+
 class AdminScoreBoard extends Component {
 
       constructor(props) {
             super(props);
             this.state = {
+
+                  isInningStart: true,
+
                   // socket data
                   team1: {
                         name: '',
@@ -57,6 +62,9 @@ class AdminScoreBoard extends Component {
                   },
                   overArray: Array(6).fill(0),
 
+                  tossResult: null,
+                  battingTeam: null,
+
                   // extra data needed
                   battingTeamPlayers: [],
                   bowlingTeamPlayers: [],
@@ -66,55 +74,81 @@ class AdminScoreBoard extends Component {
 
                   wickets: 0,
                   isWicket: false,
-                  changePlayer: false,
 
                   inningEnd: false,
-                  showPopup: false
+                  showPopup: false,
+
+                  socket: null
             }
       }
 
       componentDidMount() {
-            const { inningId, striker, nonStriker, totalOvers, tossResult, battingTeam, team1, team2, team1Players, team2Players, socket } = this.props;
 
-            let battingTeamPlayers, bowlingTeamPlayers;
+            // const { totalOvers, tossResult, battingTeam, team1, team2, team1Players, team2Players } = this.props;
 
-            if (battingTeam === 1) {
-                  battingTeamPlayers = team1Players;
-                  bowlingTeamPlayers = team2Players;
-            } else {
-                  battingTeamPlayers = team2Players;
-                  bowlingTeamPlayers = team1Players;
-            }
+            // let battingTeamPlayers, bowlingTeamPlayers;
 
-            let heading = (tossResult === 1) ?
-                  `${team1} won the toss and elected to do ${(battingTeam === 1) ? 'batting' : 'fielding'}.`
-                  :
-                  `${team2} won the toss and elected to do ${(battingTeam === 2) ? 'batting' : 'fielding'}.`;
+            // if (battingTeam === 1) {
+            //       battingTeamPlayers = team1Players;
+            //       bowlingTeamPlayers = team2Players;
+            // } else {
+            //       battingTeamPlayers = team2Players;
+            //       bowlingTeamPlayers = team1Players;
+            // }
 
-            let teamOne = {
-                  name: team1,
-                  logo: '',
-                  wonToss: (tossResult === 1),
-                  isBatting: (battingTeam === 1),
-                  runs: 0,
-                  wickets: 0,
-                  ballsFaced: 0
-            };
-            let teamTwo = {
-                  name: team2,
-                  logo: '',
-                  wonToss: (tossResult === 2),
-                  isBatting: (battingTeam === 2),
-                  runs: 0,
-                  wickets: 0,
-                  ballsFaced: 0
-            }
+            // let heading = (tossResult === 1) ?
+            //       `${team1} won the toss and elected to do ${(battingTeam === 1) ? 'batting' : 'fielding'}.`
+            //       :
+            //       `${team2} won the toss and elected to do ${(battingTeam === 2) ? 'batting' : 'fielding'}.`;
 
-            this.setState({ battingTeamPlayers, bowlingTeamPlayers, heading, team1: teamOne, team2: teamTwo, totalOvers });
+            // let teamOne = {
+            //       name: team1,
+            //       logo: '',
+            //       wonToss: (tossResult === 1),
+            //       isBatting: (battingTeam === 1),
+            //       runs: 0,
+            //       wickets: 0,
+            //       ballsFaced: 0
+            // };
+            // let teamTwo = {
+            //       name: team2,
+            //       logo: '',
+            //       wonToss: (tossResult === 2),
+            //       isBatting: (battingTeam === 2),
+            //       runs: 0,
+            //       wickets: 0,
+            //       ballsFaced: 0
+            // }
+
+            const { socket, totalOvers } = this.props;
+            socket.on('scoreCardDisplay', (sbDetails) => { // score board details
+                  console.log('Score board details: ', sbDetails);
+                  this.initializeScoreBoard(sbDetails);
+            });
+            this.setState({ socket, totalOvers });
+
+            // this.setState({ battingTeamPlayers, bowlingTeamPlayers, heading, team1: teamOne, team2: teamTwo, totalOvers, tossResult, battingTeam });
+
+      }
+
+      initializeScoreBoard(sbDetails) {
+            const { inningId, striker, nonStriker, heading, team1, team2, team1Players, team2Players } = sbDetails;
+            const { battingTeamPlayers, bowlingTeamPlayers, tossResult, battingTeam } = this.state;
+
+            tossResult = (team1.wonToss) ? 1 : 2;
+            battingTeam = (team1.isBatting) ? 1 : 2;
+            battingTeamPlayers = (battingTeam === 1) ? team1Players : team2Players;
+            bowlingTeamPlayers = (battingTeam !== 1) ? team1Players : team2Players;
+
+            this.setState({ inningId, battingTeamPlayers, bowlingTeamPlayers, heading, team1, team2, tossResult, battingTeam, striker, nonStriker });
       }
 
       setBatsmenDetails(striker, nonStriker) {
             this.setState({ striker, nonStriker });
+      }
+
+      setBowlerDetails(bowler) {
+            this.setState({ bowler });
       }
 
       updateRuns(addRuns) {
@@ -130,23 +164,22 @@ class AdminScoreBoard extends Component {
       }
 
       setWicket(isWicket, wicketDetails) {
-            // Event - wicket
-            // let wicketDetails = {
-            //       wicketBy: wicketDetails.wicketBy, // to be taken 
-            //       wicketType: wicketDetails.wicketReason, 
-            //       playerId: wicketDetails.playerId, // to be updated 
-            //       teamId: this.props.battingTeam, 
-            //       newPlayerId: wicketDetails.newPlayerId, 
-            //       newPlayerName: wicketDetails.newPlayerName,
-            //       strikerId: wicketDetails.strikerId, 
-            //       bowlerId: this.state.bowler.id, // to be passed
-            //       runScored: this.state.totalRuns // is player runs for the current ball set in batsman section
-            // }
-            // socket.emit('wicket', wicketDetails);
+            // Event - wicket ============================================================
+            wicketDetails.teamId = this.state.battingTeam;
+            wicketDetails.bowlerId = this.state.bowler.id; // to be passed
+            wicketDetails.runScored = this.state.totalRuns; // is player runs for the current ball set in batsman section
+            this.state.socket.emit('wicket', wicketDetails);
+            // ============================================================================
+
             this.setState({ isWicket });
-            if (!isWicket) { // hack - code to be revised - isWicket = false comes from Batsman section and true from Overs section
+            if (wicketDetails.page === 'batsmanSection') { // hack - code to be revised - isWicket = false comes from Batsman section and true from Overs section
                   this.setState({
                         striker: wicketDetails.striker, nonStriker: wicketDetails.nonStriker
+                  });
+            }
+            if (this.state.wickets === 10) {
+                  this.setState({ inningEnd: true, showPopup: true }, () => {
+                        this.initializeNextInning(wicketDetails);
                   });
             }
       }
@@ -157,14 +190,75 @@ class AdminScoreBoard extends Component {
             this.setState({ wickets });
       }
 
-      setInningEnd(isInningEnd) {
-            this.setState({ inningEnd: isInningEnd, showPopup: true });
+      initializeNextInning(inningDetails) {
+            let { isInningStart, striker, nonStriker, bowler, inningId, totalRuns, wickets, battingTeamPlayers, bowlingTeamPlayers, isWicket, inningEnd, showPopup } = this.state;
+
+            // update state values
+            isInningStart = true;
+            inningId = 2;
+            striker = {
+                  id: 0,
+                  name: '',
+                  runs: 0,
+                  balls: 0,
+                  fours: 0,
+                  sixes: 0
+            };
+            nonStriker = {
+                  id: 0,
+                  name: '',
+                  runs: 0,
+                  balls: 0,
+                  fours: 0,
+                  sixes: 0
+            };
+            bowler = {
+                  id: 0,
+                  name: '',
+                  runsGiven: 0,
+                  overs: 0.0,
+                  maiden: 0,
+                  wickets: 0
+            };
+            battingTeamPlayers = bowlingTeamPlayers;
+            bowlingTeamPlayers = battingTeamPlayers;
+            totalRuns = 0;
+            wickets = 0;
+            isWicket = false;
+            inningEnd = false;
+            showPopup = false;
+
+            this.setState({ isInningStart, inningId, striker, nonStriker, bowler, totalRuns, wickets, battingTeamPlayers, bowlingTeamPlayers, isWicket, inningEnd, showPopup });
+      }
+
+      setInningStart(isInningStart) {
+            this.setState({ isInningStart });
+      }
+
+      setInningEnd(isInningEnd, inningDetails) {
+            inningDetails.inningId = this.state.inningId;
+            inningDetails.runs = this.state.totalRuns;
+            inningDetails.wickets = this.state.wickets;
+            inningHistory.push(inningDetails);
+
+            let { inningId, team1, team2, totalRuns, wickets } = this.state;
+            if (inningId == 1) {
+                  team1.runs = totalRuns;
+                  team1.wickets = wickets;
+                  team1.ballsFaced = inningDetails.totalBowls;
+                  this.setState({ inningEnd: isInningEnd, showPopup: true, team1 });
+            } else if (inningId == 2) {
+                  team2.runs = totalRuns;
+                  team2.wickets = wickets;
+                  team2.ballsFaced = inningDetails.totalBowls;
+                  this.setState({ team2, endGame: true, showPopup: true });
+            }
             // Event - inningEnd
-            // socket.emit('inningEnd', {
-            //    teamId: battingTeam,
-            //    totalScore: this.state.totalRuns,
-            //    totalWicket: this.state.totalWicket
-            // });
+            this.state.socket.emit('inningEnd', {
+                  teamId: (team1.isBatting) ? 1 : 2,
+                  totalScore: this.state.totalRuns,
+                  totalWicket: this.state.totalWicket
+            });
       }
 
       // setEndGame() {
@@ -214,6 +308,9 @@ class AdminScoreBoard extends Component {
                                                 </div>
                                           </div>
                                           <BatsmanSection
+                                                inningId={this.state.inningId}
+                                                isInningStart={this.state.isInningStart}
+                                                setInningStart={this.setInningStart.bind(this)}
                                                 striker={this.state.striker}
                                                 nonStriker={this.state.nonStriker}
                                                 battingTeam={this.state.battingTeam}
@@ -225,17 +322,17 @@ class AdminScoreBoard extends Component {
                                                 socket={this.state.socket}
                                           />
                                           <OversSection
+                                                inningId={this.state.inningId}
                                                 striker={this.state.striker}
                                                 nonStriker={this.state.nonStriker}
                                                 totalOvers={this.state.totalOvers}
-                                                battingTeam={this.state.battingTeam}
+                                                // battingTeam={this.state.battingTeam}
                                                 bowlingTeamPlayers={bowlingTeamPlayers}
-                                                setBatsmenDetails={this.setBatsmenDetails.bind(this)}
+                                                setBowlerDetails={this.setBowlerDetails.bind(this)}
                                                 updateRuns={this.updateRuns.bind(this)}
                                                 setWicket={this.setWicket.bind(this)}
-                                                socket={this.state.socket}
-
                                                 setInningEnd={this.setInningEnd.bind(this)}
+                                                socket={this.state.socket}
                                           />
                                           {
                                                 (this.state.inningEnd) &&
@@ -243,7 +340,7 @@ class AdminScoreBoard extends Component {
                                                       children={
                                                             <div className="popup">
                                                                   <div id="popup-header">
-                                                                        <span>Inning End</span>
+                                                                        <span>{(this.state.inningId === 1) ? team1.name : team2.name} Inning End</span>
                                                                   </div>
                                                                   <div id="popup-body">
                                                                         <div className="dropdown-list">
@@ -252,19 +349,55 @@ class AdminScoreBoard extends Component {
                                                                                     {this.state.totalRuns}
                                                                               </div>
                                                                         </div>
-                                                                        <button onClick={() => this.setState({ showPopup: false })}>OK</button>
+                                                                        <div className="dropdown-list">
+                                                                              <div className="dd-list-half">{"Inning Wickets: "}</div>
+                                                                              <div className="dd-list-half">
+                                                                                    {this.state.wickets}
+                                                                              </div>
+                                                                        </div>
+                                                                        <div className="dropdown-list">
+                                                                              <div className="dd-list-half">{"Total Bowls: "}</div>
+                                                                              <div className="dd-list-half">
+                                                                                    {this.state.team1.ballsFaced}
+                                                                              </div>
+                                                                        </div>
+                                                                        <button onClick={() => this.initializeNextInning()}>OK</button>
                                                                   </div>
                                                             </div>
                                                       }
                                                       showPopup={this.state.showPopup}
-                                                      closePopup={() => this.setState({ showPopup: false })}
+                                                      closePopup={() => this.initializeNextInning()}
                                                 />
                                           }
                                     </div>
 
                                     :
-                                    <div className="scoreboard-body">
-                                    </div>
+                                    <Popup
+                                          children={
+                                                <div className="popup">
+                                                      <div id="popup-header">
+                                                            <span>Inning End</span>
+                                                      </div>
+                                                      <div id="popup-body">
+                                                            <div className="dropdown-list">
+                                                                  <div className="dd-list-half">{"Inning Runs: "}</div>
+                                                                  <div className="dd-list-half">
+                                                                        {this.state.runs}
+                                                                  </div>
+                                                            </div>
+                                                            <div className="dropdown-list">
+                                                                  <div className="dd-list-half">{"Inning Wickets: "}</div>
+                                                                  <div className="dd-list-half">
+                                                                        {this.state.wickets}
+                                                                  </div>
+                                                            </div>
+                                                            <button onClick={() => this.setState({ showPopup: false })}>OK</button>
+                                                      </div>
+                                                </div>
+                                          }
+                                          showPopup={this.state.showPopup}
+                                          closePopup={() => this.setState({ showPopup: false })}
+                                    />
                         }
 
                   </div>
