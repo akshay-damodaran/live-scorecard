@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 
 import '../styles/AdminScoreBoard.css';
-// import Popup from "./Popup";
-import BatsmanSection from '../components/BatsmanSection';
-import OversSection from '../components/OversSection';
+import Popup from "./Popup";
+import BatsmanSection from './BatsmanSection';
+import OversSection from './OversSection';
 
 class AdminScoreBoard extends Component {
 
@@ -68,7 +68,8 @@ class AdminScoreBoard extends Component {
                   isWicket: false,
                   changePlayer: false,
 
-                  inningEnd: false
+                  inningEnd: false,
+                  showPopup: false
             }
       }
 
@@ -157,7 +158,7 @@ class AdminScoreBoard extends Component {
       }
 
       setInningEnd(isInningEnd) {
-            this.setState({ inningEnd: isInningEnd });
+            this.setState({ inningEnd: isInningEnd, showPopup: true });
             // Event - inningEnd
             // socket.emit('inningEnd', {
             //    teamId: battingTeam,
@@ -236,7 +237,31 @@ class AdminScoreBoard extends Component {
 
                                                 setInningEnd={this.setInningEnd.bind(this)}
                                           />
+                                          {
+                                                (this.state.inningEnd) &&
+                                                <Popup
+                                                      children={
+                                                            <div className="popup">
+                                                                  <div id="popup-header">
+                                                                        <span>Inning End</span>
+                                                                  </div>
+                                                                  <div id="popup-body">
+                                                                        <div className="dropdown-list">
+                                                                              <div className="dd-list-half">{"Inning Runs: "}</div>
+                                                                              <div className="dd-list-half">
+                                                                                    {this.state.totalRuns}
+                                                                              </div>
+                                                                        </div>
+                                                                        <button onClick={() => this.setState({ showPopup: false })}>OK</button>
+                                                                  </div>
+                                                            </div>
+                                                      }
+                                                      showPopup={this.state.showPopup}
+                                                      closePopup={() => this.setState({ showPopup: false })}
+                                                />
+                                          }
                                     </div>
+
                                     :
                                     <div className="scoreboard-body">
                                     </div>

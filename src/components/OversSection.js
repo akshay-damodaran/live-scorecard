@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Popup from '../components/Popup';
 
 // id: 1, // totalBowlNo: current bowl no in total boels for inning
 // bowlNo: 1, // currentBowlNo: current over - bowl no
@@ -77,7 +76,7 @@ class OversSection extends Component {
       renderOverBowls() {
             let { bowls, totalBowlNo } = this.state;
             return (
-                  <div className="over-count">
+                  <div id="over-bowls" className="over-count">
                         <span>Overs:</span>
                         {
                               bowls.map((item, i) =>
@@ -96,7 +95,6 @@ class OversSection extends Component {
 
       lockBowl() {
             let { bowls, currentBowlNo, totalBowlNo, currentOverBowlNo, currentOvers, totalOvers, runs, totalRuns } = this.state;
-            console.log(currentBowlNo, totalBowlNo, currentOverBowlNo);
 
             if (currentBowlNo < 6) {
                   if (bowls[currentOverBowlNo].bowlStatus === 'WD' || bowls[currentOverBowlNo].bowlStatus === 'NB') {
@@ -131,7 +129,6 @@ class OversSection extends Component {
             } else {
                   // new over start
                   currentOvers = parseInt(currentOvers) + 1;
-                  console.log(currentOvers, parseInt(totalOvers));
                   if (currentOvers < parseInt(totalOvers)) {
                         currentOverBowlNo = 0;
                         currentBowlNo = 1;
@@ -149,42 +146,11 @@ class OversSection extends Component {
                   }
 
             }
-            // }
-            // let { currentBowlNo, totalBowlNo, currentOvers, currentOverBowls, runs, bowls } = this.state;
+
             // if (bowls[currentBowlNo - 1].isLocked) {
             //       // revert case
             // } else {
             //       // fresh update
-            //       bowls[currentBowlNo - 1].bowlRuns = runs;
-            //       bowls[currentBowlNo - 1].isLocked = true;
-            //       if (bowls[currentBowlNo - 1].bowlStatus === 'WD' || bowls[currentBowlNo - 1].bowlStatus === 'NB') {
-            //             currentOverBowls = currentOverBowls + 1;
-            //             currentBowlNo = currentBowlNo + 1;
-            //             totalBowlNo = totalBowlNo + 1;
-            //             bowls.push({
-            //                   id: totalBowlNo,
-            //                   bowlNo: currentBowlNo,
-            //                   currentOverNo: parseInt(currentOvers) + 1,
-            //                   bowlStatus: null,
-            //                   bowlRuns: 0,
-            //                   isLocked: false,
-            //                   isExtra: true
-            //             });
-            //       }
-            //       currentOvers = (parseInt(currentOvers) + ((currentBowlNo) * 0.1)).toFixed(1);
-            //       currentOverBowls = currentOverBowls + 1;
-            //       currentBowlNo = currentBowlNo + 1;
-            //       totalBowlNo = totalBowlNo + 1;
-            //       bowls.push({
-            //             id: totalBowlNo,
-            //             bowlNo: currentBowlNo,
-            //             currentOverNo: parseInt(currentOvers) + 1,
-            //             bowlStatus: null,
-            //             bowlRuns: 0,
-            //             isLocked: false,
-            //             isExtra: false
-            //       });
-            //       this.setState({ currentOvers, bowls, currentBowlNo, totalBowlNo, showRunsInput: false });
             // }
       }
 
@@ -201,8 +167,8 @@ class OversSection extends Component {
             const bowlStatus = ['WD', 'WK', 'NB', 'B', 'LB'];
             return (
                   <div>
-                        <div className="over-count">
-                              {/* <span>Select status:</span> */}
+                        <div id="select-bowl-status" className="over-count">
+                              <span>Bowl Status:</span>
                               {
                                     bowlStatus.map((item, j) =>
                                           <div
@@ -218,7 +184,7 @@ class OversSection extends Component {
                         </div>
                         {
                               // (this.state.showRunsInput) &&
-                              <div>
+                              <div id="runs-scored" className="overs-count">
                                     <div className="dropdown-list">
                                           <div className="dd-list-half">{"Runs Scored: "}</div>
                                           <div className="dd-list-half">
@@ -341,29 +307,6 @@ class OversSection extends Component {
                                                 </div>
                               }
                         </div>
-                        {
-                              (this.state.inningEnd) &&
-                              <Popup
-                                    children={
-                                          <div className="popup">
-                                                <div id="popup-header">
-                                                      <span>Inning End</span>
-                                                </div>
-                                                <div id="popup-body">
-                                                      <div className="dropdown-list">
-                                                            <div className="dd-list-half">{"Inning Runs: "}</div>
-                                                            <div className="dd-list-half">
-                                                                  {this.state.totalRuns}
-                                                            </div>
-                                                      </div>
-                                                      <button onClick={() => this.setState({ showPopup: false })}>OK</button>
-                                                </div>
-                                          </div>
-                                    }
-                                    showPopup={true}
-                                    closePopup={() => this.setState({ showPopup: false })}
-                              />
-                        }
                   </div>
             );
       }

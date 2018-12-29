@@ -240,15 +240,18 @@ class BatsmanSection extends Component {
       renderPlayer(player) {
             return (
                   <div className="striker">
+                        <div className="batsman">
+                              {player.name}
+                        </div>
                         {
                               // Object.keys(player).map((item, i) =>
-                                    <div
-                                          key={`batsman_${player.id}`}
-                                          className="batsman"
-                                    >
-                                          {player.name}
-                                          {/* {(item === 'id') ? null : player[item]} */}
-                                    </div>
+                              //       <div
+                              //             key={`batsman_${player.id}`}
+                              //             className="batsman"
+                              //       >
+                              //             {player.name}
+                              //             {(item === 'id') ? null : player[item]}
+                              //       </div>
                               // )
                         }
                   </div>
