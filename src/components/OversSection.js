@@ -1,4 +1,13 @@
 import React, { Component } from 'react';
+import Popup from '../components/Popup';
+
+// id: 1, // totalBowlNo: current bowl no in total boels for inning
+// bowlNo: 1, // currentBowlNo: current over - bowl no
+// currentOverNo: 1, // current over no
+// bowlStatus: null, // ['WD', 'WK', 'NB', 'B', 'LB']
+// bowlRuns: 0, // number of runs for the bowl
+// isLocked: false, // if the bowl status was already set
+// isExtra: false // if the bowl is extra ['WD', 'NB']
 
 class OversSection extends Component {
 
@@ -18,24 +27,27 @@ class OversSection extends Component {
                   isOverStart: true,
                   totalOvers: 20,
                   currentOvers: 0,
-                  remainingOvers: 0,
-                  currentOverBowls: 6,
+                  // remainingOvers: 0,
                   overRuns: [1, 2, 3, 4, 5, 6],
 
                   // current bowl details
-                  totalBowls: 0, // total bowls for the inning (not sure if needed - maybe in extra balls cases)
-                  currentBowl: 0, // ball number of the current over
+                  totalBowlNo: 1, // total bowls for the inning (not sure if needed - maybe in extra balls cases)
+                  currentBowlNo: 1, // ball number of the current over
+                  currentOverBowlNo: 0,
                   bowler: {
                         name: 'Select Bowler'
                   },
                   bowls: [{
+                        id: 1,
                         bowlNo: 1,
                         bowlStatus: null,
                         bowlRuns: 0,
-                        isLocked: false
+                        currentOver: 1
                   }],
+                  showRunsInput: false,
 
                   runs: 0,
+                  totalRuns: 0,
                   showBowlStatus: false,
                   changeBowler: false,
 
@@ -51,76 +63,6 @@ class OversSection extends Component {
             });
       }
 
-      lockBowl() {
-            let { currentBowl, currentOvers, runs, totalBowls, bowls, currentOverBowls, striker, battingTeam } = this.state;
-            if (!bowls[currentBowl - 1].isLocked) {
-                  if (bowls[currentBowl - 1].bowlStatus === 'WD' || bowls[currentBowl - 1].bowlStatus === 'NB') {
-                        currentOverBowls = currentOverBowls + 1;
-                        totalBowls = totalBowls + 1;
-
-                        // Event - extra
-                        // socket.emit('extra', {
-                        //    score: runs,
-                        //    teamId: battingTeam,
-                        //    type: bowls[currentBowl - 1].bowlStatus
-                        // });
-                  }
-                  totalBowls = totalBowls + 1;
-                  currentOvers = (parseInt(currentOvers) + ((currentBowl) * 0.1)).toFixed(1);
-                  document.getElementById(`bowl_${currentBowl - 1}`).style.backgroundColor = '#333333';
-                  document.getElementById(`bowl_${currentBowl - 1}`).style.color = '#ffffff';
-                  this.props.updateRuns(runs);
-
-                  // Event - eachBallUpdate
-                  // socket.emit('eachBallUpdate', {
-                  //       runScored: runs,
-                  //       teamId: battingTeam
-                  //       strikerId: striker.id,
-                  //       bowlerId: bowler.id,
-                  // });
-
-                  if (bowls.length <= currentOverBowls && !bowls[currentBowl - 1].isLocked) {
-                        bowls.push({
-                              bowlNo: (bowls[currentBowl - 1].bowlStatus === 'WD' || bowls[currentBowl - 1].bowlStatus === 'NB') ? currentBowl : currentBowl + 1,
-                              bowlStatus: null,
-                              bowlRuns: 0,
-                              isLocked: false,
-                              striker: {}
-                        });
-                        bowls[currentBowl - 1].isLocked = true;
-                        bowls[currentBowl - 1].striker = striker;
-                        this.setState({ totalBowls, currentOvers, showBowlStatus: false, bowls });
-
-                        // if (bowls.length === totalBowls) {
-                              
-                              // this.setState({ inningEnd: true });
-                              // this.props.setInningEnd(true); // or set the above event in AdminScoreBoard page
-                        // }
-                  } else {
-                        bowls = [{
-                              bowlNo: 1,
-                              bowlStatus: null,
-                              bowlRuns: 0,
-                              isLocked: false
-                        }]
-                        this.setState({ isOverStart: true, bowls });
-                  }
-            } else {
-                  console.log('yahpe aaya', bowls[currentBowl - 1]);
-                  let prevRuns = bowls[currentBowl - 1].bowlRuns;
-                  this.props.updateRuns(runs - prevRuns);
-                  bowls[currentBowl - 1].bowlRuns = runs;
-                  bowls[currentBowl - 1].striker.runs = bowls[currentBowl - 1].striker.runs - bowls[currentBowl - 1].bowlRuns + runs;
-                  console.log('yahpe aaya 2', bowls[currentBowl - 1]);
-            }
-
-      }
-
-      setBowlStatus(ballNo, i) {
-            document.getElementById(`bowl_${i}`).style.backgroundColor = '#ffff00';
-            this.setState({ currentBowl: i + 1, runs: 0, showBowlStatus: true });
-      }
-
       setOverStartDetails() {
             this.setState({ isOverStart: false });
 
@@ -132,31 +74,127 @@ class OversSection extends Component {
             // });
       }
 
-      setBowler(e) {
-            const { bowler } = this.state;
-            bowler.name = e.target.value;
-            this.setState({ bowler });
-      }
-
       renderOverBowls() {
-            const { bowls } = this.state;
+            let { bowls, totalBowlNo } = this.state;
             return (
                   <div className="over-count">
                         <span>Overs:</span>
                         {
                               bowls.map((item, i) =>
                                     <div
-                                          key={`bowl_${i}`}
-                                          id={`bowl_${i}`}
+                                          id={`bowl_${totalBowlNo}`}
                                           className="bowl"
-                                          onClick={() => { this.setBowlStatus(item, i) }}
                                     >
-                                          {(item.bowlStatus === null) ? item.bowlNo : item.bowlStatus}
+                                          {/* {item.bowlNo} */}
+                                          {(item.bowlStatus !== null) ? item.bowlStatus : item.bowlNo}
                                     </div>
                               )
                         }
                   </div>
             );
+      }
+
+      lockBowl() {
+            let { bowls, currentBowlNo, totalBowlNo, currentOverBowlNo, currentOvers, totalOvers, runs, totalRuns } = this.state;
+            console.log(currentBowlNo, totalBowlNo, currentOverBowlNo);
+
+            if (currentBowlNo < 6) {
+                  if (bowls[currentOverBowlNo].bowlStatus === 'WD' || bowls[currentOverBowlNo].bowlStatus === 'NB') {
+                        // extra case
+                        currentOverBowlNo++;
+                        totalBowlNo++;
+                        bowls.push({
+                              id: totalBowlNo,
+                              bowlNo: currentBowlNo,
+                              bowlStatus: null,
+                              bowlRuns: 0,
+                              currentOver: parseInt(currentOvers)
+                        });
+                  } else {
+                        // normal update
+                        currentOvers = (parseInt(currentOvers) + ((currentBowlNo) * 0.1)).toFixed(1);
+                        currentOverBowlNo++;
+                        currentBowlNo++;
+                        totalBowlNo++;
+                        bowls.push({
+                              id: totalBowlNo,
+                              bowlNo: currentBowlNo,
+                              bowlStatus: null,
+                              bowlRuns: 0,
+                              currentOver: parseInt(currentOvers)
+                        });
+                  }
+                  bowls[currentOverBowlNo].bowlRuns = runs;
+                  this.props.updateRuns(runs);
+                  totalRuns = totalRuns + runs;
+                  this.setState({ bowls, currentBowlNo, totalBowlNo, currentOverBowlNo, currentOvers, totalRuns });
+            } else {
+                  // new over start
+                  currentOvers = parseInt(currentOvers) + 1;
+                  console.log(currentOvers, parseInt(totalOvers));
+                  if (currentOvers < parseInt(totalOvers)) {
+                        currentOverBowlNo = 0;
+                        currentBowlNo = 1;
+                        bowls = [{
+                              id: totalBowlNo,
+                              bowlNo: 1,
+                              bowlStatus: null,
+                              bowlRuns: 0,
+                              currentOver: parseInt(currentOvers)
+                        }];
+                        this.setState({ isOverStart: true, bowls, currentBowlNo, currentOverBowlNo, currentOvers });
+                  } else if (currentOvers == totalOvers) {
+                        this.setState({ inningEnd: true });
+                        this.props.setInningEnd(true);
+                  }
+
+            }
+            // }
+            // let { currentBowlNo, totalBowlNo, currentOvers, currentOverBowls, runs, bowls } = this.state;
+            // if (bowls[currentBowlNo - 1].isLocked) {
+            //       // revert case
+            // } else {
+            //       // fresh update
+            //       bowls[currentBowlNo - 1].bowlRuns = runs;
+            //       bowls[currentBowlNo - 1].isLocked = true;
+            //       if (bowls[currentBowlNo - 1].bowlStatus === 'WD' || bowls[currentBowlNo - 1].bowlStatus === 'NB') {
+            //             currentOverBowls = currentOverBowls + 1;
+            //             currentBowlNo = currentBowlNo + 1;
+            //             totalBowlNo = totalBowlNo + 1;
+            //             bowls.push({
+            //                   id: totalBowlNo,
+            //                   bowlNo: currentBowlNo,
+            //                   currentOverNo: parseInt(currentOvers) + 1,
+            //                   bowlStatus: null,
+            //                   bowlRuns: 0,
+            //                   isLocked: false,
+            //                   isExtra: true
+            //             });
+            //       }
+            //       currentOvers = (parseInt(currentOvers) + ((currentBowlNo) * 0.1)).toFixed(1);
+            //       currentOverBowls = currentOverBowls + 1;
+            //       currentBowlNo = currentBowlNo + 1;
+            //       totalBowlNo = totalBowlNo + 1;
+            //       bowls.push({
+            //             id: totalBowlNo,
+            //             bowlNo: currentBowlNo,
+            //             currentOverNo: parseInt(currentOvers) + 1,
+            //             bowlStatus: null,
+            //             bowlRuns: 0,
+            //             isLocked: false,
+            //             isExtra: false
+            //       });
+            //       this.setState({ currentOvers, bowls, currentBowlNo, totalBowlNo, showRunsInput: false });
+            // }
+      }
+
+      setBowlStatus(bowlStatus) {
+            let { currentOverBowlNo, bowls } = this.state;
+            bowls[currentOverBowlNo].bowlStatus = bowlStatus;
+            if (bowlStatus === 'WK') {
+                  this.props.setWicket(true, {});
+            }
+            this.setState({ bowls });
       }
 
       renderOver() {
@@ -171,62 +209,66 @@ class OversSection extends Component {
                                                 id={`status_${item}`}
                                                 key={`bowledStatus_${j}`}
                                                 className="bowl"
-                                                onClick={() => {
-                                                      let { currentBowl, bowls } = this.state;
-                                                      bowls[currentBowl - 1].bowlStatus = item;
-                                                      if (item === 'WK') {
-                                                            this.props.setWicket(true, {});
-                                                      }
-                                                      this.setState({ bowls, changeBowler: (item === 'CB') });
-                                                }}
+                                                onClick={() => this.setBowlStatus(item)}
                                           >
                                                 {item}
                                           </div>
                                     )
                               }
                         </div>
-                        <div className="dropdown-list">
-                              <div className="dd-list-half">{"Runs Scored: "}</div>
-                              <div className="dd-list-half">
-                                    {
-                                          this.state.overRuns.map((item, i) =>
-                                                <div
-                                                      id={`status_${item}`}
-                                                      key={`runsscores_${i}`}
-                                                      className="bowl"
-                                                      onClick={() => {
-                                                            let { runs } = this.state;
-                                                            runs = parseInt(item);
-                                                            this.setState({ runs });
-                                                      }}
-                                                >
-                                                      {item}
-                                                </div>
-                                          )
-                                    }
+                        {
+                              // (this.state.showRunsInput) &&
+                              <div>
+                                    <div className="dropdown-list">
+                                          <div className="dd-list-half">{"Runs Scored: "}</div>
+                                          <div className="dd-list-half">
+                                                {
+                                                      this.state.overRuns.map((item, i) =>
+                                                            <div
+                                                                  id={`status_${item}`}
+                                                                  key={`runsscores_${i}`}
+                                                                  className="bowl"
+                                                                  onClick={() => {
+                                                                        let { runs } = this.state;
+                                                                        runs = parseInt(item);
+                                                                        this.setState({ runs });
+                                                                  }}
+                                                            >
+                                                                  {item}
+                                                            </div>
+                                                      )
+                                                }
+                                          </div>
+                                    </div>
+                                    <input
+                                          value={this.state.runs}
+                                          placeholder="Enter runs scored"
+                                          type="number"
+                                          min="0"
+                                          max="10"
+                                          step="1"
+                                          onChange={(e) => {
+                                                let { runs } = this.state;
+                                                runs = parseInt(e.target.value);
+                                                this.setState({ runs });
+                                          }}
+                                          onBlur={(e) => {
+                                                let { runs } = this.state;
+                                                runs = parseInt(e.target.value);
+                                                this.setState({ runs });
+                                          }}
+                                    />
                               </div>
-                        </div>
-                        <input
-                              value={this.state.runs}
-                              placeholder="Enter runs scored"
-                              type="number"
-                              min="0"
-                              max="10"
-                              step="1"
-                              onChange={(e) => {
-                                    let { runs } = this.state;
-                                    runs = parseInt(e.target.value);
-                                    this.setState({ runs });
-                              }}
-                              onBlur={(e) => {
-                                    let { runs } = this.state;
-                                    runs = parseInt(e.target.value);
-                                    this.setState({ runs });
-                              }}
-                        />
+                        }
                         <button id="lock-bowl" onClick={() => this.lockBowl()}>OK</button>
                   </div>
             );
+      }
+
+      setBowler(e) {
+            const { bowler } = this.state;
+            bowler.name = e.target.value;
+            this.setState({ bowler });
       }
 
       renderBowlingTeamDropDown() {
@@ -255,21 +297,16 @@ class OversSection extends Component {
                                     (this.state.isOverStart) ?
                                           <div>
                                                 <div className="scoreboard-body">
-                                                      <div>
-                                                            {/* <div className="section-header">
-                                                                  <span>{`Over Start Details`}</span>
-                                                            </div> */}
-                                                            <div className="match-start-section">
-                                                                  <div className="dropdown-list">
-                                                                        <div className="dd-list-half">{"Bowler for the over: "}</div>
-                                                                        <div className="dd-list-half">
-                                                                              {
-                                                                                    this.renderBowlingTeamDropDown()
-                                                                              }
-                                                                        </div>
+                                                      <div className="match-start-section">
+                                                            <div className="dropdown-list">
+                                                                  <div className="dd-list-half">{"Bowler for the over: "}</div>
+                                                                  <div className="dd-list-half">
+                                                                        {
+                                                                              this.renderBowlingTeamDropDown()
+                                                                        }
                                                                   </div>
-                                                                  <button onClick={() => this.setOverStartDetails()}>OK</button>
                                                             </div>
+                                                            <button onClick={() => this.setOverStartDetails()}>OK</button>
                                                       </div>
                                                 </div>
                                           </div>
@@ -286,13 +323,8 @@ class OversSection extends Component {
                                                             {/* <span className="overs">Remaining: {this.state.totalOvers - this.state.currentOvers}</span> */}
                                                       </div>
                                                       <div className="overs">
-                                                            {
-                                                                  this.renderOverBowls()
-                                                            }
-                                                            {
-                                                                  (this.state.showBowlStatus) &&
-                                                                  this.renderOver()
-                                                            }
+                                                            {this.renderOverBowls()}
+                                                            {this.renderOver()}
                                                       </div>
                                                 </div>
                                                 :
@@ -309,6 +341,29 @@ class OversSection extends Component {
                                                 </div>
                               }
                         </div>
+                        {
+                              (this.state.inningEnd) &&
+                              <Popup
+                                    children={
+                                          <div className="popup">
+                                                <div id="popup-header">
+                                                      <span>Inning End</span>
+                                                </div>
+                                                <div id="popup-body">
+                                                      <div className="dropdown-list">
+                                                            <div className="dd-list-half">{"Inning Runs: "}</div>
+                                                            <div className="dd-list-half">
+                                                                  {this.state.totalRuns}
+                                                            </div>
+                                                      </div>
+                                                      <button onClick={() => this.setState({ showPopup: false })}>OK</button>
+                                                </div>
+                                          </div>
+                                    }
+                                    showPopup={true}
+                                    closePopup={() => this.setState({ showPopup: false })}
+                              />
+                        }
                   </div>
             );
       }

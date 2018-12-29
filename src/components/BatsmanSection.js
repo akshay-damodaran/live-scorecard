@@ -241,14 +241,15 @@ class BatsmanSection extends Component {
             return (
                   <div className="striker">
                         {
-                              Object.keys(player).map((item, i) =>
+                              // Object.keys(player).map((item, i) =>
                                     <div
-                                          key={`batsman_${item}`}
+                                          key={`batsman_${player.id}`}
                                           className="batsman"
                                     >
-                                          {(item === 'id') ? null : player[item]}
+                                          {player.name}
+                                          {/* {(item === 'id') ? null : player[item]} */}
                                     </div>
-                              )
+                              // )
                         }
                   </div>
             );
@@ -358,10 +359,10 @@ class BatsmanSection extends Component {
                                                             <div className="section-body">
                                                                   <div className="striker-headings">
                                                                         <div className="batsman">Name</div>
-                                                                        <div className="batsman">Runs</div>
+                                                                        {/* <div className="batsman">Runs</div>
                                                                         <div className="batsman">Balls</div>
                                                                         <div className="batsman">Fours</div>
-                                                                        <div className="batsman">Sixes</div>
+                                                                        <div className="batsman">Sixes</div> */}
                                                                   </div>
                                                                   {this.renderPlayer(this.state.striker)}
                                                                   {this.renderPlayer(this.state.nonStriker)}

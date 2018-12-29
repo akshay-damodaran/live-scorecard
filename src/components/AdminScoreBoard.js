@@ -15,7 +15,7 @@ class AdminScoreBoard extends Component {
                         name: '',
                         logo: '',
                         wonToss: false,
-                        isBatting: true,
+                        isBatting: false,
                         runs: 0,
                         wickets: 0,
                         ballsFaced: 0
@@ -24,7 +24,7 @@ class AdminScoreBoard extends Component {
                         name: '',
                         logo: '',
                         wonToss: false,
-                        isBatting: true,
+                        isBatting: false,
                         runs: 0,
                         wickets: 0,
                         ballsFaced: 0
@@ -233,6 +233,8 @@ class AdminScoreBoard extends Component {
                                                 updateRuns={this.updateRuns.bind(this)}
                                                 setWicket={this.setWicket.bind(this)}
                                                 socket={this.state.socket}
+
+                                                setInningEnd={this.setInningEnd.bind(this)}
                                           />
                                     </div>
                                     :

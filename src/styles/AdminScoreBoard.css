@@ -251,9 +251,10 @@
       flex: 1;
       width: 100%;
       flex-direction: row;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: center;
-      height: 50px;
+      height: auto;
       font-weight: bold;
       /* background-color: #b3ecff; */
       /* padding-top: 10px; */
@@ -279,6 +280,16 @@
       color: #000000;
 }
 
+.inning-end {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+}
+
 
 /* 
 .bowl:disabled {
@@ -302,7 +313,7 @@
 
 .bowler-input {
       padding-left: 10px;
-}
+}*/
 
 .popup {
       display: flex;
@@ -328,4 +339,5 @@
 #popup-body {
       display: flex;
       align-items: center;
-} */
+      flex-direction: column;
+}
