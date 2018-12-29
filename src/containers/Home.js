@@ -132,26 +132,12 @@ class Home extends React.Component {
       if (data.striker && data.nonStriker) {
         currentBatsman = [data.striker, data.nonStriker];
       }
+
       // let headline, teamName, balls, runs;
-      // if (inningId === 1) {
-      //   if (toss.teamId === 1) {
-      //     teamName = team1.name;
-      //   } else if (toss.teamId === 2) {
-      //     teamName = team2.name;
-      //   }
-      //   headline = `${teamName} won the toss and elected to ${toss.decision ? "Bowl" : "Bat"} first.`;
-      // } else if (inningsId === 2) {
-      //   if (battingTeam === 1) {
-      //     teamName = team1.name;
-      //     runs = team2.runs - team1.runs + 1;
-      //     balls = totalBalls - team1.ballsFaced;
-      //   } else if (battingTeam === 2) {
-      //     teamName = team2.name;
-      //     runs = team1.runs - team2.runs + 1;
-      //     balls = totalBalls - team2.balls;
-      //   }
-      //   headline = `${teamName} needs ${runs} runs to win from ${balls} balls.`
-      // }
+
+      let { headline, inningId, battingTeam, team1, team2, totalBalls } = data;
+      headline = this.getHeadLine(headline.title, inningId, battingTeam, team1, team2, totalBalls);
+
       this.setState({ ...data, current_striker, currentBatsman, });
     });
 
@@ -195,6 +181,9 @@ class Home extends React.Component {
         team2.runs += runScored;
         team2.ballsFaced += 1;
       }
+
+      let { headline, inningId, battingTeam, totalBalls } = this.state;
+      headline = this.getHeadLine(headline, inningId, battingTeam, team1, team2, totalBalls);
 
       this.setState({
         currentBatsman,
@@ -267,6 +256,8 @@ class Home extends React.Component {
     socket.on('extra', data => {
       const { score, teamId, type } = data;
 
+      let { headline, inningId, battingTeam, team1, team2, totalBalls } = this.state;
+      headline = this.getHeadLine(headline, inningId, battingTeam, team1, team2, totalBalls);
       
     });
 
@@ -277,6 +268,24 @@ class Home extends React.Component {
 
     // document.getElementById(`tab${this.state.currentTab}`).style.backgroundColor = '#ba124c';
     // document.getElementById(`tab${this.state.currentTab}`).style.fontWeight = 'bold';
+  }
+
+  getHeadLine(headline, inningId, battingTeam, team1, team2, totalBalls) {
+    if (inningId === 1) {
+        return headline;
+      } else if (inningId === 2) {
+        let teamName, runs, balls;
+        if (battingTeam === 1) {
+          teamName = team1.name;
+          runs = team2.runs - team1.runs + 1;
+          balls = totalBalls - team1.ballsFaced;
+        } else if (battingTeam === 2) {
+          teamName = team2.name;
+          runs = team1.runs - team2.runs + 1;
+          balls = totalBalls - team2.balls;
+        }
+        headline = `${teamName} needs ${runs} runs to win from ${balls} balls.`
+      }
   }
 
   setTab(tabNo) {
