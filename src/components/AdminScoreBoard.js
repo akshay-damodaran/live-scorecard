@@ -370,7 +370,6 @@ class AdminScoreBoard extends Component {
                                                 />
                                           }
                                     </div>
-
                                     :
                                     <Popup
                                           children={
@@ -410,7 +409,6 @@ class AdminScoreBoard extends Component {
                                           closePopup={() => this.setState({ showPopup: false })}
                                     />
                         }
-
                   </div>
             );
       }

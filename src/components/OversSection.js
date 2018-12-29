@@ -86,7 +86,10 @@ class OversSection extends Component {
                                           key={`bowl_${i}`}
                                           id={`bowl_${currentBowlNo}`}
                                           className="bowl"
-                                          style={{ backgroundColor: (item.bowlStatus !== null) ? '#333333' : '#ffff00' }}
+                                          style={{
+                                                backgroundColor: (item.isLocked === true) ? '#333333' : '#ffff00',
+                                                color: (item.isLocked === true) ? '#ffffff' : '#000000'
+                                          }}
                                     >
                                           {/* {item.bowlNo} */}
                                           {(item.bowlStatus !== null) ? item.bowlStatus : item.bowlNo}
@@ -100,11 +103,11 @@ class OversSection extends Component {
       lockBowl() {
             let { bowls, currentBowlNo, totalBowlNo, currentOverBowlNo, currentOvers, totalOvers, runs, totalRuns } = this.state;
 
-            document.getElementById(`bowl_${currentBowlNo}`).style.backgroundColor = '#333333';
-            document.getElementById(`bowl_${currentBowlNo}`).style.color = '#ffffff';
-            document.getElementById(`bowl_${currentBowlNo}`).style.pointerEvents = 'none';
-
             if (currentBowlNo < 6) {
+                  // document.getElementById(`bowl_${currentBowlNo}`).style.backgroundColor = '#333333';
+                  // document.getElementById(`bowl_${currentBowlNo}`).style.color = '#ffffff';
+                  // document.getElementById(`bowl_${currentBowlNo}`).style.pointerEvents = 'none';
+                  bowls[currentOverBowlNo].isLocked = true;
                   if (bowls[currentOverBowlNo].bowlStatus === 'WD' || bowls[currentOverBowlNo].bowlStatus === 'NB') {
                         // extra case
                         currentOverBowlNo++;
@@ -133,9 +136,9 @@ class OversSection extends Component {
                         });
                   }
                   bowls[currentOverBowlNo].bowlRuns = runs;
-                  bowls[currentOverBowlNo].isLocked = true;
                   this.props.updateRuns(runs);
                   totalRuns = totalRuns + runs;
+
                   this.setState({ bowls, currentBowlNo, totalBowlNo, currentOverBowlNo, currentOvers, totalRuns });
             } else {
                   // new over start
@@ -309,7 +312,6 @@ class OversSection extends Component {
       }
 
       render() {
-            const { bowls } = this.state;
             return (
                   <div className="overs-section">
                         <div className="section-header">

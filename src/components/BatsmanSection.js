@@ -166,13 +166,13 @@ class BatsmanSection extends Component {
                   case 'striker': {
                         switch (nextPlayer.isStriker) {
                               case true: {
-                                    delete nextPlayer['isStriker'];
+                                    // delete nextPlayer['isStriker'];
                                     this.setState({ striker: nextPlayer, isWicket: false, changePlayer: false });
                                     break;
                               }
                               case false: {
                                     this.switchStriker();
-                                    delete nextPlayer['isStriker'];
+                                    // delete nextPlayer['isStriker'];
                                     this.setState({ nonStriker: nextPlayer, isWicket: false, changePlayer: false });
                                     break;
                               }
@@ -184,12 +184,12 @@ class BatsmanSection extends Component {
                         switch (nextPlayer.isStriker) {
                               case true: {
                                     this.switchStriker();
-                                    delete nextPlayer['isStriker'];
+                                    // delete nextPlayer['isStriker'];
                                     this.setState({ striker: nextPlayer, isWicket: false, changePlayer: false });
                                     break;
                               }
                               case false: {
-                                    delete nextPlayer['isStriker'];
+                                    // delete nextPlayer['isStriker'];
                                     this.setState({ nonStriker: nextPlayer, isWicket: false, changePlayer: false });
                                     break;
                               }
