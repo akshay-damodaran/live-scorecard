@@ -184,7 +184,7 @@ class OversSection extends Component {
                         </div>
                         {
                               // (this.state.showRunsInput) &&
-                              <div id="runs-scored" className="overs-count">
+                              <div id="runs-scored" className="over-count">
                                     <div className="dropdown-list">
                                           <div className="dd-list-half">{"Runs Scored: "}</div>
                                           <div className="dd-list-half">

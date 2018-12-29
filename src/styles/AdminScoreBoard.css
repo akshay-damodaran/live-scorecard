@@ -292,17 +292,20 @@
 
 #over-bowls {
       background-color: #6699ff;
-      padding: 5px;
+      padding-top: 5px;
+      padding-bottom: 5px;
 }
 
 #select-bowl-status {
       background-color: #9999ff;
-      padding: 5px;
+      padding-top: 5px;
+      padding-bottom: 5px;
 }
 
 #runs-scored {
       background-color: #d1b3ff;
-      padding: 5px;
+      padding-top: 5px;
+      padding-bottom: 5px;
       /* width: 100vw; */
 }
 
