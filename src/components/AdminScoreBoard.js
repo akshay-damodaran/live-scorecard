@@ -118,7 +118,7 @@ class AdminScoreBoard extends Component {
             // const { socket, totalOvers, scoreCardDisplay } = this.props;
             // socket.on('scoreCardDisplay', (sbDetails) => { // score board details
             //       console.log('Score board details: ', sbDetails);
-                  // this.initializeScoreBoard(scoreCardDisplay);
+            // this.initializeScoreBoard(scoreCardDisplay);
             // });
             // this.setState({ socket, totalOvers });       
 
@@ -186,7 +186,7 @@ class AdminScoreBoard extends Component {
       }
 
       initializeNextInning(inningDetails) {
-            let { isInningStart, striker, nonStriker, bowler, inningId, totalRuns, wickets, battingTeamPlayers, bowlingTeamPlayers, isWicket, inningEnd, showPopup } = this.state;
+            let { isInningStart, battingTeam, striker, nonStriker, bowler, inningId, totalRuns, wickets, battingTeamPlayers, bowlingTeamPlayers, isWicket, inningEnd, showPopup } = this.state;
 
             // update state values
             isInningStart = true;
@@ -223,8 +223,9 @@ class AdminScoreBoard extends Component {
             isWicket = false;
             inningEnd = false;
             showPopup = false;
+            battingTeam = (battingTeam === 1) ? 2 : 1;
 
-            this.setState({ isInningStart, inningId, striker, nonStriker, bowler, totalRuns, wickets, battingTeamPlayers, bowlingTeamPlayers, isWicket, inningEnd, showPopup });
+            this.setState({ isInningStart, inningId, battingTeam, striker, nonStriker, bowler, totalRuns, wickets, battingTeamPlayers, bowlingTeamPlayers, isWicket, inningEnd, showPopup });
       }
 
       setInningStart(isInningStart) {
@@ -237,16 +238,37 @@ class AdminScoreBoard extends Component {
             inningDetails.wickets = this.state.wickets;
             inningHistory.push(inningDetails);
 
-            let { inningId, team1, team2, totalRuns, wickets } = this.state;
+            console.log(inningDetails);
+
+            let { inningId, team1, team2, totalRuns, wickets, battingTeam } = this.state;
             if (inningId === 1) {
-                  team1.runs = totalRuns;
-                  team1.wickets = wickets;
-                  team1.ballsFaced = inningDetails.totalBowls;
-                  this.setState({ inningEnd: isInningEnd, showPopup: true, team1 });
+                  if (battingTeam === 1) {
+                        team1.runs = totalRuns;
+                        team1.wickets = wickets;
+                        team1.ballsFaced = inningDetails.totalBowls;
+                        team1.isBatting = false;
+
+                        team2.isBatting = true;
+                  } else {
+                        team2.runs = totalRuns;
+                        team2.wickets = wickets;
+                        team2.ballsFaced = inningDetails.totalBowls;
+                        team2.isBatting = false;
+
+                        team1.isBatting = true;
+                  }
+                  this.setState({ inningEnd: isInningEnd, showPopup: true, team1, team2 });
             } else if (inningId === 2) {
-                  team2.runs = totalRuns;
-                  team2.wickets = wickets;
-                  team2.ballsFaced = inningDetails.totalBowls;
+                  if (battingTeam === 1) {
+                        team1.runs = totalRuns;
+                        team1.wickets = wickets;
+                        team1.ballsFaced = inningDetails.totalBowls;
+                  } else {
+                        team2.runs = totalRuns;
+                        team2.wickets = wickets;
+                        team2.ballsFaced = inningDetails.totalBowls;
+                  }
+
                   this.setState({ team2, endGame: true, showPopup: true });
             }
             // Event - inningEnd
@@ -272,12 +294,12 @@ class AdminScoreBoard extends Component {
                         </div>
                         <div className="admin-teams">
                               <div className="team" id="team-1" style={{ backgroundColor: '#66ccff' }}>
-                                    <img src={(battingTeam === 1) ? require('../images/team1.png') : require('../images/team2.png')} width="50" height="50" className="team-logo" alt={team1} />
+                                    <img src={(team1.isBatting === 1) ? require('../images/team1.png') : require('../images/team2.png')} width="50" height="50" className="team-logo" alt={team1} />
                                     <h4>&nbsp;&nbsp;&nbsp;{(battingTeam === 1) ? team1.name : team2.name}</h4>
                                     {/* <h4>&nbsp;&nbsp;&nbsp;{`(${(battingTeam === 1) ? team1.runs : team2.runs})`}</h4> */}
                               </div>
                               <div className="team" id="team-2" style={{ backgroundColor: '#ccccff' }}>
-                                    <img src={(battingTeam !== 1) ? require('../images/team1.png') : require('../images/team2.png')} width="50" height="50" className="team-logo" alt={team2} />
+                                    <img src={(team2.isBatting === 1) ? require('../images/team2.png') : require('../images/team1.png')} width="50" height="50" className="team-logo" alt={team2} />
                                     <h4>&nbsp;&nbsp;&nbsp;{(battingTeam !== 1) ? team1.name : team2.name}</h4>
                                     {/* <h4>&nbsp;&nbsp;&nbsp;{`(${(battingTeam !== 1) ? team1.runs : team2.runs})`}</h4> */}
                               </div>
@@ -317,7 +339,7 @@ class AdminScoreBoard extends Component {
                                                 isWicket={this.state.isWicket}
                                                 setWicket={this.setWicket.bind(this)}
                                                 updateWickets={this.updateWickets.bind(this)}
-                                                // socket={this.state.socket}
+                                          // socket={this.state.socket}
                                           />
                                           <OversSection
                                                 inningId={this.state.inningId}
@@ -330,7 +352,7 @@ class AdminScoreBoard extends Component {
                                                 updateRuns={this.updateRuns.bind(this)}
                                                 setWicket={this.setWicket.bind(this)}
                                                 setInningEnd={this.setInningEnd.bind(this)}
-                                                // socket={this.state.socket}
+                                          // socket={this.state.socket}
                                           />
                                           {
                                                 (this.state.inningEnd) &&
@@ -356,7 +378,12 @@ class AdminScoreBoard extends Component {
                                                                         <div className="dropdown-list">
                                                                               <div className="dd-list-half">{"Total Bowls: "}</div>
                                                                               <div className="dd-list-half">
-                                                                                    {this.state.team1.ballsFaced}
+                                                                                    {
+                                                                                          (this.state.battingTeam === 1) ?
+                                                                                                this.state.team1.ballsFaced
+                                                                                                :
+                                                                                                this.state.team2.ballsFaced
+                                                                                    }
                                                                               </div>
                                                                         </div>
                                                                         <button onClick={() => this.initializeNextInning()}>OK</button>
@@ -406,6 +433,10 @@ class AdminScoreBoard extends Component {
                                           showPopup={this.state.showPopup}
                                           closePopup={() => this.setState({ showPopup: false })}
                                     />
+                        }
+                        {
+                              // this.state.endGame && // - TO DO [to show who won tthe match]
+
                         }
                   </div>
             );

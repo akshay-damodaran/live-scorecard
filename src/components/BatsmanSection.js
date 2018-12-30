@@ -274,19 +274,30 @@ class BatsmanSection extends Component {
       renderPlayer(player) {
             return (
                   <div className="striker">
-                        <div className="batsman">
+                        {/* <div
+                              className="batsman"
+                              style={{
+                                    backgroundColor: (player.id === this.state.striker.id) ? '#ba124c' : '#e6e6e6',
+                                    color: (player.id === this.state.striker.id) ? '#ffffff' : '#000000'
+                              }}>
                               {player.name}
-                        </div>
+                        </div> */}
                         {
-                              // Object.keys(player).map((item, i) =>
-                              //       <div
-                              //             key={`batsman_${player.id}`}
-                              //             className="batsman"
-                              //       >
-                              //             {player.name}
-                              //             {(item === 'id') ? null : player[item]}
-                              //       </div>
-                              // )
+                              Object.keys(player).map((item, i) => (
+                                    (item !== 'id') ?
+                                          <div
+                                                key={`batsman_${item}`}
+                                                className="batsman"
+                                                style={{
+                                                      backgroundColor: (player.id === this.state.striker.id) ? '#6666ff' : '#e6e6e6',
+                                                      color: (player.id === this.state.striker.id) ? '#ffffff' : '#000000'
+                                                }}
+                                          >
+                                                {player[item]}
+                                          </div>
+                                          :
+                                          null
+                              ))
                         }
                   </div>
             );
@@ -356,7 +367,6 @@ class BatsmanSection extends Component {
       }
 
       render() {
-            // const { striker, nonStriker } = this.state;
             return (
                   <div className="match-section">
                         <div className="section-header">
@@ -403,10 +413,10 @@ class BatsmanSection extends Component {
                                                             <div className="section-body">
                                                                   <div className="striker-headings">
                                                                         <div className="batsman">Name</div>
-                                                                        {/* <div className="batsman">Runs</div>
+                                                                        <div className="batsman">Runs</div>
                                                                         <div className="batsman">Balls</div>
                                                                         <div className="batsman">Fours</div>
-                                                                        <div className="batsman">Sixes</div> */}
+                                                                        <div className="batsman">Sixes</div>
                                                                   </div>
                                                                   {this.renderPlayer(this.state.striker)}
                                                                   {this.renderPlayer(this.state.nonStriker)}

@@ -124,7 +124,7 @@
       flex: 0.2;
       flex-direction: column;
       align-items: center;
-      height: 40px;
+      height: auto;
       background-color: #999999;
       font-weight: bold;
 }
@@ -134,7 +134,7 @@
       flex: 0.4;
       flex-direction: column;
       align-items: center;
-      height: 40px;
+      height:auto;
       background-color: #eeeeee;
 }
 
@@ -145,7 +145,7 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      /* border-bottom: solid 1px #cccccc; */
+      border-bottom: solid 1px #cccccc;
 }
 
 .scores-section {
