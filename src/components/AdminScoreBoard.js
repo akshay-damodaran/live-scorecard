@@ -310,8 +310,9 @@ class AdminScoreBoard extends Component {
                                                 setInningStart={this.setInningStart.bind(this)}
                                                 striker={this.state.striker}
                                                 nonStriker={this.state.nonStriker}
-                                                battingTeam={this.state.battingTeam}
+                                                // battingTeam={this.state.battingTeam}
                                                 battingTeamPlayers={battingTeamPlayers}
+                                                bowlingTeamPlayers={bowlingTeamPlayers}
                                                 setBatsmenDetails={this.setBatsmenDetails.bind(this)}
                                                 isWicket={this.state.isWicket}
                                                 setWicket={this.setWicket.bind(this)}

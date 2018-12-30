@@ -220,6 +220,7 @@
       align-items: center;
       justify-content: center;
       text-align: center;
+      width: 100vw;
       height: 40px;
       background-color: #e6e6e6;
       font-weight: bold;

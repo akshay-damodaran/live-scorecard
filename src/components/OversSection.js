@@ -272,7 +272,7 @@ class OversSection extends Component {
                                                             </div>
                                                       )
                                                 }
-                                          </div>
+                                          </div>      
                                     </div>
                                     <input
                                           value={this.state.runs}
@@ -304,6 +304,7 @@ class OversSection extends Component {
             let bowlerSelected = JSON.parse(e.target.value);
             bowler.id = bowlerSelected.id;
             bowler.name = bowlerSelected.name;
+            document.getElementById(`overBowler`).text = bowlerSelected.name;
             this.setState({ bowler }, () => {
                   this.props.setBowlerDetails(this.state.bowler);
             });
@@ -313,7 +314,7 @@ class OversSection extends Component {
             const { bowlingTeamPlayers } = this.props;
             return (
                   <select className="team-dropdown" value={this.state.bowler.name} onChange={(e) => this.setBowler(e)}>
-                        <option>{"Select Bowler"}</option>
+                        <option id={`overBowler`}>{"Select Bowler"}</option>
                         {
                               bowlingTeamPlayers.map((item, i) =>
                                     <option key={i} value={JSON.stringify(item)}>{item.name}</option>
