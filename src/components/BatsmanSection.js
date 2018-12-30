@@ -108,7 +108,6 @@ class BatsmanSection extends Component {
 
             this.props.setBatsmenDetails(striker, nonStriker);
             this.props.setInningStart(false);
-            // this.setState({ isInningStart: false });
 
             // Event - inningStart
             // this.state.socket.emit('inningStart', {
@@ -228,7 +227,7 @@ class BatsmanSection extends Component {
 
             this.props.setWicket(false, {
                   page: 'batsmanSection',
-                  wicketBy: wicketBy, // input to be taken
+                  wicketBy: wicketBy,
                   wicketType: wicketReason,
                   playerId: (currentOutPlayer === 'striker') ? striker.id : nonStriker.id,
                   newPlayerId: nextPlayer.id,
@@ -284,7 +283,7 @@ class BatsmanSection extends Component {
                         </div> */}
                         {
                               Object.keys(player).map((item, i) => (
-                                    (item !== 'id') ?
+                                    (item !== 'id' && item !== 'isStriker') ?
                                           <div
                                                 key={`batsman_${item}`}
                                                 className="batsman"

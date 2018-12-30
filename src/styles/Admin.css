@@ -29,18 +29,6 @@ body {
       font-size: 14px;
 }
 
-/* .admin-body {
-      background-color: #e6e6e6;
-      display: flex;
-      width: 100%;
-      min-height: 100%;
-} */
-
-/* .admin-card {
-      width: 100%;
-      background-color: #ffffff;
-} */
-
 .admin-body {
       display: flex;
       flex: 1;
@@ -101,8 +89,3 @@ button {
 button:hover {
       background-color:#0086b3;
 }
-
-/* button:active, button:focus {
-      background-color: #ba124c;
-      color: #ffffff;
-} */

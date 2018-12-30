@@ -84,6 +84,22 @@
       font-size: 15px;
 }
 
+.team {
+      overflow: auto;
+      background-color: #99cc00;
+      text-align: center;
+}
+
+/* .team-data {
+      display: flex;
+      flex-direction: column;
+      height: 100px;
+      align-items: flex-start;
+      justify-content: flex-start;
+      text-align: center;
+      background-color: #333333;
+} */
+
 .team-dropdown {
       width: 200px;
       height: 40px;

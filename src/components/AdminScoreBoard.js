@@ -149,7 +149,7 @@ class AdminScoreBoard extends Component {
             totalRuns = totalRuns + addRuns;
             striker.runs = striker.runs + addRuns;
             striker.balls = striker.balls + 1;
-            if (totalRuns % 2 !== 0) {
+            if (addRuns % 2 !== 0) {
                   this.setState({ striker: nonStriker, nonStriker: striker, totalRuns });
             } else {
                   this.setState({ totalRuns, striker });
@@ -157,20 +157,20 @@ class AdminScoreBoard extends Component {
       }
 
       setWicket(isWicket, wicketDetails) {
-            // Event - wicket ============================================================
-            // const { socket } = this.state;
-            // wicketDetails.teamId = this.state.battingTeam;
-            // wicketDetails.bowlerId = this.state.bowler.id; // to be passed
-            // wicketDetails.runScored = this.state.totalRuns; // is player runs for the current ball set in batsman section
-            // socket.emit('wicket', wicketDetails);
-            // ============================================================================
-            // console.log(wicketDetails);
-
             this.setState({ isWicket });
-            if (wicketDetails.page === 'batsmanSection') { // hack - code to be revised - isWicket = false comes from Batsman section and true from Overs section
+            if (wicketDetails.page === 'batsmanSection') {
                   this.setState({
                         striker: wicketDetails.striker, nonStriker: wicketDetails.nonStriker
                   });
+
+                  // Event - wicket ============================================================
+                  // const { socket } = this.state;
+                  // wicketDetails.teamId = this.state.battingTeam;
+                  // wicketDetails.bowlerId = this.state.bowler.id; // to be passed
+                  // wicketDetails.runScored = this.state.totalRuns; // is player runs for the current ball set in batsman section
+                  // socket.emit('wicket', wicketDetails);
+                  // console.log(wicketDetails);
+                  // ============================================================================
             }
             if (this.state.wickets === 10) {
                   this.setState({ inningEnd: true, showPopup: true }, () => {
@@ -238,8 +238,6 @@ class AdminScoreBoard extends Component {
             inningDetails.wickets = this.state.wickets;
             inningHistory.push(inningDetails);
 
-            console.log(inningDetails);
-
             let { inningId, team1, team2, totalRuns, wickets, battingTeam } = this.state;
             if (inningId === 1) {
                   if (battingTeam === 1) {
@@ -280,10 +278,6 @@ class AdminScoreBoard extends Component {
             // });
       }
 
-      // setEndGame() {
-      //       this.setState({ endGame: true });
-      // }
-
       render() {
             const { battingTeam } = this.props;
             const { team1, team2, battingTeamPlayers, bowlingTeamPlayers } = this.state;
@@ -294,14 +288,22 @@ class AdminScoreBoard extends Component {
                         </div>
                         <div className="admin-teams">
                               <div className="team" id="team-1" style={{ backgroundColor: '#66ccff' }}>
-                                    <img src={(team1.isBatting === 1) ? require('../images/team1.png') : require('../images/team2.png')} width="50" height="50" className="team-logo" alt={team1} />
-                                    <h4>&nbsp;&nbsp;&nbsp;{(battingTeam === 1) ? team1.name : team2.name}</h4>
-                                    {/* <h4>&nbsp;&nbsp;&nbsp;{`(${(battingTeam === 1) ? team1.runs : team2.runs})`}</h4> */}
+                                    {/* <div> */}
+                                          <img src={(battingTeam === 1) ? require('../images/team1.png') : require('../images/team2.png')} width="50" height="50" className="team-logo" alt={team1} />
+                                    {/* </div> */}
+                                    <div className="team-data">
+                                          <h4>&nbsp;&nbsp;&nbsp;{(battingTeam === 1) ? `${team1.name}` : `${team2.name}`}</h4>
+                                          <h4>&nbsp;&nbsp;&nbsp;{`(${(battingTeam === 1) ? `${this.state.totalRuns} / ${this.state.wickets}` : `${team2.runs} / ${team2.wickets}`})`}</h4>
+                                    </div>
                               </div>
                               <div className="team" id="team-2" style={{ backgroundColor: '#ccccff' }}>
-                                    <img src={(team2.isBatting === 1) ? require('../images/team2.png') : require('../images/team1.png')} width="50" height="50" className="team-logo" alt={team2} />
-                                    <h4>&nbsp;&nbsp;&nbsp;{(battingTeam !== 1) ? team1.name : team2.name}</h4>
-                                    {/* <h4>&nbsp;&nbsp;&nbsp;{`(${(battingTeam !== 1) ? team1.runs : team2.runs})`}</h4> */}
+                                    {/* <div> */}
+                                          <img src={(battingTeam === 1) ? require('../images/team2.png') : require('../images/team1.png')} width="50" height="50" className="team-logo" alt={team2} />
+                                    {/* </div> */}
+                                    <div className="team-data">
+                                          <h4>&nbsp;&nbsp;&nbsp;{(battingTeam !== 1) ? `${team1.name}` : `${team2.name}`}</h4>
+                                          <h4>&nbsp;&nbsp;&nbsp;{`(${(battingTeam !== 1) ? `${this.state.totalRuns} / ${this.state.wickets}` : `${team1.runs} / ${team1.wickets}`})`}</h4>
+                                    </div>
                               </div>
                         </div>
                         <div className="toss-win">
