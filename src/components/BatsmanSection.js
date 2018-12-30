@@ -56,8 +56,10 @@ class BatsmanSection extends Component {
       }
 
       setPlayer(e, type) {
+            let selectedPlayer = JSON.parse(e.target.value); 
             let player = {
-                  name: e.target.value,
+                  id: selectedPlayer.id,
+                  name: selectedPlayer.name,
                   runs: 0,
                   balls: 0,
                   fours: 0,
@@ -97,6 +99,9 @@ class BatsmanSection extends Component {
       setMatchStartDetails(e) {
             e.preventDefault();
             const { striker, nonStriker, inningId } = this.state;
+
+            console.log(striker, nonStriker);
+
             this.props.setBatsmenDetails(striker, nonStriker);
             this.props.setInningStart(false);
             // this.setState({ isInningStart: false });
@@ -120,10 +125,10 @@ class BatsmanSection extends Component {
                         autoFocus={(team === 'striker')}
                         required={true}
                   >
-                        <option value="">{`Select player`}</option>
+                        <option value={(team === 'striker') ? this.state.striker.name : (team === 'nonStriker') ? this.state.nonStriker.name : this.state.nextPlayer.name}>{`Select player`}</option>
                         {
                               battingTeamPlayers.map((item, i) =>
-                                    <option key={i} value={item.name}>{item.name}</option>
+                                    <option key={i} value={JSON.stringify(item)}>{item.name}</option>
                               )
                         }
                   </select>

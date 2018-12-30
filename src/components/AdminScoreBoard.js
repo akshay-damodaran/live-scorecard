@@ -121,10 +121,10 @@ class AdminScoreBoard extends Component {
             }
             this.setState({ battingTeamPlayers, bowlingTeamPlayers, heading, team1: teamOne, team2: teamTwo, totalOvers, tossResult, battingTeam });
 
-            // const { socket, totalOvers } = this.props;
+            // const { socket, totalOvers, scoreCardDisplay } = this.props;
             // socket.on('scoreCardDisplay', (sbDetails) => { // score board details
             //       console.log('Score board details: ', sbDetails);
-            //       this.initializeScoreBoard(sbDetails);
+                  // this.initializeScoreBoard(scoreCardDisplay);
             // });
             // this.setState({ socket, totalOvers });       
 
@@ -164,11 +164,12 @@ class AdminScoreBoard extends Component {
 
       setWicket(isWicket, wicketDetails) {
             // Event - wicket ============================================================
-            // wicketDetails.teamId = this.state.battingTeam;
-            // wicketDetails.bowlerId = this.state.bowler.id; // to be passed
-            // wicketDetails.runScored = this.state.totalRuns; // is player runs for the current ball set in batsman section
+            wicketDetails.teamId = this.state.battingTeam;
+            wicketDetails.bowlerId = this.state.bowler.id; // to be passed
+            wicketDetails.runScored = this.state.totalRuns; // is player runs for the current ball set in batsman section
             // this.state.socket.emit('wicket', wicketDetails);
             // ============================================================================
+            console.log(wicketDetails);
 
             this.setState({ isWicket });
             if (wicketDetails.page === 'batsmanSection') { // hack - code to be revised - isWicket = false comes from Batsman section and true from Overs section

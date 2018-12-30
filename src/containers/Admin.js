@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-// import socketIOClient from 'socket.io-client';
-// import axios from 'axios';
+import socketIOClient from 'socket.io-client';
+import axios from 'axios';
 
 import '../styles/Admin.css';
 
@@ -11,12 +11,13 @@ import TossResults from '../components/TossResults';
 import AdminScoreBoard from '../components/AdminScoreBoard';
 import Login from '../components/Login';
 
-// import conf from '../conf';
+import conf from '../conf';
 
 class Admin extends Component {
   constructor(props) {
     super(props);
     // const endpoint = 'http://127.0.0.1:4001';
+    // const endpoint = 'https://livescorecardserver.herokuapp.com:4001';
     // const socket = socketIOClient(endpoint);
 
     this.state = {
@@ -199,6 +200,8 @@ class Admin extends Component {
             team2Players={team2Players}
             tossResult={tossResult}
             battingTeam={battingTeam}
+
+            // scoreCardDisplay={this.state.pageComponent}
             socket={this.state.socket}
           />
         );
