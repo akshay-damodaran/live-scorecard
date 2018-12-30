@@ -100,8 +100,6 @@ class BatsmanSection extends Component {
             e.preventDefault();
             const { striker, nonStriker, inningId } = this.state;
 
-            console.log(striker, nonStriker);
-
             this.props.setBatsmenDetails(striker, nonStriker);
             this.props.setInningStart(false);
             // this.setState({ isInningStart: false });
@@ -328,7 +326,7 @@ class BatsmanSection extends Component {
       }
 
       render() {
-            const { striker, nonStriker } = this.state;
+            // const { striker, nonStriker } = this.state;
             return (
                   <div className="match-section">
                         <div className="section-header">

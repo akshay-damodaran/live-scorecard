@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import socketIOClient from 'socket.io-client';
-import axios from 'axios';
+// import socketIOClient from 'socket.io-client';
+// import axios from 'axios';
 
 import '../styles/Admin.css';
 
@@ -11,7 +11,7 @@ import TossResults from '../components/TossResults';
 import AdminScoreBoard from '../components/AdminScoreBoard';
 import Login from '../components/Login';
 
-import conf from '../conf';
+// import conf from '../conf';
 
 class Admin extends Component {
   constructor(props) {
@@ -58,7 +58,7 @@ class Admin extends Component {
     });
 
     // Send sockent message for next screen
-    // this.state.socket.emit('nextScreen', pageComponent + 1);
+    // socket.emit('nextScreen', pageComponent + 1);
   }
 
   nextScreen() {
@@ -76,7 +76,7 @@ class Admin extends Component {
     });
 
     // Send sockent message for next screen
-    // this.state.socket.emit('nextScreen', pageComponent + 1);
+    // socket.emit('nextScreen', pageComponent + 1);
   }
 
   changeTeamName(teamName) {

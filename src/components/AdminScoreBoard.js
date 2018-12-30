@@ -87,14 +87,8 @@ class AdminScoreBoard extends Component {
             const { totalOvers, tossResult, battingTeam, team1, team2, team1Players, team2Players } = this.props;
 
             let battingTeamPlayers, bowlingTeamPlayers;
-
-            if (battingTeam === 1) {
-                  battingTeamPlayers = team1Players;
-                  bowlingTeamPlayers = team2Players;
-            } else {
-                  battingTeamPlayers = team2Players;
-                  bowlingTeamPlayers = team1Players;
-            }
+            battingTeamPlayers = (battingTeam === 1) ? team1Players : team2Players;
+            bowlingTeamPlayers = (battingTeam !== 1) ? team1Players : team2Players;
 
             let heading = (tossResult === 1) ?
                   `${team1} won the toss and elected to do ${(battingTeam === 1) ? 'batting' : 'fielding'}.`
@@ -164,12 +158,13 @@ class AdminScoreBoard extends Component {
 
       setWicket(isWicket, wicketDetails) {
             // Event - wicket ============================================================
-            wicketDetails.teamId = this.state.battingTeam;
-            wicketDetails.bowlerId = this.state.bowler.id; // to be passed
-            wicketDetails.runScored = this.state.totalRuns; // is player runs for the current ball set in batsman section
-            // this.state.socket.emit('wicket', wicketDetails);
+            // const { socket } = this.state;
+            // wicketDetails.teamId = this.state.battingTeam;
+            // wicketDetails.bowlerId = this.state.bowler.id; // to be passed
+            // wicketDetails.runScored = this.state.totalRuns; // is player runs for the current ball set in batsman section
+            // socket.emit('wicket', wicketDetails);
             // ============================================================================
-            console.log(wicketDetails);
+            // console.log(wicketDetails);
 
             this.setState({ isWicket });
             if (wicketDetails.page === 'batsmanSection') { // hack - code to be revised - isWicket = false comes from Batsman section and true from Overs section
@@ -255,7 +250,8 @@ class AdminScoreBoard extends Component {
                   this.setState({ team2, endGame: true, showPopup: true });
             }
             // Event - inningEnd
-            // this.state.socket.emit('inningEnd', {
+            // const { socket } = this.state;
+            // socket.emit('inningEnd', {
             //       teamId: (team1.isBatting) ? 1 : 2,
             //       totalScore: this.state.totalRuns,
             //       totalWicket: this.state.totalWicket
@@ -320,7 +316,7 @@ class AdminScoreBoard extends Component {
                                                 isWicket={this.state.isWicket}
                                                 setWicket={this.setWicket.bind(this)}
                                                 updateWickets={this.updateWickets.bind(this)}
-                                                socket={this.state.socket}
+                                                // socket={this.state.socket}
                                           />
                                           <OversSection
                                                 inningId={this.state.inningId}
@@ -333,7 +329,7 @@ class AdminScoreBoard extends Component {
                                                 updateRuns={this.updateRuns.bind(this)}
                                                 setWicket={this.setWicket.bind(this)}
                                                 setInningEnd={this.setInningEnd.bind(this)}
-                                                socket={this.state.socket}
+                                                // socket={this.state.socket}
                                           />
                                           {
                                                 (this.state.inningEnd) &&

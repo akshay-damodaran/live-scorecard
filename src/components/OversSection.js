@@ -68,7 +68,8 @@ class OversSection extends Component {
             this.setState({ isOverStart: false });
 
             // Event - overStart
-            // this.state.socket.emit('overStart', {
+            // const { socket } = this.state;
+            // socket.emit('overStart', {
             //       bowlerId: this.state.bowler.id,
             //       strikerId: this.state.striker.id,
             //       nonStrikerId: this.state.nonStriker.id,
@@ -104,13 +105,12 @@ class OversSection extends Component {
             let { bowls, currentBowlNo, totalBowlNo, currentOverBowlNo, currentOvers, totalOvers, runs, totalRuns } = this.state;
 
             if (bowls[currentOverBowlNo].isLocked) {
-                  // revert case
-                  console.log(bowls[currentOverBowlNo], totalRuns);
-                  totalRuns = (totalRuns - bowls[currentOverBowlNo].bowlRuns) + runs;
-                  bowls[currentOverBowlNo].bowlRuns = runs;
-                  bowls[currentOverBowlNo].isLocked = true;
-                  console.log(bowls[currentOverBowlNo], totalRuns);
-                  this.setState({ totalRuns, bowls });
+                  // revert case - TO DO
+                  // totalRuns = (totalRuns - bowls[currentOverBowlNo].bowlRuns) + runs;
+                  // bowls[currentOverBowlNo].bowlRuns = runs;
+                  // bowls[currentOverBowlNo].isLocked = true;
+                  // console.log(bowls[currentOverBowlNo], totalRuns);
+                  // this.setState({ totalRuns, bowls });
             } else {
                   // fresh update
                   if (currentBowlNo < 6) {
@@ -223,6 +223,7 @@ class OversSection extends Component {
       }
 
       renderOver() {
+            const { bowls, currentOverBowlNo, runs } = this.state;
             const bowlStatus = ['WD', 'WK', 'NB', 'B', 'LB'];
             return (
                   <div>
@@ -235,6 +236,10 @@ class OversSection extends Component {
                                                 key={`bowledStatus_${j}`}
                                                 className="bowl"
                                                 onClick={() => this.setBowlStatus(item)}
+                                                style={{
+                                                      backgroundColor: (bowls[currentOverBowlNo].bowlStatus === item) ? '#ba124c' : '#ffffff',
+                                                      color: (bowls[currentOverBowlNo].bowlStatus === item) ? '#ffffff' : '#000000'
+                                                }}
                                           >
                                                 {item}
                                           </div>
@@ -250,13 +255,17 @@ class OversSection extends Component {
                                                 {
                                                       this.state.overRuns.map((item, i) =>
                                                             <div
-                                                                  id={`status_${item}`}
+                                                                  id={`runsscores_${item}`}
                                                                   key={`runsscores_${i}`}
                                                                   className="bowl"
                                                                   onClick={() => {
                                                                         let { runs } = this.state;
                                                                         runs = parseInt(item);
                                                                         this.setState({ runs });
+                                                                  }}
+                                                                  style={{
+                                                                        backgroundColor: (runs === item) ? '#73e600' : '#ffffff',
+                                                                        // color: (runs === item) ? '#ffffff' : '#000000'
                                                                   }}
                                                             >
                                                                   {item}

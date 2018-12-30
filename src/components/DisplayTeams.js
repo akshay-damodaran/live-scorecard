@@ -5,7 +5,7 @@ const DisplayTeams = ({ team1, team2, team1Players, team2Players, nextScreen, pr
 	<div className="admin-body">
 		<div className="admin-body-title">
 			<div className="back-button" onClick={() => { prevScreen(); }}>
-				<i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+				<i className="fa fa-chevron-circle-left" aria-hidden="true"></i>
 			</div>
 			<span>Display Teams</span>
 		</div>
