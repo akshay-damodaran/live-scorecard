@@ -17,6 +17,7 @@ class Admin extends Component {
   constructor(props) {
     super(props);
     // const endpoint = 'http://127.0.0.1:4001';
+    // const endpoint = 'https://livescorecardserver.herokuapp.com:4001';
     // const socket = socketIOClient(endpoint);
 
     this.state = {
@@ -28,7 +29,7 @@ class Admin extends Component {
       team2Players: Array(16).fill(null).map(() => ({ name: '' })),
       tossResult: 0,
       battingTeam: 0,
-      totalOvers: 0,
+      totalOvers: 2,
       // socket,
 
     }
@@ -57,7 +58,7 @@ class Admin extends Component {
     });
 
     // Send sockent message for next screen
-    // this.state.socket.emit('nextScreen', pageComponent + 1);
+    // socket.emit('nextScreen', pageComponent + 1);
   }
 
   nextScreen() {
@@ -75,7 +76,7 @@ class Admin extends Component {
     });
 
     // Send sockent message for next screen
-    // this.state.socket.emit('nextScreen', pageComponent + 1);
+    // socket.emit('nextScreen', pageComponent + 1);
   }
 
   changeTeamName(teamName) {
@@ -126,7 +127,7 @@ class Admin extends Component {
   }
 
   renderComponent() {
-    const { team1, team2, team1Players, team2Players, tossResult, battingTeam } = this.state;
+    const { team1, team2, totalOvers, team1Players, team2Players, tossResult, battingTeam } = this.state;
     switch (this.state.pageComponent) {
       case 0: {
         return (
@@ -140,6 +141,7 @@ class Admin extends Component {
           <Teams
             team1={team1}
             team2={team2}
+            totalOvers={totalOvers}
             nextScreen={() => this.nextScreen()}
             changeTeamName={(teamName) => this.changeTeamName(teamName)}
             setTotalOvers={(totalOvers) => this.setTotalOvers(totalOvers)}
@@ -199,6 +201,8 @@ class Admin extends Component {
             team2Players={team2Players}
             tossResult={tossResult}
             battingTeam={battingTeam}
+
+            // scoreCardDisplay={this.state.pageComponent}
             socket={this.state.socket}
           />
         );

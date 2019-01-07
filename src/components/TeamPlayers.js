@@ -5,8 +5,8 @@ class TeamPlayers extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			mainPlayers: Array(11).fill(null).map(() => ({ name: '' })), // remove by default data
-			extraPlayers: Array(5).fill(null).map(() => ({ name: '' })) // remove by default data
+			mainPlayers: Array(11).fill(null).map(() => ({ name: '' })),
+			extraPlayers: Array(5).fill(null).map(() => ({ name: '' }))
 		}
 	}
 
@@ -41,7 +41,7 @@ class TeamPlayers extends Component {
 			<div className="admin-body">
 				<div className="admin-body-title" id="team-bg">
 					<div className="back-button" onClick={() => { prevScreen(); }}>
-						<i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+						<i className="fa fa-chevron-circle-left" aria-hidden="true"></i>
 					</div>
 					<img src={(teamNo === 1) ? require('../images/team1.png') : require('../images/team2.png')} width="50" height="50" className="team-logo" alt={teamName} />
 					<span>&nbsp;&nbsp;{`Team ${teamNo}: ${teamName}`}</span>

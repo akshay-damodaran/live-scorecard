@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/Teams.css';
 
-const Teams = ({ team1 = '', team2 = '', totalOvers, changeTeamName = f => f, setTotalOvers = f => f, nextScreen = f => f }) => (
+const Teams = ({ team1 = '', team2 = '', totalOvers = 2, changeTeamName = f => f, setTotalOvers = f => f, nextScreen = f => f }) => (
 	<div className="admin-body">
 		<div className="admin-body-title">
 			<span>{'Start a match'}</span>

@@ -12,7 +12,6 @@ class BatsmanSection extends Component {
                   isInningStart: this.props.isInningStart,
                   striker: {},
                   nonStriker: {},
-                  battingTeam: this.props.battingTeam,
 
                   changePlayer: this.props.changePlayer,
                   isWicket: this.props.isWicket,
@@ -33,7 +32,9 @@ class BatsmanSection extends Component {
                         catchedByWhom: ''
                   },
                   wicketReason: '',
-                  wicketBy: '',
+                  wicketBy: {
+                        name: ''
+                  },
                   wicketReasons: ['Catch Out', 'Run Out', 'Bold'],
                   socket: this.props.socket
             }
@@ -44,7 +45,7 @@ class BatsmanSection extends Component {
             this.setState({ striker, nonStriker });
       }
 
-      componentWillReceiveProps(nextProps) {    
+      componentWillReceiveProps(nextProps) {
             this.setState({
                   striker: nextProps.striker,
                   nonStriker: nextProps.nonStriker,
@@ -56,13 +57,16 @@ class BatsmanSection extends Component {
       }
 
       setPlayer(e, type) {
+            let selectedPlayer = JSON.parse(e.target.value);
             let player = {
-                  name: e.target.value,
+                  id: selectedPlayer.id,
+                  name: selectedPlayer.name,
                   runs: 0,
                   balls: 0,
                   fours: 0,
                   sixes: 0
-            }
+            };
+            document.getElementById(`battingTeam_${type}`).text = player.name;
             switch (type) {
                   case 'striker': {
                         this.setState({ striker: player });
@@ -96,10 +100,14 @@ class BatsmanSection extends Component {
 
       setMatchStartDetails(e) {
             e.preventDefault();
-            const { striker, nonStriker, inningId } = this.state;
+            const {
+                  striker,
+                  nonStriker,
+                  // inningId
+            } = this.state;
+
             this.props.setBatsmenDetails(striker, nonStriker);
             this.props.setInningStart(false);
-            // this.setState({ isInningStart: false });
 
             // Event - inningStart
             // this.state.socket.emit('inningStart', {
@@ -107,6 +115,23 @@ class BatsmanSection extends Component {
             //       strikerId: striker.id,
             //       nonStrikerId: nonStriker.id,
             // });
+      }
+
+      renderBowlingTeamDropDown() {
+            const { bowlingTeamPlayers } = this.props;
+            return (
+                  <select className="team-dropdown" value={this.state.wicketBy.name} onChange={(e) => {
+                        this.setState({ wicketBy: JSON.parse(e.target.value) });
+                        document.getElementById(`bowlerSelected`).text = JSON.parse(e.target.value).name;
+                  }}>
+                        <option id={`bowlerSelected`}>{"Select Bowler"}</option>
+                        {
+                              bowlingTeamPlayers.map((item, i) =>
+                                    <option key={i} value={JSON.stringify(item)}>{item.name}</option>
+                              )
+                        }
+                  </select>
+            )
       }
 
       renderBattingTeamDropDown(team) {
@@ -120,10 +145,10 @@ class BatsmanSection extends Component {
                         autoFocus={(team === 'striker')}
                         required={true}
                   >
-                        <option value="">{`Select player`}</option>
+                        <option id={`battingTeam_${team}`} value={(team === 'striker') ? this.state.striker.name : (team === 'nonStriker') ? this.state.nonStriker.name : this.state.nextPlayer.name}>{`Select player`}</option>
                         {
                               battingTeamPlayers.map((item, i) =>
-                                    <option key={i} value={item.name}>{item.name}</option>
+                                    <option key={i} value={JSON.stringify(item)}>{item.name}</option>
                               )
                         }
                   </select>
@@ -202,16 +227,16 @@ class BatsmanSection extends Component {
 
             this.props.setWicket(false, {
                   page: 'batsmanSection',
-                  wicketBy: wicketBy, // input to be taken
+                  wicketBy: wicketBy,
                   wicketType: wicketReason,
                   playerId: (currentOutPlayer === 'striker') ? striker.id : nonStriker.id,
-                  newPlayerId: nextPlayer.id, 
+                  newPlayerId: nextPlayer.id,
                   newPlayerName: nextPlayer.name,
                   strikerId: striker.id,
                   striker: (nextPlayer.isStriker) ? nextPlayer : striker,
                   nonStriker: (nextPlayer.isStriker) ? nonStriker : nextPlayer,
             });
-            this.props.updateWickets(1);            
+            this.props.updateWickets(1);
       }
 
       handleWicketReason(item) {
@@ -248,19 +273,30 @@ class BatsmanSection extends Component {
       renderPlayer(player) {
             return (
                   <div className="striker">
-                        <div className="batsman">
+                        {/* <div
+                              className="batsman"
+                              style={{
+                                    backgroundColor: (player.id === this.state.striker.id) ? '#ba124c' : '#e6e6e6',
+                                    color: (player.id === this.state.striker.id) ? '#ffffff' : '#000000'
+                              }}>
                               {player.name}
-                        </div>
+                        </div> */}
                         {
-                              // Object.keys(player).map((item, i) =>
-                              //       <div
-                              //             key={`batsman_${player.id}`}
-                              //             className="batsman"
-                              //       >
-                              //             {player.name}
-                              //             {(item === 'id') ? null : player[item]}
-                              //       </div>
-                              // )
+                              Object.keys(player).map((item, i) => (
+                                    (item !== 'id' && item !== 'isStriker') ?
+                                          <div
+                                                key={`batsman_${item}`}
+                                                className="batsman"
+                                                style={{
+                                                      backgroundColor: (player.id === this.state.striker.id) ? '#6666ff' : '#e6e6e6',
+                                                      color: (player.id === this.state.striker.id) ? '#ffffff' : '#000000'
+                                                }}
+                                          >
+                                                {player[item]}
+                                          </div>
+                                          :
+                                          null
+                              ))
                         }
                   </div>
             );
@@ -289,15 +325,22 @@ class BatsmanSection extends Component {
                                                 }
                                           </div>
                                           <div className="overs-header">{`Wicket By?`}</div>
-                                          <div className="player-out">
+                                          {/* <div className="player-out">
                                                 <input
                                                       type="text"
                                                       value={this.state.wicketBy}
                                                       onChange={(e) => this.setState({ wicketBy: e.target.value })}
-                                                 />
-                                                 {/* future: to render bowling team */}
+                                                />
+                                          </div> */}
+                                          <div className="dropdown-list">
+                                                <div className="dd-list-half">{"Select fielder:"}</div>
+                                                <div className="dd-list-half">
+                                                      {
+                                                            this.renderBowlingTeamDropDown()
+                                                      }
+                                                </div>
                                           </div>
-                                    </div>      
+                                    </div>
                               }
                               <div className="overs-header">{`Next batsman?`}</div>
                               <div className="dropdown-list">
@@ -323,7 +366,6 @@ class BatsmanSection extends Component {
       }
 
       render() {
-            const { striker, nonStriker } = this.state;
             return (
                   <div className="match-section">
                         <div className="section-header">
@@ -370,10 +412,10 @@ class BatsmanSection extends Component {
                                                             <div className="section-body">
                                                                   <div className="striker-headings">
                                                                         <div className="batsman">Name</div>
-                                                                        {/* <div className="batsman">Runs</div>
+                                                                        <div className="batsman">Runs</div>
                                                                         <div className="batsman">Balls</div>
                                                                         <div className="batsman">Fours</div>
-                                                                        <div className="batsman">Sixes</div> */}
+                                                                        <div className="batsman">Sixes</div>
                                                                   </div>
                                                                   {this.renderPlayer(this.state.striker)}
                                                                   {this.renderPlayer(this.state.nonStriker)}

@@ -68,7 +68,8 @@ class OversSection extends Component {
             this.setState({ isOverStart: false });
 
             // Event - overStart
-            // this.state.socket.emit('overStart', {
+            // const { socket } = this.state;
+            // socket.emit('overStart', {
             //       bowlerId: this.state.bowler.id,
             //       strikerId: this.state.striker.id,
             //       nonStrikerId: this.state.nonStriker.id,
@@ -103,107 +104,109 @@ class OversSection extends Component {
       lockBowl() {
             let { bowls, currentBowlNo, totalBowlNo, currentOverBowlNo, currentOvers, totalOvers, runs, totalRuns } = this.state;
 
-            if (currentBowlNo < 6) {
-                  // document.getElementById(`bowl_${currentBowlNo}`).style.backgroundColor = '#333333';
-                  // document.getElementById(`bowl_${currentBowlNo}`).style.color = '#ffffff';
-                  // document.getElementById(`bowl_${currentBowlNo}`).style.pointerEvents = 'none';
-                  bowls[currentOverBowlNo].isLocked = true;
-                  if (bowls[currentOverBowlNo].bowlStatus === 'WD' || bowls[currentOverBowlNo].bowlStatus === 'NB') {
-                        // extra case
-                        currentOverBowlNo++;
-                        totalBowlNo++;
-                        bowls.push({
-                              id: totalBowlNo,
-                              bowlNo: currentBowlNo,
-                              bowlStatus: null,
-                              bowlRuns: 0,
-                              currentOver: parseInt(currentOvers),
-                              isLocked: false
-                        });
-                  } else {
-                        // normal update
-                        currentOvers = (parseInt(currentOvers) + ((currentBowlNo) * 0.1)).toFixed(1);
-                        currentOverBowlNo++;
-                        currentBowlNo++;
-                        totalBowlNo++;
-                        bowls.push({
-                              id: totalBowlNo,
-                              bowlNo: currentBowlNo,
-                              bowlStatus: null,
-                              bowlRuns: 0,
-                              currentOver: parseInt(currentOvers),
-                              isLocked: false
-                        });
-                  }
-                  bowls[currentOverBowlNo].bowlRuns = runs;
-                  this.props.updateRuns(runs);
-                  totalRuns = totalRuns + runs;
-
-                  this.setState({ bowls, currentBowlNo, totalBowlNo, currentOverBowlNo, currentOvers, totalRuns });
+            if (bowls[currentOverBowlNo].isLocked) {
+                  // revert case - TO DO
+                  // totalRuns = (totalRuns - bowls[currentOverBowlNo].bowlRuns) + runs;
+                  // bowls[currentOverBowlNo].bowlRuns = runs;
+                  // bowls[currentOverBowlNo].isLocked = true;
+                  // console.log(bowls[currentOverBowlNo], totalRuns);
+                  // this.setState({ totalRuns, bowls });
             } else {
-                  // new over start
+                  // fresh update
+                  if (currentBowlNo < 6) {
+                        bowls[currentOverBowlNo].isLocked = true;
+                        if (bowls[currentOverBowlNo].bowlStatus === 'WD' || bowls[currentOverBowlNo].bowlStatus === 'NB') {
+                              // extra case
+                              currentOverBowlNo++;
+                              totalBowlNo++;
+                              bowls.push({
+                                    id: totalBowlNo,
+                                    bowlNo: currentBowlNo,
+                                    bowlStatus: null,
+                                    bowlRuns: 0,
+                                    currentOver: parseInt(currentOvers),
+                                    isLocked: false
+                              });
+                        } else {
+                              // normal update
+                              currentOvers = (parseInt(currentOvers) + ((currentBowlNo) * 0.1)).toFixed(1);
+                              currentOverBowlNo++;
+                              currentBowlNo++;
+                              totalBowlNo++;
+                              bowls.push({
+                                    id: totalBowlNo,
+                                    bowlNo: currentBowlNo,
+                                    bowlStatus: null,
+                                    bowlRuns: 0,
+                                    currentOver: parseInt(currentOvers),
+                                    isLocked: false
+                              });
+                        }
+                        bowls[currentOverBowlNo].bowlRuns = runs;
+                        this.props.updateRuns(runs);
+                        totalRuns = totalRuns + runs;
 
-                  bowls[currentOverBowlNo].bowlRuns = runs;
-                  bowls[currentOverBowlNo].isLocked = true;
-                  this.props.updateRuns(runs);
-                  totalRuns = totalRuns + runs;
+                        this.setState({ bowls, currentBowlNo, totalBowlNo, currentOverBowlNo, currentOvers, totalRuns });
+                  } else {
+                        // new over start
 
-                  currentOvers = parseInt(currentOvers) + 1;
-                  if (currentOvers < parseInt(totalOvers)) {
-                        // update overDetails (global) history;
-                        overDetails.push(bowls);
+                        bowls[currentOverBowlNo].bowlRuns = runs;
+                        bowls[currentOverBowlNo].isLocked = true;
+                        this.props.updateRuns(runs);
+                        totalRuns = totalRuns + runs;
 
-                        currentOverBowlNo = 0;
-                        currentBowlNo = 1;
-                        bowls = [{
-                              id: totalBowlNo,
-                              bowlNo: 1,
-                              bowlStatus: null,
-                              bowlRuns: 0,
-                              currentOver: parseInt(currentOvers),
-                              isLocked: false
-                        }];
-                        this.setState({ isOverStart: true, bowls, currentBowlNo, currentOverBowlNo, currentOvers, totalRuns });
-                  } else if (currentOvers === parseInt(totalOvers)) {
-                        let inningDetails = {
-                              inningId: this.state.inningId,
-                              inningRuns: this.state.inningRuns,
-                              inningWickets: 0,
-                              totalBowls: totalBowlNo,
-                              overDetails,
-                        };
-                        this.setState({ bowls, totalRuns }, () => {
-                              this.props.setInningEnd(true, inningDetails);
-                              let { isOverStart, currentOvers, totalBowlNo, currentBowlNo, currentOverBowlNo, bowler, bowls, runs, totalRuns, changeBowler } = this.state;
-                              isOverStart = true;
-                              currentOvers = 0;
-                              totalBowlNo = 1;
-                              currentBowlNo = 1;
+                        currentOvers = parseInt(currentOvers) + 1;
+                        if (currentOvers < parseInt(totalOvers)) {
+                              // update overDetails (global) history;
+                              overDetails.push(bowls);
+
                               currentOverBowlNo = 0;
-                              bowler = {
-                                    name: 'Select Bowler'
-                              };
+                              currentBowlNo = 1;
                               bowls = [{
-                                    id: 1,
+                                    id: totalBowlNo,
                                     bowlNo: 1,
                                     bowlStatus: null,
                                     bowlRuns: 0,
-                                    currentOver: 1
+                                    currentOver: parseInt(currentOvers),
+                                    isLocked: false
                               }];
-                              runs = 0;
-                              totalRuns = 0;
-                              changeBowler = false;
-                              this.setState({ isOverStart, currentOvers, totalBowlNo, currentBowlNo, currentOverBowlNo, bowler, bowls, runs, totalRuns, changeBowler });
-                        });
-                  }
+                              this.setState({ isOverStart: true, bowls, currentBowlNo, currentOverBowlNo, currentOvers, totalRuns });
+                        } else if (currentOvers === parseInt(totalOvers)) {
+                              let inningDetails = {
+                                    inningId: this.state.inningId,
+                                    inningRuns: this.state.inningRuns,
+                                    inningWickets: 0,
+                                    totalBowls: totalBowlNo,
+                                    overDetails,
+                              };
+                              this.setState({ bowls, totalRuns }, () => {
+                                    this.props.setInningEnd(true, inningDetails);
+                                    let { isOverStart, currentOvers, totalBowlNo, currentBowlNo, currentOverBowlNo, bowler, bowls, runs, totalRuns, changeBowler } = this.state;
+                                    isOverStart = true;
+                                    currentOvers = 0;
+                                    totalBowlNo = 1;
+                                    currentBowlNo = 1;
+                                    currentOverBowlNo = 0;
+                                    bowler = {
+                                          name: 'Select Bowler'
+                                    };
+                                    bowls = [{
+                                          id: 1,
+                                          bowlNo: 1,
+                                          bowlStatus: null,
+                                          bowlRuns: 0,
+                                          currentOver: 1
+                                    }];
+                                    runs = 0;
+                                    totalRuns = 0;
+                                    changeBowler = false;
+                                    this.setState({ isOverStart, currentOvers, totalBowlNo, currentBowlNo, currentOverBowlNo, bowler, bowls, runs, totalRuns, changeBowler });
+                              });
+                        }
 
+                  }
             }
 
-            // if (bowls[currentBowlNo - 1].isLocked) {
-            //       // revert case
-            // } else {
-            //       // fresh update
-            // }
       }
 
       setBowlStatus(bowlStatus) {
@@ -220,6 +223,7 @@ class OversSection extends Component {
       }
 
       renderOver() {
+            const { bowls, currentOverBowlNo, runs } = this.state;
             const bowlStatus = ['WD', 'WK', 'NB', 'B', 'LB'];
             return (
                   <div>
@@ -232,6 +236,10 @@ class OversSection extends Component {
                                                 key={`bowledStatus_${j}`}
                                                 className="bowl"
                                                 onClick={() => this.setBowlStatus(item)}
+                                                style={{
+                                                      backgroundColor: (bowls[currentOverBowlNo].bowlStatus === item) ? '#ba124c' : '#ffffff',
+                                                      color: (bowls[currentOverBowlNo].bowlStatus === item) ? '#ffffff' : '#000000'
+                                                }}
                                           >
                                                 {item}
                                           </div>
@@ -247,7 +255,7 @@ class OversSection extends Component {
                                                 {
                                                       this.state.overRuns.map((item, i) =>
                                                             <div
-                                                                  id={`status_${item}`}
+                                                                  id={`runsscores_${item}`}
                                                                   key={`runsscores_${i}`}
                                                                   className="bowl"
                                                                   onClick={() => {
@@ -255,12 +263,16 @@ class OversSection extends Component {
                                                                         runs = parseInt(item);
                                                                         this.setState({ runs });
                                                                   }}
+                                                                  style={{
+                                                                        backgroundColor: (runs === item) ? '#73e600' : '#ffffff',
+                                                                        // color: (runs === item) ? '#ffffff' : '#000000'
+                                                                  }}
                                                             >
                                                                   {item}
                                                             </div>
                                                       )
                                                 }
-                                          </div>
+                                          </div>      
                                     </div>
                                     <input
                                           value={this.state.runs}
@@ -292,6 +304,7 @@ class OversSection extends Component {
             let bowlerSelected = JSON.parse(e.target.value);
             bowler.id = bowlerSelected.id;
             bowler.name = bowlerSelected.name;
+            document.getElementById(`overBowler`).text = bowlerSelected.name;
             this.setState({ bowler }, () => {
                   this.props.setBowlerDetails(this.state.bowler);
             });
@@ -301,7 +314,7 @@ class OversSection extends Component {
             const { bowlingTeamPlayers } = this.props;
             return (
                   <select className="team-dropdown" value={this.state.bowler.name} onChange={(e) => this.setBowler(e)}>
-                        <option>{"Select Bowler"}</option>
+                        <option id={`overBowler`}>{"Select Bowler"}</option>
                         {
                               bowlingTeamPlayers.map((item, i) =>
                                     <option key={i} value={JSON.stringify(item)}>{item.name}</option>

@@ -5,7 +5,7 @@ const TossResults = ({ team1 = '', team2 = '', setTossResults = f => f, setTossD
       <div className="admin-body">
             <div className="admin-body-title">
                   <div className="back-button" onClick={() => { prevScreen(); }}>
-                        <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+                        <i className="fa fa-chevron-circle-left" aria-hidden="true"></i>
                   </div>
                   <span>Toss Results</span>
             </div>
