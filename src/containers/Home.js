@@ -54,74 +54,74 @@ class Home extends React.Component {
     //   this.setState({ liveScoreBoard });
     // });
 
-    const data = {
-      team1: {
-        name:"abc" ,
-        logo: require('../images/team1.png'),
-        wonToss: false,
-        isBatting: true,
-        runs: 200,
-        wickets: 3,
-        ballsFaced:5
-      },
-      team2: {
-        name: "jhj",
-        logo: require('../images/team2.png'),
-        wonToss: true,
-        isBatting: false,
-        runs: 200,
-        wickets: 3,
-        ballsFaced:4
-      },
-      inningId: 1,
-      heading: {
-        title: '2 won the toss and elected to do B.'
-      },
-      striker: {
-        id: 4,
-        name: 'Akshay Damodaran',
-        runs: 3,
-        balls: 6,
-        fours: '0',
-        sixes: '0'
-      },
-      nonStriker: {
-        id: 5,
-        name: 'Jagrutee Banda',
-        runs: 4,
-        balls: 6,
-        fours: '0',
-        sixes: '0'
-      },
-      bowler: {
-        id: 4,
-        name: 'abc',
-        runsGiven: 5,
-        ballsBowled: 16,
-        maiden: 3,
-        wickets: 2
-      },
-      overArray: [
-      ],
-      batsmanBoard: [
-        {
-          id: 4,
-          name: 'abc',
-          runs: 12,
-          balls: 12,
-          fours: '0',
-          sixes: '0'
-        },
-        {
-          id: 4,
-          name: 'abc',
-          runs: 12,
-          balls: 34,
-          fours: '0',
-          sixes: '0'
-        }
-      ]
-    }
+    // const data = {
+    //   team1: {
+    //     name:"abc" ,
+    //     logo: require('../images/team1.png'),
+    //     wonToss: false,
+    //     isBatting: true,
+    //     runs: 200,
+    //     wickets: 3,
+    //     ballsFaced:5
+    //   },
+    //   team2: {
+    //     name: "jhj",
+    //     logo: require('../images/team2.png'),
+    //     wonToss: true,
+    //     isBatting: false,
+    //     runs: 200,
+    //     wickets: 3,
+    //     ballsFaced:4
+    //   },
+    //   inningId: 1,
+    //   heading: {
+    //     title: '2 won the toss and elected to do B.'
+    //   },
+    //   striker: {
+    //     id: 4,
+    //     name: 'Akshay Damodaran',
+    //     runs: 3,
+    //     balls: 6,
+    //     fours: '0',
+    //     sixes: '0'
+    //   },
+    //   nonStriker: {
+    //     id: 5,
+    //     name: 'Jagrutee Banda',
+    //     runs: 4,
+    //     balls: 6,
+    //     fours: '0',
+    //     sixes: '0'
+    //   },
+    //   bowler: {
+    //     id: 4,
+    //     name: 'abc',
+    //     runsGiven: 5,
+    //     ballsBowled: 16,
+    //     maiden: 3,
+    //     wickets: 2
+    //   },
+    //   overArray: [
+    //   ],
+    //   batsmanBoard: [
+    //     {
+    //       id: 4,
+    //       name: 'abc',
+    //       runs: 12,
+    //       balls: 12,
+    //       fours: '0',
+    //       sixes: '0'
+    //     },
+    //     {
+    //       id: 4,
+    //       name: 'abc',
+    //       runs: 12,
+    //       balls: 34,
+    //       fours: '0',
+    //       sixes: '0'
+    //     }
+    //   ]
+    // }
 
     // this.setState({ ...data, current_striker, currentBatsman });
 
@@ -138,7 +138,7 @@ class Home extends React.Component {
       let { headline, inningId, battingTeam, team1, team2, totalBalls } = data;
       headline = this.getHeadLine(headline.title, inningId, battingTeam, team1, team2, totalBalls);
 
-      this.setState({ ...data, current_striker, currentBatsman, });
+      this.setState({ ...data, current_striker, currentBatsman, headline});
     });
 
     // On each ball
