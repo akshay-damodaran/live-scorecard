@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-// import socketIOClient from 'socket.io-client';
-// import axios from 'axios';
+import socketIOClient from 'socket.io-client';
+import axios from 'axios';
 
 import '../styles/Admin.css';
 
@@ -16,9 +16,9 @@ import Login from '../components/Login';
 class Admin extends Component {
   constructor(props) {
     super(props);
-    // const endpoint = 'http://127.0.0.1:4001';
+    const endpoint = 'http://127.0.0.1:4001';
     // const endpoint = 'https://livescorecardserver.herokuapp.com:4001';
-    // const socket = socketIOClient(endpoint);
+    const socket = socketIOClient(endpoint);
 
     this.state = {
       pageComponent: 1,
@@ -30,17 +30,16 @@ class Admin extends Component {
       tossResult: 0,
       battingTeam: 0,
       totalOvers: 2,
-      // socket,
-
+      socket,
     }
   }
 
   componentDidMount() {
-    // const { socket } = this.state;
-    // socket.on('initialize', pageComponent => {
-    //   console.log('Page Component : ', pageComponent);
-    //   this.setState({ pageComponent });
-    // });
+    const { socket } = this.state;
+    socket.on('initialize', data => {
+      console.log('Page Component : ', data.matchStatus);
+      this.setState({ pageComponent: data.matchStatus });
+    });
   }
 
   prevScreen() {
