@@ -279,17 +279,20 @@ class AdminScoreBoard extends Component {
       }
 
       render() {
-            const { battingTeam } = this.props;
+            const { battingTeam, prevScreen } = this.props;
             const { team1, team2, battingTeamPlayers, bowlingTeamPlayers } = this.state;
             return (
                   <div className="admin-scoreboard">
                         <div className="scoreboard-header">
+                              <div className="back-button" onClick={() => { prevScreen(); }}>
+                                    <i className="fa fa-chevron-circle-left" aria-hidden="true"></i>
+                              </div>
                               <b>Admin Score Board</b>
                         </div>
                         <div className="admin-teams">
                               <div className="team" id="team-1" style={{ backgroundColor: '#66ccff' }}>
                                     {/* <div> */}
-                                          <img src={(battingTeam === 1) ? require('../images/team1.png') : require('../images/team2.png')} width="50" height="50" className="team-logo" alt={team1} />
+                                    <img src={(battingTeam === 1) ? require('../images/team1.png') : require('../images/team2.png')} width="50" height="50" className="team-logo" alt={team1} />
                                     {/* </div> */}
                                     <div className="team-data">
                                           <h4>&nbsp;&nbsp;&nbsp;{(battingTeam === 1) ? `${team1.name}` : `${team2.name}`}</h4>
@@ -298,7 +301,7 @@ class AdminScoreBoard extends Component {
                               </div>
                               <div className="team" id="team-2" style={{ backgroundColor: '#ccccff' }}>
                                     {/* <div> */}
-                                          <img src={(battingTeam === 1) ? require('../images/team2.png') : require('../images/team1.png')} width="50" height="50" className="team-logo" alt={team2} />
+                                    <img src={(battingTeam === 1) ? require('../images/team2.png') : require('../images/team1.png')} width="50" height="50" className="team-logo" alt={team2} />
                                     {/* </div> */}
                                     <div className="team-data">
                                           <h4>&nbsp;&nbsp;&nbsp;{(battingTeam !== 1) ? `${team1.name}` : `${team2.name}`}</h4>

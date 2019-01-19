@@ -54,74 +54,74 @@ class Home extends React.Component {
     //   this.setState({ liveScoreBoard });
     // });
 
-    const data = {
-      team1: {
-        name:"abc" ,
-        logo: require('../images/team1.png'),
-        wonToss: false,
-        isBatting: true,
-        runs: 200,
-        wickets: 3,
-        ballsFaced:5
-      },
-      team2: {
-        name: "jhj",
-        logo: require('../images/team2.png'),
-        wonToss: true,
-        isBatting: false,
-        runs: 200,
-        wickets: 3,
-        ballsFaced:4
-      },
-      inningId: 1,
-      heading: {
-        title: '2 won the toss and elected to do B.'
-      },
-      striker: {
-        id: 4,
-        name: 'Akshay Damodaran',
-        runs: 3,
-        balls: 6,
-        fours: '0',
-        sixes: '0'
-      },
-      nonStriker: {
-        id: 5,
-        name: 'Jagrutee Banda',
-        runs: 4,
-        balls: 6,
-        fours: '0',
-        sixes: '0'
-      },
-      bowler: {
-        id: 4,
-        name: 'abc',
-        runsGiven: 5,
-        ballsBowled: 16,
-        maiden: 3,
-        wickets: 2
-      },
-      overArray: [
-      ],
-      batsmanBoard: [
-        {
-          id: 4,
-          name: 'abc',
-          runs: 12,
-          balls: 12,
-          fours: '0',
-          sixes: '0'
-        },
-        {
-          id: 4,
-          name: 'abc',
-          runs: 12,
-          balls: 34,
-          fours: '0',
-          sixes: '0'
-        }
-      ]
-    }
+    // const data = {
+    //   team1: {
+    //     name:"abc" ,
+    //     logo: require('../images/team1.png'),
+    //     wonToss: false,
+    //     isBatting: true,
+    //     runs: 200,
+    //     wickets: 3,
+    //     ballsFaced:5
+    //   },
+    //   team2: {
+    //     name: "jhj",
+    //     logo: require('../images/team2.png'),
+    //     wonToss: true,
+    //     isBatting: false,
+    //     runs: 200,
+    //     wickets: 3,
+    //     ballsFaced:4
+    //   },
+    //   inningId: 1,
+    //   heading: {
+    //     title: '2 won the toss and elected to do B.'
+    //   },
+    //   striker: {
+    //     id: 4,
+    //     name: 'Akshay Damodaran',
+    //     runs: 3,
+    //     balls: 6,
+    //     fours: '0',
+    //     sixes: '0'
+    //   },
+    //   nonStriker: {
+    //     id: 5,
+    //     name: 'Jagrutee Banda',
+    //     runs: 4,
+    //     balls: 6,
+    //     fours: '0',
+    //     sixes: '0'
+    //   },
+    //   bowler: {
+    //     id: 4,
+    //     name: 'abc',
+    //     runsGiven: 5,
+    //     ballsBowled: 16,
+    //     maiden: 3,
+    //     wickets: 2
+    //   },
+    //   overArray: [
+    //   ],
+    //   batsmanBoard: [
+    //     {
+    //       id: 4,
+    //       name: 'abc',
+    //       runs: 12,
+    //       balls: 12,
+    //       fours: '0',
+    //       sixes: '0'
+    //     },
+    //     {
+    //       id: 4,
+    //       name: 'abc',
+    //       runs: 12,
+    //       balls: 34,
+    //       fours: '0',
+    //       sixes: '0'
+    //     }
+    //   ]
+    // }
 
     // this.setState({ ...data, current_striker, currentBatsman });
 
@@ -132,27 +132,13 @@ class Home extends React.Component {
       if (data.striker && data.nonStriker) {
         currentBatsman = [data.striker, data.nonStriker];
       }
+
       // let headline, teamName, balls, runs;
-      // if (inningId === 1) {
-      //   if (toss.teamId === 1) {
-      //     teamName = team1.name;
-      //   } else if (toss.teamId === 2) {
-      //     teamName = team2.name;
-      //   }
-      //   headline = `${teamName} won the toss and elected to ${toss.decision ? "Bowl" : "Bat"} first.`;
-      // } else if (inningsId === 2) {
-      //   if (battingTeam === 1) {
-      //     teamName = team1.name;
-      //     runs = team2.runs - team1.runs + 1;
-      //     balls = totalBalls - team1.ballsFaced;
-      //   } else if (battingTeam === 2) {
-      //     teamName = team2.name;
-      //     runs = team1.runs - team2.runs + 1;
-      //     balls = totalBalls - team2.balls;
-      //   }
-      //   headline = `${teamName} needs ${runs} runs to win from ${balls} balls.`
-      // }
-      this.setState({ ...data, current_striker, currentBatsman, });
+
+      let { headline, inningId, battingTeam, team1, team2, totalBalls } = data;
+      headline = this.getHeadLine(headline.title, inningId, battingTeam, team1, team2, totalBalls);
+
+      this.setState({ ...data, current_striker, currentBatsman, headline});
     });
 
     // On each ball
@@ -195,6 +181,9 @@ class Home extends React.Component {
         team2.runs += runScored;
         team2.ballsFaced += 1;
       }
+
+      let { headline, inningId, battingTeam, totalBalls } = this.state;
+      headline = this.getHeadLine(headline, inningId, battingTeam, team1, team2, totalBalls);
 
       this.setState({
         currentBatsman,
@@ -267,6 +256,8 @@ class Home extends React.Component {
     socket.on('extra', data => {
       const { score, teamId, type } = data;
 
+      let { headline, inningId, battingTeam, team1, team2, totalBalls } = this.state;
+      headline = this.getHeadLine(headline, inningId, battingTeam, team1, team2, totalBalls);
       
     });
 
@@ -277,6 +268,24 @@ class Home extends React.Component {
 
     // document.getElementById(`tab${this.state.currentTab}`).style.backgroundColor = '#ba124c';
     // document.getElementById(`tab${this.state.currentTab}`).style.fontWeight = 'bold';
+  }
+
+  getHeadLine(headline, inningId, battingTeam, team1, team2, totalBalls) {
+    if (inningId === 1) {
+        return headline;
+      } else if (inningId === 2) {
+        let teamName, runs, balls;
+        if (battingTeam === 1) {
+          teamName = team1.name;
+          runs = team2.runs - team1.runs + 1;
+          balls = totalBalls - team1.ballsFaced;
+        } else if (battingTeam === 2) {
+          teamName = team2.name;
+          runs = team1.runs - team2.runs + 1;
+          balls = totalBalls - team2.balls;
+        }
+        headline = `${teamName} needs ${runs} runs to win from ${balls} balls.`
+      }
   }
 
   setTab(tabNo) {
