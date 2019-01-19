@@ -68,12 +68,12 @@ class OversSection extends Component {
             this.setState({ isOverStart: false });
 
             // Event - overStart
-            // const { socket } = this.state;
-            // socket.emit('overStart', {
-            //       bowlerId: this.state.bowler.id,
-            //       strikerId: this.state.striker.id,
-            //       nonStrikerId: this.state.nonStriker.id,
-            // });
+            const { socket } = this.state;
+            socket.emit('overStart', {
+                  bowlerId: this.state.bowler.id,
+                  strikerId: this.state.striker.id,
+                  nonStrikerId: this.state.nonStriker.id,
+            });
       }
 
       renderOverBowls() {

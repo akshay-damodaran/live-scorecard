@@ -103,18 +103,18 @@ class BatsmanSection extends Component {
             const {
                   striker,
                   nonStriker,
-                  // inningId
+                  inningId
             } = this.state;
 
             this.props.setBatsmenDetails(striker, nonStriker);
             this.props.setInningStart(false);
 
             // Event - inningStart
-            // this.state.socket.emit('inningStart', {
-            //       inningId,
-            //       strikerId: striker.id,
-            //       nonStrikerId: nonStriker.id,
-            // });
+            this.state.socket.emit('inningStart', {
+                  inningId,
+                  strikerId: striker.id,
+                  nonStrikerId: nonStriker.id,
+            });
       }
 
       renderBowlingTeamDropDown() {

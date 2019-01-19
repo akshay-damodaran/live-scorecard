@@ -84,43 +84,43 @@ class AdminScoreBoard extends Component {
 
       componentDidMount() {
 
-            const { totalOvers, tossResult, battingTeam, team1, team2, team1Players, team2Players } = this.props;
+            // const { totalOvers, tossResult, battingTeam, team1, team2, team1Players, team2Players } = this.props;
 
-            let battingTeamPlayers, bowlingTeamPlayers;
-            battingTeamPlayers = (battingTeam === 1) ? team1Players : team2Players;
-            bowlingTeamPlayers = (battingTeam !== 1) ? team1Players : team2Players;
+            // let battingTeamPlayers, bowlingTeamPlayers;
+            // battingTeamPlayers = (battingTeam === 1) ? team1Players : team2Players;
+            // bowlingTeamPlayers = (battingTeam !== 1) ? team1Players : team2Players;
 
-            let heading = (tossResult === 1) ?
-                  `${team1} won the toss and elected to do ${(battingTeam === 1) ? 'batting' : 'fielding'}.`
-                  :
-                  `${team2} won the toss and elected to do ${(battingTeam === 2) ? 'batting' : 'fielding'}.`;
+            // let heading = (tossResult === 1) ?
+            //       `${team1} won the toss and elected to do ${(battingTeam === 1) ? 'batting' : 'fielding'}.`
+            //       :
+            //       `${team2} won the toss and elected to do ${(battingTeam === 2) ? 'batting' : 'fielding'}.`;
 
-            let teamOne = {
-                  name: team1,
-                  logo: '',
-                  wonToss: (tossResult === 1),
-                  isBatting: (battingTeam === 1),
-                  runs: 0,
-                  wickets: 0,
-                  ballsFaced: 0
-            };
-            let teamTwo = {
-                  name: team2,
-                  logo: '',
-                  wonToss: (tossResult === 2),
-                  isBatting: (battingTeam === 2),
-                  runs: 0,
-                  wickets: 0,
-                  ballsFaced: 0
-            }
-            this.setState({ battingTeamPlayers, bowlingTeamPlayers, heading, team1: teamOne, team2: teamTwo, totalOvers, tossResult, battingTeam });
+            // let teamOne = {
+            //       name: team1,
+            //       logo: '',
+            //       wonToss: (tossResult === 1),
+            //       isBatting: (battingTeam === 1),
+            //       runs: 0,
+            //       wickets: 0,
+            //       ballsFaced: 0
+            // };
+            // let teamTwo = {
+            //       name: team2,
+            //       logo: '',
+            //       wonToss: (tossResult === 2),
+            //       isBatting: (battingTeam === 2),
+            //       runs: 0,
+            //       wickets: 0,
+            //       ballsFaced: 0
+            // }
+            // this.setState({ battingTeamPlayers, bowlingTeamPlayers, heading, team1: teamOne, team2: teamTwo, totalOvers, tossResult, battingTeam });
 
-            // const { socket, totalOvers, scoreCardDisplay } = this.props;
-            // socket.on('scoreCardDisplay', (sbDetails) => { // score board details
-            //       console.log('Score board details: ', sbDetails);
-            // this.initializeScoreBoard(scoreCardDisplay);
-            // });
-            // this.setState({ socket, totalOvers });       
+            const { socket, totalOvers, scoreCardDisplay } = this.props;
+            socket.on('scoreCardDisplay', (sbDetails) => { // score board details
+                  console.log('Score board details: ', sbDetails);
+                  this.initializeScoreBoard(scoreCardDisplay);
+            });
+            this.setState({ socket, totalOvers });
 
       }
 
@@ -164,12 +164,12 @@ class AdminScoreBoard extends Component {
                   });
 
                   // Event - wicket ============================================================
-                  // const { socket } = this.state;
-                  // wicketDetails.teamId = this.state.battingTeam;
-                  // wicketDetails.bowlerId = this.state.bowler.id; // to be passed
-                  // wicketDetails.runScored = this.state.totalRuns; // is player runs for the current ball set in batsman section
-                  // socket.emit('wicket', wicketDetails);
-                  // console.log(wicketDetails);
+                  const { socket } = this.state;
+                  wicketDetails.teamId = this.state.battingTeam;
+                  wicketDetails.bowlerId = this.state.bowler.id; // to be passed
+                  wicketDetails.runScored = this.state.totalRuns; // is player runs for the current ball set in batsman section
+                  socket.emit('wicket', wicketDetails);
+                  console.log('WicketDetails: ', wicketDetails);
                   // ============================================================================
             }
             if (this.state.wickets === 10) {
@@ -270,12 +270,12 @@ class AdminScoreBoard extends Component {
                   this.setState({ team2, endGame: true, showPopup: true });
             }
             // Event - inningEnd
-            // const { socket } = this.state;
-            // socket.emit('inningEnd', {
-            //       teamId: (team1.isBatting) ? 1 : 2,
-            //       totalScore: this.state.totalRuns,
-            //       totalWicket: this.state.totalWicket
-            // });
+            const { socket } = this.state;
+            socket.emit('inningEnd', {
+                  teamId: (team1.isBatting) ? 1 : 2,
+                  totalScore: this.state.totalRuns,
+                  totalWicket: this.state.totalWicket
+            });
       }
 
       render() {
@@ -344,7 +344,7 @@ class AdminScoreBoard extends Component {
                                                 isWicket={this.state.isWicket}
                                                 setWicket={this.setWicket.bind(this)}
                                                 updateWickets={this.updateWickets.bind(this)}
-                                          // socket={this.state.socket}
+                                                socket={this.state.socket}
                                           />
                                           <OversSection
                                                 inningId={this.state.inningId}
@@ -357,7 +357,7 @@ class AdminScoreBoard extends Component {
                                                 updateRuns={this.updateRuns.bind(this)}
                                                 setWicket={this.setWicket.bind(this)}
                                                 setInningEnd={this.setInningEnd.bind(this)}
-                                          // socket={this.state.socket}
+                                                socket={this.state.socket}
                                           />
                                           {
                                                 (this.state.inningEnd) &&
