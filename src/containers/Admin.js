@@ -35,11 +35,13 @@ class Admin extends Component {
 
   componentDidMount() {
     const { socket } = this.state;
-    console.log('')
     socket.on('initialize', data => {
       console.log('Page Component : ', data);
       this.setState({ pageComponent: data.matchStatus });
     });
+    socket.on('nextScreen', data => {
+      this.setState({ pageComponent: data });
+    })
   }
 
   prevScreen() {
@@ -47,12 +49,12 @@ class Admin extends Component {
       pageComponent,
       socket
     } = this.state;
-    if (pageComponent === 0) {
-      pageComponent = 1;
-    }
-    this.setState({
-      pageComponent: pageComponent - 1,
-    });
+    // if (pageComponent === 0) {
+    //   pageComponent = 1;
+    // }
+    // this.setState({
+    //   pageComponent: pageComponent - 1,
+    // });
 
     // Send sockent message for previous screen
     socket.emit('nextScreen', pageComponent - 1);
@@ -63,14 +65,14 @@ class Admin extends Component {
       pageComponent,
       socket
     } = this.state;
-    // No of screens
-    let n = 6;
-    if (pageComponent === n) {
-      pageComponent = -1;
-    }
-    this.setState({
-      pageComponent: pageComponent + 1,
-    });
+    // // No of screens
+    // let n = 6;
+    // if (pageComponent === n) {
+    //   pageComponent = -1;
+    // }
+    // this.setState({
+    //   pageComponent: pageComponent + 1,
+    // });
 
     // Send sockent message for next screen
     socket.emit('nextScreen', pageComponent + 1);
