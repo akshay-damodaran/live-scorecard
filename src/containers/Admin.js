@@ -30,6 +30,8 @@ class Admin extends Component {
       battingTeam: 0,
       totalOvers: 2,
       socket,
+      inningId: 1,
+      overArray: [],
     }
   }
 
@@ -37,9 +39,20 @@ class Admin extends Component {
     const { socket } = this.state;
     socket.on('initialize', data => {
       // console.log('Page Component : ', data);
-      this.setState({ pageComponent: data.matchStatus });
+      const { matchStatus, team1, team2, inningId, toss, overArray, } = data
+      this.setState({
+        pageComponent: matchStatus,
+        team1: team1.name,
+        team2: team2.name,
+        team1Players: team1.players,
+        team2Players: team2.players,
+        overArray,
+        battingTeam: toss.battingTeam,
+        inningId,
+      });
     });
     socket.on('nextScreen', data => {
+      console.log('Data : ', data);
       this.setState({ pageComponent: data });
     })
   }
@@ -49,6 +62,7 @@ class Admin extends Component {
       pageComponent,
       socket
     } = this.state;
+    console.log('Prev');
     // if (pageComponent === 0) {
     //   pageComponent = 1;
     // }
