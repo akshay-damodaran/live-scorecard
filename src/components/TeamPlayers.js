@@ -81,10 +81,10 @@ class TeamPlayers extends Component {
 				<div className="teamplayer-input">
 					<button className="teamplayer-button" onClick={() => {
 						setTeamPlayers([...mainPlayers, ...extraPlayers]);
-						// this.setState({ 
-						// 	mainPlayers: Array(11).fill(null).map(() => ({ name: '' })),
-						// 	extraPlayers: Array(5).fill(null).map(() => ({ name: '' }))
-						// });
+						this.setState({ 
+							mainPlayers: Array(11).fill(null).map(() => ({ name: '' })),
+							// extraPlayers: Array(5).fill(null).map(() => ({ name: '' }))
+						});
 					}}>
 						{
 							(teamNo === 1) ?
