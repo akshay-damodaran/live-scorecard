@@ -5,8 +5,9 @@ class TeamPlayers extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			mainPlayers: Array(11).fill(null).map(() => ({ name: '' })),
-			extraPlayers: Array(5).fill(null).map(() => ({ name: '' }))
+			mainPlayers: props.teamPlayers,
+			// extraPlayers: Array(5).fill(null).map(() => ({ name: '' }))
+			extraPlayers: [],
 		}
 	}
 
@@ -35,8 +36,7 @@ class TeamPlayers extends Component {
 	render() {
 		const { teamNo, teamName, setTeamPlayers, prevScreen } = this.props;
 		let { mainPlayers, extraPlayers } = this.state;
-		mainPlayers = Array(11).fill(null).map((item, i) => ({ id: i, name: (this.props.teamNo === 1) ? `Mum${i}` : `Pun${i}` })); // remove by default data
-		extraPlayers = Array(5).fill(null).map((item, i) => ({ id: 12 + i, name: (this.props.teamNo === 1) ? `Mum${12 + i}` : `Pun${12 + i}` })); // remove by default data
+		// extraPlayers = Array(5).fill(null).map((item, i) => ({ id: 12 + i, name: (this.props.teamNo === 1) ? `Mum${12 + i}` : `Pun${12 + i}` })); // remove by default data
 		return (
 			<div className="admin-body">
 				<div className="admin-body-title" id="team-bg">
@@ -62,7 +62,7 @@ class TeamPlayers extends Component {
 						</div>
 					)
 				}
-				<div className="admin-body-title">
+				{/* <div className="admin-body-title">
 					<span>{`Extra Players`}</span>
 				</div>
 				{
@@ -77,7 +77,7 @@ class TeamPlayers extends Component {
 							/>
 						</div>
 					)
-				}
+				} */}
 				<div className="teamplayer-input">
 					<button className="teamplayer-button" onClick={() => {
 						setTeamPlayers([...mainPlayers, ...extraPlayers]);
