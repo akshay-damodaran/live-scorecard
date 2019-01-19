@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-// import socketIOClient from 'socket.io-client';
-// import axios from 'axios';
+import socketIOClient from 'socket.io-client';
+import axios from 'axios';
 
 import '../styles/Admin.css';
 
@@ -11,17 +11,17 @@ import TossResults from '../components/TossResults';
 import AdminScoreBoard from '../components/AdminScoreBoard';
 import Login from '../components/Login';
 
-// import conf from '../conf';
+import conf from '../conf';
 
 class Admin extends Component {
   constructor(props) {
     super(props);
-    // const endpoint = 'http://127.0.0.1:4001';
+    const endpoint = 'http://127.0.0.1:4001';
     // const endpoint = 'https://livescorecardserver.herokuapp.com:4001';
-    // const socket = socketIOClient(endpoint);
+    const socket = socketIOClient(endpoint);
 
     this.state = {
-      pageComponent: 1,
+      pageComponent: 0,
       currentTeam: 1,
       team1: 'Mumbai',
       team2: 'Pune',
@@ -30,26 +30,26 @@ class Admin extends Component {
       tossResult: 0,
       battingTeam: 0,
       totalOvers: 2,
-      // socket,
+      socket,
 
     }
   }
 
   componentDidMount() {
-    // const { socket } = this.state;
-    // socket.on('initialize', pageComponent => {
-    //   console.log('Page Component : ', pageComponent);
-    //   this.setState({ pageComponent });
-    // });
+    const { socket } = this.state;
+    socket.on('initialize', pageComponent => {
+      console.log('Page Component : ', pageComponent);
+      this.setState({ pageComponent });
+    });
   }
 
   prevScreen() {
     let {
       pageComponent,
-      // socket
+      socket
     } = this.state;
     // No of screens
-    // let n = 6;
+    let n = 6;
     if (pageComponent === 0) {
       pageComponent = -1;
     }
@@ -58,13 +58,13 @@ class Admin extends Component {
     });
 
     // Send sockent message for next screen
-    // socket.emit('nextScreen', pageComponent + 1);
+    socket.emit('nextScreen', pageComponent + 1);
   }
 
   nextScreen() {
     let {
       pageComponent,
-      // socket
+      socket
     } = this.state;
     // No of screens
     let n = 6;
@@ -76,7 +76,7 @@ class Admin extends Component {
     });
 
     // Send sockent message for next screen
-    // socket.emit('nextScreen', pageComponent + 1);
+    socket.emit('nextScreen', pageComponent + 1);
   }
 
   changeTeamName(teamName) {
@@ -90,19 +90,19 @@ class Admin extends Component {
   }
 
   setTeamPlayers(teamId, teamName, teamPlayers) {
-    // const url = `${conf.base_url}apis/createteam`;
-    // axios.post(
-    //   url,
-    //   {
-    //     teamName,
-    //     teamId,
-    //     teamPlayers,
-    //     totalOvers: this.state.totalOvers
-    //   })
-    //   .then(res => {
-    //     console.log('Res : ', res);
-    //   })
-    //   .catch(err => console.log('Error : ', err));
+    const url = `${conf.base_url}apis/createteam`;
+    axios.post(
+      url,
+      {
+        teamName,
+        teamId,
+        teamPlayers,
+        totalOvers: this.state.totalOvers
+      })
+      .then(res => {
+        console.log('Res : ', res);
+      })
+      .catch(err => console.log('Error : ', err));
     if (teamId === 1) {
       this.setState({ team1Players: teamPlayers });
     } else {
@@ -112,18 +112,27 @@ class Admin extends Component {
   }
 
   setTossResults() {
-    // const { tossResult, battingTeam } = this.state;
-    // const url = `${conf.base_url}apis/toss`;
-    // const decision = (tossResult === battingTeam) ? '0' : '1';
-    // axios.post(
-    //   url,
-    //   {
-    //     teamid: tossResult,
-    //     battingTeam,
-    //     decision,
-    //   }
-    // )
+    const { tossResult, battingTeam } = this.state;
+    const url = `${conf.base_url}apis/toss`;
+    const decision = (tossResult === battingTeam) ? '0' : '1';
+    axios.post(
+      url,
+      {
+        teamid: tossResult,
+        battingTeam,
+        decision,
+      }
+    )
     this.nextScreen();
+  }
+
+  handleImageUpload(e, teamName) {
+    let imageData = document.querySelector('input[type=file]').files[0];
+    let url = '';
+    axios.post(
+      url,
+      imageData
+    );
   }
 
   renderComponent() {

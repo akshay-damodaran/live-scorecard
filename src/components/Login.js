@@ -50,9 +50,10 @@ class Login extends Component {
                                     onChange={(e) => this.setState({ username: e.target.value })}
                                     autoFocus
                               />
+                              <label></label>
                               {
                                     (this.state.usernameError.length > 0) &&
-                                          <span className="error-message">{this.state.usernameError}</span>
+                                    <span className="error-message">{this.state.usernameError}</span>
                               }
                         </div>
                         <div className="login-input">
@@ -62,11 +63,10 @@ class Login extends Component {
                                     value={this.state.password}
                                     placeholder={"Enter password"}
                                     onChange={(e) => this.setState({ password: e.target.value })}
-
                               />
                               {
                                     (this.state.passwordError.length > 0) &&
-                                          <span className="error-message">{this.state.passwordError}</span>
+                                    <span className="error-message">{this.state.passwordError}</span>
                               }
                         </div>
                         <div className="login-input">

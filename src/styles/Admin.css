@@ -55,6 +55,7 @@ input, button, select {
       -webkit-transition: 0.5s;
       transition: 0.5s;
       outline: none;
+      font-family: 'FontAwesome';
 }
 
 input[type=submit] {
