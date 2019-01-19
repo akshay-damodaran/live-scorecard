@@ -11,33 +11,33 @@ import TossResults from '../components/TossResults';
 import AdminScoreBoard from '../components/AdminScoreBoard';
 import Login from '../components/Login';
 
-// import conf from '../conf';
+import conf from '../conf';
 
 class Admin extends Component {
   constructor(props) {
     super(props);
-    const endpoint = 'http://127.0.0.1:4001';
-    // const endpoint = 'https://livescorecardserver.herokuapp.com:4001';
+    const endpoint = conf.broadcast_socket_url;
     const socket = socketIOClient(endpoint);
 
     this.state = {
       pageComponent: 1,
       currentTeam: 1,
-      team1: 'Mumbai',
-      team2: 'Pune',
-      team1Players: Array(16).fill(null).map(() => ({ name: '' })),
-      team2Players: Array(16).fill(null).map(() => ({ name: '' })),
+      team1: '',
+      team2: '',
+      team1Players: Array(11).fill(null).map((item, i) => ({ id: i, name: '' })),
+      team2Players: Array(11).fill(null).map((item, i) => ({ id: i, name: '' })),
       tossResult: 0,
       battingTeam: 0,
-      totalOvers: 2,
+      totalOvers: '',
       socket,
     }
   }
 
   componentDidMount() {
     const { socket } = this.state;
+    console.log('')
     socket.on('initialize', data => {
-      console.log('Page Component : ', data.matchStatus);
+      console.log('Page Component : ', data);
       this.setState({ pageComponent: data.matchStatus });
     });
   }
@@ -45,25 +45,23 @@ class Admin extends Component {
   prevScreen() {
     let {
       pageComponent,
-      // socket
+      socket
     } = this.state;
-    // No of screens
-    // let n = 6;
     if (pageComponent === 0) {
-      pageComponent = -1;
+      pageComponent = 1;
     }
     this.setState({
       pageComponent: pageComponent - 1,
     });
 
-    // Send sockent message for next screen
-    // socket.emit('nextScreen', pageComponent + 1);
+    // Send sockent message for previous screen
+    socket.emit('nextScreen', pageComponent - 1);
   }
 
   nextScreen() {
     let {
       pageComponent,
-      // socket
+      socket
     } = this.state;
     // No of screens
     let n = 6;
@@ -75,7 +73,7 @@ class Admin extends Component {
     });
 
     // Send sockent message for next screen
-    // socket.emit('nextScreen', pageComponent + 1);
+    socket.emit('nextScreen', pageComponent + 1);
   }
 
   changeTeamName(teamName) {
@@ -89,19 +87,19 @@ class Admin extends Component {
   }
 
   setTeamPlayers(teamId, teamName, teamPlayers) {
-    // const url = `${conf.base_url}apis/createteam`;
-    // axios.post(
-    //   url,
-    //   {
-    //     teamName,
-    //     teamId,
-    //     teamPlayers,
-    //     totalOvers: this.state.totalOvers
-    //   })
-    //   .then(res => {
-    //     console.log('Res : ', res);
-    //   })
-    //   .catch(err => console.log('Error : ', err));
+    const url = `${conf.base_url}apis/createteam`;
+    axios.post(
+      url,
+      {
+        teamName,
+        teamId,
+        teamPlayers,
+        totalOvers: this.state.totalOvers
+      })
+      .then(res => {
+        console.log('Res : ', res);
+      })
+      .catch(err => console.log('Error : ', err));
     if (teamId === 1) {
       this.setState({ team1Players: teamPlayers });
     } else {
@@ -111,23 +109,23 @@ class Admin extends Component {
   }
 
   setTossResults() {
-    // const { tossResult, battingTeam } = this.state;
-    // const url = `${conf.base_url}apis/toss`;
-    // const decision = (tossResult === battingTeam) ? '0' : '1';
-    // axios.post(
-    //   url,
-    //   {
-    //     teamid: tossResult,
-    //     battingTeam,
-    //     decision,
-    //   }
-    // )
+    const { tossResult, battingTeam } = this.state;
+    const url = `${conf.base_url}apis/toss`;
+    const decision = (tossResult === battingTeam) ? '0' : '1';
+    axios.post(
+      url,
+      {
+        teamid: tossResult,
+        battingTeam,
+        decision,
+      }
+    )
     this.nextScreen();
   }
 
   renderComponent() {
-    const { team1, team2, totalOvers, team1Players, team2Players, tossResult, battingTeam } = this.state;
-    switch (this.state.pageComponent) {
+    const { team1, team2, totalOvers, team1Players, team2Players, tossResult, battingTeam, pageComponent } = this.state;
+    switch (pageComponent) {
       case 0: {
         return (
           <Login
@@ -152,6 +150,7 @@ class Admin extends Component {
           <TeamPlayers
             teamNo={1}
             teamName={this.state.team1}
+            teamPlayers={this.state.team1Players}
             setTeamPlayers={teamPlayers => this.setTeamPlayers(1, team1, teamPlayers)}
             prevScreen={() => this.prevScreen()}
           />
@@ -162,6 +161,7 @@ class Admin extends Component {
           <TeamPlayers
             teamNo={2}
             teamName={this.state.team2}
+            teamPlayers={this.state.team2Players}
             setTeamPlayers={teamPlayers => this.setTeamPlayers(2, team2, teamPlayers)}
             prevScreen={() => this.prevScreen()}
           />
