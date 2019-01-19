@@ -18,6 +18,9 @@ const Teams = ({ team1 = '', team2 = '', totalOvers = '', changeTeamName = f => 
 					autoFocus
 				/>
 			</div>
+			<div className="login-input">
+				<input type="file" name="team1-logo" accept="image/*" onChange={(e) => this.handleImageUpload(e, 'team1')} />
+			</div>
 			<div className="team-input">
 				<input
 					id="teams-input-2"
@@ -27,6 +30,9 @@ const Teams = ({ team1 = '', team2 = '', totalOvers = '', changeTeamName = f => 
 					onChange={e => changeTeamName({ team2: e.target.value })}
 					required
 				/>
+			</div>
+			<div className="login-input">
+				<input type="file" name="team2-logo" accept="image/*" onChange={(e) => this.handleImageUpload(e, 'team2')} />
 			</div>
 			<div className="team-input">
 				<input

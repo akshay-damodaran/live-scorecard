@@ -28,7 +28,7 @@ class Admin extends Component {
       team2Players: Array(11).fill(null).map((item, i) => ({ id: i, name: '' })),
       tossResult: 0,
       battingTeam: 0,
-      totalOvers: '',
+      totalOvers: 2,
       socket,
     }
   }
@@ -36,7 +36,7 @@ class Admin extends Component {
   componentDidMount() {
     const { socket } = this.state;
     socket.on('initialize', data => {
-      console.log('Page Component : ', data);
+      // console.log('Page Component : ', data);
       this.setState({ pageComponent: data.matchStatus });
     });
     socket.on('nextScreen', data => {
@@ -99,7 +99,7 @@ class Admin extends Component {
         totalOvers: this.state.totalOvers
       })
       .then(res => {
-        console.log('Res : ', res);
+        // console.log('Res : ', res);
       })
       .catch(err => console.log('Error : ', err));
     if (teamId === 1) {
@@ -123,6 +123,15 @@ class Admin extends Component {
       }
     )
     this.nextScreen();
+  }
+
+  handleImageUpload(e, teamName) {
+    let imageData = document.querySelector('input[type=file]').files[0];
+    let url = '';
+    axios.post(
+      url,
+      imageData
+    );
   }
 
   renderComponent() {
@@ -195,15 +204,16 @@ class Admin extends Component {
       case 6: {
         return (
           <AdminScoreBoard
-            team1={team1}
-            team2={team2}
-            totalOvers={this.state.totalOvers}
-            team1Players={team1Players}
-            team2Players={team2Players}
-            tossResult={tossResult}
-            battingTeam={battingTeam}
-
-            // scoreCardDisplay={this.state.pageComponent}
+            // team1={team1}
+            // team2={team2}
+            // totalOvers={this.state.totalOvers}
+            // team1Players={team1Players}
+            // team2Players={team2Players}
+            // tossResult={tossResult}
+            // battingTeam={battingTeam}
+            
+            prevScreen={() => this.prevScreen()}
+            scoreCardDisplay={this.state.pageComponent}
             socket={this.state.socket}
           />
         );
