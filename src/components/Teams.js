@@ -6,7 +6,10 @@ const Teams = ({ team1 = '', team2 = '', totalOvers = '', changeTeamName = f => 
 		<div className="admin-body-title">
 			<span>{'Start a match'}</span>
 		</div>
-		<form onSubmit={() => nextScreen()}>
+		<form onSubmit={(e) => {
+			e.preventDefault();
+			nextScreen()
+		}}>
 			<div className="team-input">
 				<input
 					id="teams-input-1"

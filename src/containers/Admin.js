@@ -36,10 +36,11 @@ class Admin extends Component {
   componentDidMount() {
     const { socket } = this.state;
     socket.on('initialize', data => {
-      // console.log('Page Component : ', data);
+      console.log('Page Component : ', data);
       this.setState({ pageComponent: data.matchStatus });
     });
     socket.on('nextScreen', data => {
+      console.log("Data: ", data);
       this.setState({ pageComponent: data });
     })
   }
@@ -114,10 +115,11 @@ class Admin extends Component {
     const { tossResult, battingTeam } = this.state;
     const url = `${conf.base_url}apis/toss`;
     const decision = (tossResult === battingTeam) ? '0' : '1';
+    console.log(tossResult, battingTeam);
     axios.post(
       url,
       {
-        teamid: tossResult,
+        teamId: tossResult,
         battingTeam,
         decision,
       }
@@ -211,7 +213,7 @@ class Admin extends Component {
             // team2Players={team2Players}
             // tossResult={tossResult}
             // battingTeam={battingTeam}
-            
+
             prevScreen={() => this.prevScreen()}
             scoreCardDisplay={this.state.pageComponent}
             socket={this.state.socket}

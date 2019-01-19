@@ -116,7 +116,7 @@ class AdminScoreBoard extends Component {
             // this.setState({ battingTeamPlayers, bowlingTeamPlayers, heading, team1: teamOne, team2: teamTwo, totalOvers, tossResult, battingTeam });
 
             const { socket, totalOvers, scoreCardDisplay } = this.props;
-            socket.on('scoreCardDisplay', (sbDetails) => { // score board details
+            socket.on('scoreCardDisplay', sbDetails => { // score board details
                   console.log('Score board details: ', sbDetails);
                   this.initializeScoreBoard(scoreCardDisplay);
             });
