@@ -117,12 +117,13 @@ class Admin extends Component {
     this.setState({ totalOvers: totalOvers.totalOvers });
   }
 
-  setTeamPlayers(teamId, teamName, teamPlayers) {
+  setTeamPlayers(teamId, team, teamPlayers) {
     const url = `${conf.base_url}apis/createteam`;
     axios.post(
       url,
       {
-        teamName,
+        teamLogo: team.logo,
+        teamName: team.name,
         teamId,
         teamPlayers,
         totalOvers: this.state.totalOvers
@@ -155,12 +156,24 @@ class Admin extends Component {
   }
 
   handleImageUpload(e, teamName) {
-    let imageData = document.querySelector('input[type=file]').files[0];
+    const { team1, team2 } = this.state;
+    // let imageData = document.querySelector('input[type=file]').files[0];
+    // console.log(imageData);
+    // let url = document.querySelector('input[type=file]').attr;
+    // console.log("url: ", url);
     let url = '';
-    axios.post(
-      url,
-      imageData
-    );
+    if (teamName === 'team1') {
+      url = '../images/team1.png';
+      team1.logo = url;
+    } else {
+      url = '../images/team2.png';
+      team2.logo = url;
+    }
+    this.setState({ team1, team2 });
+    // axios.post(
+    //   url,
+    //   imageData
+    // );
   }
 
   renderComponent() {
@@ -182,6 +195,7 @@ class Admin extends Component {
             nextScreen={() => this.nextScreen()}
             changeTeamName={(teamName) => this.changeTeamName(teamName)}
             setTotalOvers={(totalOvers) => this.setTotalOvers(totalOvers)}
+            handleImageUpload={(teamName) => this.handleImageUpload(teamName)}
           />
         );
       }

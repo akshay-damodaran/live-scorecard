@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/Teams.css';
 
-const Teams = ({ team1 = '', team2 = '', totalOvers = '', changeTeamName = f => f, setTotalOvers = f => f, nextScreen = f => f }) => (
+const Teams = ({ team1 = '', team2 = '', totalOvers = '', changeTeamName = f => f, setTotalOvers = f => f, nextScreen = f => f, handleImageUpload = f => f }) => (
 	<div className="admin-body">
 		<div className="admin-body-title">
 			<span>{'Start a match'}</span>
@@ -33,7 +33,7 @@ const Teams = ({ team1 = '', team2 = '', totalOvers = '', changeTeamName = f => 
 				/>
 			</div>
 			<div className="login-input">
-				<input type="file" name="team1-logo" accept="image/*" onChange={(e) => this.handleImageUpload(e, 'team1')} />
+				<input type="file" name="team1-logo" accept="image/*" onChange={(e) => handleImageUpload(e, 'team1')} />
 			</div>
 			<div className="team-input">
 				<input
@@ -56,7 +56,7 @@ const Teams = ({ team1 = '', team2 = '', totalOvers = '', changeTeamName = f => 
 				/>
 			</div>
 			<div className="login-input">
-				<input type="file" name="team2-logo" accept="image/*" onChange={(e) => this.handleImageUpload(e, 'team2')} />
+				<input type="file" name="team2-logo" accept="image/*" onChange={(e) => handleImageUpload(e, 'team2')} />
 			</div>
 			<div className="team-input">
 				<input
