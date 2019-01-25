@@ -102,7 +102,6 @@ class Admin extends Component {
     // this.setState({
     //   pageComponent: pageComponent + 1,
     // });
-    console.log('admin me ayaya');
 
     // Send sockent message for next screen
     socket.emit('nextScreen', pageComponent + 1);
