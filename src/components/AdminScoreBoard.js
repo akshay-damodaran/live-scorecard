@@ -11,30 +11,19 @@ class AdminScoreBoard extends Component {
 
       constructor(props) {
             super(props);
+            const { team1, team2, team1Players, team2Players, totalOvers, tossResult, battingTeam, overArray, socket } = props;
             this.state = {
 
                   isInningStart: true,
 
                   // socket data
-                  team1: {
-                        name: '',
-                        logo: '',
-                        wonToss: false,
-                        isBatting: false,
-                        runs: 0,
-                        wickets: 0,
-                        ballsFaced: 0
-                  },
-                  team2: {
-                        name: '',
-                        logo: '',
-                        wonToss: false,
-                        isBatting: false,
-                        runs: 0,
-                        wickets: 0,
-                        ballsFaced: 0
-                  },
-                  inningId: 1,
+                  team1,
+                  team2,
+                  team1Players,
+                  team2Players, totalOvers,
+                  tossResult,
+                  battingTeam,
+                  overArray,
                   heading: '',
                   striker: {
                         id: 0,
@@ -60,17 +49,17 @@ class AdminScoreBoard extends Component {
                         maiden: 0,
                         wickets: 0
                   },
-                  overArray: Array(6).fill(0),
+                  // overArray: Array(6).fill(0),
 
-                  tossResult: null,
-                  battingTeam: null,
+                  // tossResult: null,
+                  // battingTeam: null,
 
                   // extra data needed
                   battingTeamPlayers: [],
                   bowlingTeamPlayers: [],
 
                   totalRuns: 0,
-                  totalOvers: 0,
+                  // totalOvers: 0,
 
                   wickets: 0,
                   isWicket: false,
@@ -78,13 +67,13 @@ class AdminScoreBoard extends Component {
                   inningEnd: false,
                   showPopup: false,
 
-                  socket: null
+                  socket      
             }
       }
 
       componentDidMount() {
 
-            // const { totalOvers, tossResult, battingTeam, team1, team2, team1Players, team2Players } = this.props;
+            const { team1, team1Players, team2Players } = this.props;
 
             // let battingTeamPlayers, bowlingTeamPlayers;
             // battingTeamPlayers = (battingTeam === 1) ? team1Players : team2Players;
@@ -115,13 +104,21 @@ class AdminScoreBoard extends Component {
             // }
             // this.setState({ battingTeamPlayers, bowlingTeamPlayers, heading, team1: teamOne, team2: teamTwo, totalOvers, tossResult, battingTeam });
 
-            const { socket, totalOvers, scoreCardDisplay } = this.props;
-            socket.on('scoreCardDisplay', sbDetails => { // score board details
-                  console.log('Score board details: ', sbDetails);
-                  this.initializeScoreBoard(scoreCardDisplay);
-            });
-            this.setState({ socket, totalOvers });
-
+            // const { socket, totalOvers, scoreCardDisplay } = this.props;
+            // socket.on('scoreCardDisplay', sbDetails => { // score board details
+            //       console.log('Score board details: ', sbDetails);
+            //       this.initializeScoreBoard(scoreCardDisplay);
+            // });
+            // this.setState({ socket, totalOvers });
+            let { battingTeamPlayers, bowlingTeamPlayers } = this.state;
+            if (team1.isBatting) {
+                  battingTeamPlayers = team1Players;
+                  bowlingTeamPlayers = team2Players;
+            } else {
+                  battingTeamPlayers = team2Players;
+                  bowlingTeamPlayers = team1Players;
+            }
+            this.setState({ battingTeamPlayers, bowlingTeamPlayers });
       }
 
       initializeScoreBoard(sbDetails) {

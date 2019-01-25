@@ -103,7 +103,7 @@ class BatsmanSection extends Component {
             const {
                   striker,
                   nonStriker,
-                  inningId
+                  inningId          
             } = this.state;
 
             this.props.setBatsmenDetails(striker, nonStriker);

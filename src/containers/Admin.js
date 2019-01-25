@@ -22,25 +22,53 @@ class Admin extends Component {
     this.state = {
       pageComponent: 1,
       currentTeam: 1,
-      team1: '',
-      team2: '',
+      team1: {
+        name: '',
+        logo: '',
+        wonToss: false,
+        isBatting: false,
+        runs: 0,
+        wickets: 0,
+        ballsFaced: 0
+      },
+      team2: {
+        name: '',
+        logo: '',
+        wonToss: false,
+        isBatting: false,
+        runs: 0,
+        wickets: 0,
+        ballsFaced: 0
+      },
       team1Players: Array(11).fill(null).map((item, i) => ({ id: i, name: '' })),
       team2Players: Array(11).fill(null).map((item, i) => ({ id: i, name: '' })),
       tossResult: 0,
       battingTeam: 0,
       totalOvers: 2,
       socket,
+      inningId: 1,
+      overArray: [],
     }
   }
 
   componentDidMount() {
     const { socket } = this.state;
     socket.on('initialize', data => {
-      console.log('Page Component : ', data);
-      this.setState({ pageComponent: data.matchStatus });
+      // console.log('Page Component : ', data);
+      const { matchStatus, team1, team2, inningId, toss, overArray, } = data
+      this.setState({
+        pageComponent: matchStatus,
+        team1,
+        team2,
+        team1Players: team1.players,
+        team2Players: team2.players,
+        overArray: Array(6).fill(0),
+        battingTeam: toss.battingTeam,
+        inningId,
+      });
     });
     socket.on('nextScreen', data => {
-      console.log("Data: ", data);
+      // console.log('Data : ', data);
       this.setState({ pageComponent: data });
     })
   }
@@ -74,6 +102,7 @@ class Admin extends Component {
     // this.setState({
     //   pageComponent: pageComponent + 1,
     // });
+    console.log('admin me ayaya');
 
     // Send sockent message for next screen
     socket.emit('nextScreen', pageComponent + 1);
@@ -115,7 +144,6 @@ class Admin extends Component {
     const { tossResult, battingTeam } = this.state;
     const url = `${conf.base_url}apis/toss`;
     const decision = (tossResult === battingTeam) ? '0' : '1';
-    console.log(tossResult, battingTeam);
     axios.post(
       url,
       {
@@ -137,7 +165,7 @@ class Admin extends Component {
   }
 
   renderComponent() {
-    const { team1, team2, totalOvers, team1Players, team2Players, tossResult, battingTeam, pageComponent } = this.state;
+    const { team1, team2, totalOvers, team1Players, team2Players, tossResult, battingTeam, pageComponent, overArray } = this.state;
     switch (pageComponent) {
       case 0: {
         return (
@@ -149,8 +177,8 @@ class Admin extends Component {
       case 1: {
         return (
           <Teams
-            team1={team1}
-            team2={team2}
+            team1={team1.name}
+            team2={team2.name}
             totalOvers={totalOvers}
             nextScreen={() => this.nextScreen()}
             changeTeamName={(teamName) => this.changeTeamName(teamName)}
@@ -162,8 +190,8 @@ class Admin extends Component {
         return (
           <TeamPlayers
             teamNo={1}
-            teamName={this.state.team1}
-            teamPlayers={this.state.team1Players}
+            teamName={team1.name}
+            teamPlayers={team1Players}
             setTeamPlayers={teamPlayers => this.setTeamPlayers(1, team1, teamPlayers)}
             prevScreen={() => this.prevScreen()}
           />
@@ -173,8 +201,8 @@ class Admin extends Component {
         return (
           <TeamPlayers
             teamNo={2}
-            teamName={this.state.team2}
-            teamPlayers={this.state.team2Players}
+            teamName={team2.name}
+            teamPlayers={team2Players}
             setTeamPlayers={teamPlayers => this.setTeamPlayers(2, team2, teamPlayers)}
             prevScreen={() => this.prevScreen()}
           />
@@ -183,8 +211,8 @@ class Admin extends Component {
       case 4: {
         return (
           <DisplayTeams
-            team1={team1}
-            team2={team2}
+            team1={team1.name}
+            team2={team2.name}
             team1Players={team1Players}
             team2Players={team2Players}
             nextScreen={() => this.nextScreen()}
@@ -206,14 +234,15 @@ class Admin extends Component {
       case 6: {
         return (
           <AdminScoreBoard
-            // team1={team1}
-            // team2={team2}
+            team1={team1}
+            team2={team2}
             // totalOvers={this.state.totalOvers}
-            // team1Players={team1Players}
-            // team2Players={team2Players}
-            // tossResult={tossResult}
-            // battingTeam={battingTeam}
-
+            team1Players={team1Players}
+            team2Players={team2Players}
+            tossResult={tossResult}
+            battingTeam={battingTeam}
+            totalOvers={totalOvers}
+            overArray={overArray}
             prevScreen={() => this.prevScreen()}
             scoreCardDisplay={this.state.pageComponent}
             socket={this.state.socket}

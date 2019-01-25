@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/TossResults.css';
 
-const TossResults = ({ team1 = '', team2 = '', setTossResults = f => f, setTossData = f => f, prevScreen = f => f }) => (
+const TossResults = ({ team1 = {}, team2 = {}, setTossResults = f => f, setTossData = f => f, prevScreen = f => f }) => (
       <div className="admin-body">
             <div className="admin-body-title">
                   <div className="back-button" onClick={() => { prevScreen(); }}>
@@ -17,18 +17,30 @@ const TossResults = ({ team1 = '', team2 = '', setTossResults = f => f, setTossD
                         document.getElementById("toss-button-1").style.color = "#ffffff";
                         document.getElementById("toss-button-2").style.backgroundColor = "#e6e6e6";
                         document.getElementById("toss-button-2").style.color = "#000000";
-                        setTossData({ tossResult: 1 });
+                        setTossData({
+													tossResult: 1,
+													team1: {
+														...team1,
+														wonToss: true,
+													}
+												});
                   }}>
-                        {`Team 1: ${team1}`}
+                        {`Team 1: ${team1.name}`}
                   </button>
                   <button id="toss-button-2" onClick={() => {
                         document.getElementById("toss-button-2").style.backgroundColor = "#ba124c";
                         document.getElementById("toss-button-2").style.color = "#ffffff";
                         document.getElementById("toss-button-1").style.backgroundColor = "#e6e6e6";
                         document.getElementById("toss-button-1").style.color = "#000000";
-                        setTossData({ tossResult: 2 });
+                        setTossData({
+													tossResult: 2,
+													team2: {
+														...team2,
+														wonToss: true,
+													}
+												});
                   }}>
-                        {`Team 2: ${team2}`}
+                        {`Team 2: ${team2.name}`}
                   </button>
                   <br />
             </div>
@@ -39,18 +51,30 @@ const TossResults = ({ team1 = '', team2 = '', setTossResults = f => f, setTossD
                         document.getElementById("batting-team-1").style.color = "#ffffff";
                         document.getElementById("batting-team-2").style.backgroundColor = "#e6e6e6";
                         document.getElementById("batting-team-2").style.color = "#000000";
-                        setTossData({ battingTeam: 1 });
+                        setTossData({
+													battingTeam: 1,
+													team1: {
+														...team1,
+														isBatting: true,
+													}
+												});
                   }}>
-                        {`Team 1: ${team1}`}
+                        {`Team 1: ${team1.name}`}
                   </button>
                   <button id="batting-team-2" onClick={() => {
                         document.getElementById("batting-team-2").style.backgroundColor = "#ba124c";
                         document.getElementById("batting-team-2").style.color = "#ffffff";
                         document.getElementById("batting-team-1").style.backgroundColor = "#e6e6e6";
                         document.getElementById("batting-team-1").style.color = "#000000";
-                        setTossData({ battingTeam: 2 });
+                        setTossData({
+													battingTeam: 2,
+													team2: {
+														...team2,
+														isBatting: true,
+													}
+												});
                   }}>
-                        {`Team 2: ${team2}`}
+                        {`Team 2: ${team2.name}`}
                   </button>
                   <br />
             </div>

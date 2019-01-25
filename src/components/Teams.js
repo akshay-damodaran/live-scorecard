@@ -7,8 +7,9 @@ const Teams = ({ team1 = '', team2 = '', totalOvers = '', changeTeamName = f => 
 			<span>{'Start a match'}</span>
 		</div>
 		<form onSubmit={(e) => {
+			console.log('foem me asaya');
 			e.preventDefault();
-			nextScreen()
+			nextScreen();
 		}}>
 			<div className="team-input">
 				<input
@@ -16,7 +17,17 @@ const Teams = ({ team1 = '', team2 = '', totalOvers = '', changeTeamName = f => 
 					placeholder="Enter Team 1 Name"
 					value={team1}
 					type="text"
-					onChange={e => changeTeamName({ team1: e.target.value })}
+					onChange={e => changeTeamName({
+						team1: {
+							name: e.target.value,
+							logo: '',
+							wonToss: false,
+							isBatting: false,
+							runs: 0,
+							wickets: 0,
+							ballsFaced: 0
+						}
+					})}
 					required
 					autoFocus
 				/>
@@ -30,7 +41,17 @@ const Teams = ({ team1 = '', team2 = '', totalOvers = '', changeTeamName = f => 
 					placeholder="Enter Team 2 Name"
 					value={team2}
 					type="text"
-					onChange={e => changeTeamName({ team2: e.target.value })}
+					onChange={e => changeTeamName({
+						team2: {
+							name: e.target.value,
+							logo: '',
+							wonToss: false,
+							isBatting: false,
+							runs: 0,
+							wickets: 0,
+							ballsFaced: 0
+						}
+					})}
 					required
 				/>
 			</div>
